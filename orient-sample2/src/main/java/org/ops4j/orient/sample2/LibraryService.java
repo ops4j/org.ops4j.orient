@@ -19,6 +19,8 @@
 package org.ops4j.orient.sample2;
 
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -26,8 +28,11 @@ import javax.inject.Inject;
 
 import org.ops4j.orient.sample2.model.Author;
 import org.ops4j.orient.sample2.model.Book;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.orientechnologies.orient.core.entity.OEntityManager;
+import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 
 
 /**
@@ -35,7 +40,9 @@ import com.orientechnologies.orient.core.entity.OEntityManager;
  *
  */
 @Stateless
-public class Initializer {
+public class LibraryService {
+    
+    private static Logger log = LoggerFactory.getLogger(LibraryService.class);
     
     @Inject
     private ObjectDatabase odb;
@@ -51,6 +58,18 @@ public class Initializer {
         Book hobbit = odb.db().newInstance(Book.class);
         hobbit.setTitle("The Hobbit");
         odb.db().save(hobbit);
+    }
+    
+    public List<Book> findBooks() {
+        log.info("finding books");
+        try {
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return odb.db().query(new OSQLSynchQuery<Book>("select from Book"));
     }
 
 }

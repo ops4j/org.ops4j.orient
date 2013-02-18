@@ -36,7 +36,7 @@ import javax.inject.Inject;
 public class OrientClient {
     
     @Inject
-    private Initializer initializer;
+    private LibraryService initializer;
 
     @Inject
     private ObjectDatabase odb;
