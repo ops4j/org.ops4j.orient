@@ -18,9 +18,6 @@
 
 package org.ops4j.orient.adapter.impl;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.resource.ResourceException;
 import javax.resource.spi.ActivationSpec;
 import javax.resource.spi.BootstrapContext;
@@ -31,7 +28,6 @@ import javax.resource.spi.TransactionSupport;
 import javax.resource.spi.endpoint.MessageEndpointFactory;
 import javax.transaction.xa.XAResource;
 
-import org.ops4j.orient.adapter.api.OrientManagedConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,8 +47,6 @@ public class OrientResourceAdapter implements ResourceAdapter {
     
     private static Logger log = LoggerFactory.getLogger(OrientResourceAdapter.class);
 
-    private Set<OrientManagedConnectionFactory> factories = new HashSet<OrientManagedConnectionFactory>();    
-    
     @Override
     public void start(BootstrapContext ctx) throws ResourceAdapterInternalException {
         log.debug("starting OrientResourceAdapter");
@@ -79,10 +73,6 @@ public class OrientResourceAdapter implements ResourceAdapter {
         return null;
     }
 
-    public void addFactory(OrientManagedConnectionFactory factory) {
-        factories.add(factory);
-    }
-    
     @Override
     public int hashCode() {
         return super.hashCode();

@@ -128,7 +128,6 @@ public class OrientManagedConnectionFactoryImpl implements OrientManagedConnecti
     @Override
     public void setResourceAdapter(ResourceAdapter ra) throws ResourceException {
         this.ra = (OrientResourceAdapter) ra;
-        this.ra.addFactory(this);
     }
 
     @Override
@@ -150,9 +149,6 @@ public class OrientManagedConnectionFactoryImpl implements OrientManagedConnecti
     public void setConnectionUrl(String connectionUrl) {
         this.connectionUrl = connectionUrl;
     }
-    
-    
-
     
     /**
      * @return the username
@@ -183,6 +179,22 @@ public class OrientManagedConnectionFactoryImpl implements OrientManagedConnecti
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    
+    /**
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
+
+    
+    /**
+     * @param type the type to set
+     */
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override
@@ -216,23 +228,4 @@ public class OrientManagedConnectionFactoryImpl implements OrientManagedConnecti
         return true;
     }
 
-    
-    /**
-     * @return the type
-     */
-    public String getType() {
-        return type;
-    }
-
-    
-    /**
-     * @param type the type to set
-     */
-    public void setType(String type) {
-        this.type = type;
-    }
-    
-    
-    
-    
 }
