@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ops4j.orient.sample1;
+package org.ops4j.orient.sample2;
 
 import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
@@ -41,7 +41,7 @@ public class ObjectDatabaseProducer {
 
     private static Logger log = LoggerFactory.getLogger(ObjectDatabaseProducer.class);
 
-    @Resource(mappedName = "java:/orient/ConnectionFactory")
+    @Resource(mappedName = "java:/orient/library")
     private OrientDatabaseConnectionFactory cf;
 
     @Produces
@@ -55,17 +55,6 @@ public class ObjectDatabaseProducer {
             throw new RuntimeException(exc);
         }
     }
-    
-//    @Produces
-//    public OObjectDatabaseTx objectDatabase(OrientDatabaseConnection connection) {
-//        return connection.object();
-//    }
-//
-//    public void close(@Disposes OObjectDatabaseTx db) {
-//        log.info("closing database");
-//        db.close();
-//    }
-
     public void close(@Disposes OrientDatabaseConnection connection) {
         log.info("closing connection");
         connection.close();

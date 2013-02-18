@@ -16,33 +16,18 @@
  * limitations under the License.
  */
 
-package org.ops4j.orient.sample1;
+package org.ops4j.orient.adapter.api;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.inject.Inject;
+import java.io.Serializable;
 
-import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
-
-import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
+import javax.resource.Referenceable;
+import javax.resource.ResourceException;
 
 
 /**
  * @author Harald Wellmann
  *
  */
-@Singleton
-@Startup
-public class OrientClient {
-    
-
-    @Inject
-    private OrientDatabaseConnection connection;
-    
-    @PostConstruct
-    public void init() {
-        OObjectDatabaseTx db = connection.object();
-        System.out.println("DB exists: "+ db.exists());
-    }
+public interface OrientDatabaseConnectionFactory extends Serializable, Referenceable {
+    OrientDatabaseConnection createConnection() throws ResourceException;
 }

@@ -16,18 +16,35 @@
  * limitations under the License.
  */
 
-package org.ops4j.orient.adapter.api;
+package org.ops4j.orient.sample2;
 
-import java.io.Serializable;
-
-import javax.resource.Referenceable;
-import javax.resource.ResourceException;
+import javax.annotation.PostConstruct;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
+import javax.inject.Inject;
 
 
 /**
  * @author Harald Wellmann
  *
  */
-public interface ObjectDatabaseConnectionFactory extends Serializable, Referenceable {
-    OrientDatabaseConnection createConnection() throws ResourceException;
+@Singleton
+@Startup
+@TransactionManagement(TransactionManagementType.BEAN)
+public class OrientClient {
+    
+    @Inject
+    private Initializer initializer;
+
+    @Inject
+    private ObjectDatabase odb;
+    
+    @PostConstruct
+    public void init() {
+        initializer.registerEntityClasses();
+        System.out.println("DB exists: "+ odb.db().exists());
+        initializer.createEntities();
+    }
 }

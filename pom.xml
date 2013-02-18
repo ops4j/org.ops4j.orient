@@ -22,6 +22,7 @@
         <module>orient-ra</module>
         <module>orient-rar</module>
         <module>orient-sample1</module>
+        <module>orient-sample2</module>
     </modules>
 
     <dependencyManagement>

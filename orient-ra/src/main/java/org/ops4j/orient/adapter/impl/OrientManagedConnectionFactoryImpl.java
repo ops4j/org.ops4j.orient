@@ -30,7 +30,7 @@ import javax.resource.spi.ManagedConnection;
 import javax.resource.spi.ResourceAdapter;
 import javax.security.auth.Subject;
 
-import org.ops4j.orient.adapter.api.ObjectDatabaseConnectionFactory;
+import org.ops4j.orient.adapter.api.OrientDatabaseConnectionFactory;
 import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
 import org.ops4j.orient.adapter.api.OrientManagedConnectionFactory;
 import org.slf4j.Logger;
@@ -42,8 +42,8 @@ import org.slf4j.LoggerFactory;
  */
 // @formatter:off
 @ConnectionDefinition(
-    connectionFactory = ObjectDatabaseConnectionFactory.class, 
-    connectionFactoryImpl = ObjectDatabaseConnectionFactoryImpl.class, 
+    connectionFactory = OrientDatabaseConnectionFactory.class, 
+    connectionFactoryImpl = OrientDatabaseConnectionFactoryImpl.class, 
     connection = OrientDatabaseConnection.class,
     connectionImpl = OrientDatabaseConnectionImpl.class)
 // @formatter:on
@@ -77,7 +77,7 @@ public class OrientManagedConnectionFactoryImpl implements OrientManagedConnecti
     @Override
     public Object createConnectionFactory(ConnectionManager cxManager) throws ResourceException {
         log.debug("creating managed connection factory");
-        return new ObjectDatabaseConnectionFactoryImpl(this, cxManager);
+        return new OrientDatabaseConnectionFactoryImpl(this, cxManager);
     }
 
     @Override
@@ -102,7 +102,8 @@ public class OrientManagedConnectionFactoryImpl implements OrientManagedConnecti
         for (ManagedConnection connection : connections) {
             if (connection instanceof OrientManagedConnectionImpl) {
                 OrientManagedConnectionImpl orientConnection = (OrientManagedConnectionImpl) connection;
-                if (orientConnection.getConnectionRequestInfo().equals(cxRequestInfo)) {
+                ConnectionRequestInfo cri = orientConnection.getConnectionRequestInfo();
+                if (cri == null || cri.equals(cxRequestInfo)) {
                     return connection;
                 }
             }

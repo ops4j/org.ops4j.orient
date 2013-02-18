@@ -46,13 +46,12 @@ import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.db.graph.OGraphDatabase;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
-
 /**
  * @author Harald Wellmann
- *
+ * 
  */
-public class OrientManagedConnectionImpl implements ManagedConnection, LocalTransaction, Closeable {
-    
+public class OrientManagedConnectionImpl implements ManagedConnection, Closeable {
+
     private static Logger log = LoggerFactory.getLogger(OrientManagedConnectionImpl.class);
 
     private OrientManagedConnectionFactoryImpl mcf;
@@ -63,15 +62,39 @@ public class OrientManagedConnectionImpl implements ManagedConnection, LocalTran
 
     private OrientDatabaseConnectionImpl connection;
 
+    class OrientLocalTransaction implements LocalTransaction {
+
+        @Override
+        public void begin() throws ResourceException {
+            log.debug("begin()");
+            db.begin();
+            fireConnectionEvent(LOCAL_TRANSACTION_STARTED);
+        }
+
+        @Override
+        public void commit() throws ResourceException {
+            log.debug("commit()");
+            db.commit();
+            fireConnectionEvent(LOCAL_TRANSACTION_COMMITTED);
+        }
+
+        @Override
+        public void rollback() throws ResourceException {
+            log.debug("rollback()");
+            db.rollback();
+            fireConnectionEvent(LOCAL_TRANSACTION_ROLLEDBACK);
+        }
+    }
+
     /**
      * @param orientManagedConnectionFactoryImpl
      * @param database
      */
-    public OrientManagedConnectionImpl(OrientManagedConnectionFactoryImpl mcf, 
+    public OrientManagedConnectionImpl(OrientManagedConnectionFactoryImpl mcf,
         ConnectionRequestInfo cri) {
         this.mcf = mcf;
         this.cri = cri;
-        openDatabase();
+        createDatabaseHandle();
     }
 
     @Override
@@ -80,31 +103,33 @@ public class OrientManagedConnectionImpl implements ManagedConnection, LocalTran
         log.debug("getConnection()");
 
         connection = new OrientDatabaseConnectionImpl(db, this);
+        if (db.isClosed()) {
+            log.debug("opening database for user = {}", mcf.getUsername());
+            db.open(mcf.getUsername(), mcf.getPassword());
+        }
+        
         return connection;
     }
 
-    private void openDatabase() {
+    private void createDatabaseHandle() {
         String type = mcf.getType();
         String url = mcf.getConnectionUrl();
-        
-        log.debug("instantiating ObjectDataseImpl for type={} url={}", type, url);
+
+        log.debug("instantiating Orient Database for type={} url={}", type, url);
         if (type.equals("document")) {
             this.db = new ODatabaseDocumentTx(url);
         }
-        else if (type.equals("object")){
+        else if (type.equals("object")) {
             this.db = new OObjectDatabaseTx(url);
         }
         else if (type.equals("graph")) {
             this.db = new OGraphDatabase(url);
         }
-        log.debug("opening database for user = {}", mcf.getUsername());
-        db.open(mcf.getUsername(), mcf.getPassword());
     }
 
     @Override
     public void destroy() throws ResourceException {
         log.debug("destroy()");
-        System.out.println("destroy()");
         db.close();
     }
 
@@ -122,10 +147,9 @@ public class OrientManagedConnectionImpl implements ManagedConnection, LocalTran
     @Override
     public void addConnectionEventListener(ConnectionEventListener listener) {
         synchronized (listeners) {
-            listeners.add(listener);            
+            listeners.add(listener);
         }
     }
-    
 
     @Override
     public void removeConnectionEventListener(ConnectionEventListener listener) {
@@ -141,7 +165,7 @@ public class OrientManagedConnectionImpl implements ManagedConnection, LocalTran
 
     @Override
     public LocalTransaction getLocalTransaction() throws ResourceException {
-        return this;
+        return new OrientLocalTransaction();
     }
 
     @Override
@@ -159,46 +183,27 @@ public class OrientManagedConnectionImpl implements ManagedConnection, LocalTran
         return logWriter;
     }
 
-    @Override
-    public void begin() throws ResourceException {
-        log.debug("begin()");
-        db.begin();
-        fireConnectionEvent(LOCAL_TRANSACTION_STARTED);
-    }
-
-    @Override
-    public void commit() throws ResourceException {
-        log.debug("commit()");
-        db.commit();
-        fireConnectionEvent(LOCAL_TRANSACTION_COMMITTED);
-    }
-
-    @Override
-    public void rollback() throws ResourceException {
-        log.debug("rollback()");
-        db.rollback();
-        fireConnectionEvent(LOCAL_TRANSACTION_ROLLEDBACK);
-    }
-
-    public void fireConnectionEvent(int event) {
-        ConnectionEvent connnectionEvent = new ConnectionEvent(this, event);
-        connnectionEvent.setConnectionHandle(db);
-        for (ConnectionEventListener listener : this.listeners) {
-            switch (event) {
-                case LOCAL_TRANSACTION_STARTED:
-                    listener.localTransactionStarted(connnectionEvent);
-                    break;
-                case LOCAL_TRANSACTION_COMMITTED:
-                    listener.localTransactionCommitted(connnectionEvent);
-                    break;
-                case LOCAL_TRANSACTION_ROLLEDBACK:
-                    listener.localTransactionRolledback(connnectionEvent);
-                    break;
-                case CONNECTION_CLOSED:
-                    listener.connectionClosed(connnectionEvent);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown event: " + event);
+    private void fireConnectionEvent(int event) {
+        ConnectionEvent connectionEvent = new ConnectionEvent(this, event);
+        connectionEvent.setConnectionHandle(connection);
+        synchronized (listeners) {
+            for (ConnectionEventListener listener : this.listeners) {
+                switch (event) {
+                    case LOCAL_TRANSACTION_STARTED:
+                        listener.localTransactionStarted(connectionEvent);
+                        break;
+                    case LOCAL_TRANSACTION_COMMITTED:
+                        listener.localTransactionCommitted(connectionEvent);
+                        break;
+                    case LOCAL_TRANSACTION_ROLLEDBACK:
+                        listener.localTransactionRolledback(connectionEvent);
+                        break;
+                    case CONNECTION_CLOSED:
+                        listener.connectionClosed(connectionEvent);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unknown event: " + event);
+                }
             }
         }
     }
@@ -206,12 +211,10 @@ public class OrientManagedConnectionImpl implements ManagedConnection, LocalTran
     @Override
     public void close() {
         log.debug("close()");
-        if (!db.isClosed()) {
-            db.close();
-        }
+        db.close();
         fireConnectionEvent(CONNECTION_CLOSED);
     }
-    
+
     public ConnectionRequestInfo getConnectionRequestInfo() {
         return cri;
     }

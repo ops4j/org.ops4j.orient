@@ -16,11 +16,9 @@
  * limitations under the License.
  */
 
-package org.ops4j.orient.sample1;
+package org.ops4j.orient.sample2;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
 import javax.inject.Inject;
 
 import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
@@ -32,17 +30,19 @@ import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
  * @author Harald Wellmann
  *
  */
-@Singleton
-@Startup
-public class OrientClient {
+public class ObjectDatabase {
     
-
     @Inject
     private OrientDatabaseConnection connection;
     
+    private OObjectDatabaseTx db;
+    
     @PostConstruct
     public void init() {
-        OObjectDatabaseTx db = connection.object();
-        System.out.println("DB exists: "+ db.exists());
+        db = connection.object();
+    }
+
+    public OObjectDatabaseTx db() {
+        return db;
     }
 }

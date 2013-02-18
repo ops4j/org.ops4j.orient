@@ -24,7 +24,7 @@ import javax.resource.ResourceException;
 import javax.resource.spi.ConnectionManager;
 
 import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
-import org.ops4j.orient.adapter.api.ObjectDatabaseConnectionFactory;
+import org.ops4j.orient.adapter.api.OrientDatabaseConnectionFactory;
 import org.ops4j.orient.adapter.api.OrientManagedConnectionFactory;
 
 
@@ -32,7 +32,7 @@ import org.ops4j.orient.adapter.api.OrientManagedConnectionFactory;
  * @author Harald Wellmann
  *
  */
-public class ObjectDatabaseConnectionFactoryImpl implements ObjectDatabaseConnectionFactory {
+public class OrientDatabaseConnectionFactoryImpl implements OrientDatabaseConnectionFactory {
 
     private static final long serialVersionUID = 1L;
 
@@ -43,7 +43,7 @@ public class ObjectDatabaseConnectionFactoryImpl implements ObjectDatabaseConnec
     /**
      * 
      */
-    public ObjectDatabaseConnectionFactoryImpl(OrientManagedConnectionFactory mcf, ConnectionManager cm) {
+    public OrientDatabaseConnectionFactoryImpl(OrientManagedConnectionFactory mcf, ConnectionManager cm) {
         this.mcf = mcf;
         this.cm = cm;
     }
