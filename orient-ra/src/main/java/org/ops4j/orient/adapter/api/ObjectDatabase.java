@@ -16,18 +16,19 @@
  * limitations under the License.
  */
 
-package org.ops4j.ora.adapter.api;
+package org.ops4j.orient.adapter.api;
 
-import java.io.Serializable;
-
-import javax.resource.Referenceable;
-import javax.resource.ResourceException;
+import com.orientechnologies.orient.core.db.ODatabaseSchemaAware;
+import com.orientechnologies.orient.core.db.object.ODatabaseObject;
 
 
 /**
  * @author Harald Wellmann
  *
  */
-public interface ObjectDatabaseConnectionFactory extends Serializable, Referenceable {
-    ObjectDatabase createConnection() throws ResourceException;
+public interface ObjectDatabase extends ODatabaseSchemaAware<Object>, ODatabaseObject {
+
+    void attach(Object pojo);
+    Object detach(Object pojo);
+
 }

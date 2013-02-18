@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-package org.ops4j.ora.adapter.impl;
+package org.ops4j.orient.adapter.impl;
 
-import org.ops4j.ora.adapter.api.ObjectDatabase;
+import org.ops4j.orient.adapter.api.ObjectDatabase;
 
 import com.orientechnologies.orient.core.db.ODatabase;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;

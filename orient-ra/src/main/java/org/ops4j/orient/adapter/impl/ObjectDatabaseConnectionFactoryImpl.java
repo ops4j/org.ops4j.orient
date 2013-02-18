@@ -16,16 +16,16 @@
  * limitations under the License.
  */
 
-package org.ops4j.ora.adapter.impl;
+package org.ops4j.orient.adapter.impl;
 
 import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.resource.ResourceException;
 import javax.resource.spi.ConnectionManager;
 
-import org.ops4j.ora.adapter.api.ObjectDatabase;
-import org.ops4j.ora.adapter.api.ObjectDatabaseConnectionFactory;
-import org.ops4j.ora.adapter.api.OrientManagedConnectionFactory;
+import org.ops4j.orient.adapter.api.ObjectDatabase;
+import org.ops4j.orient.adapter.api.ObjectDatabaseConnectionFactory;
+import org.ops4j.orient.adapter.api.OrientManagedConnectionFactory;
 
 
 /**

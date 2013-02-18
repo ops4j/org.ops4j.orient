@@ -16,15 +16,32 @@
  * limitations under the License.
  */
 
-package org.ops4j.ora.adapter.api;
+package org.ops4j.orient.sample1;
 
-import javax.resource.spi.ManagedConnection;
+import javax.annotation.PostConstruct;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+import javax.inject.Inject;
+
+import org.ops4j.orient.adapter.api.ObjectDatabase;
 
 
 /**
  * @author Harald Wellmann
  *
  */
-public interface OrientManagedConnection extends ManagedConnection {
+@Singleton
+@Startup
+public class OrientClient {
+    
+
+    @Inject
+    private ObjectDatabase db;
+    
+    @PostConstruct
+    public void init() {
+        System.out.println("DB exists: "+ db.exists());
+            //db.close();
+    }
 
 }

@@ -16,17 +16,18 @@
  * limitations under the License.
  */
 
-package org.ops4j.ora.adapter.api;
+package org.ops4j.orient.adapter.api;
 
-import javax.resource.spi.ManagedConnectionFactory;
-import javax.resource.spi.ResourceAdapterAssociation;
-import javax.resource.spi.TransactionSupport;
+import java.io.Serializable;
+
+import javax.resource.Referenceable;
+import javax.resource.ResourceException;
 
 
 /**
  * @author Harald Wellmann
  *
  */
-public interface OrientManagedConnectionFactory extends ManagedConnectionFactory, ResourceAdapterAssociation, TransactionSupport {
-
+public interface ObjectDatabaseConnectionFactory extends Serializable, Referenceable {
+    ObjectDatabase createConnection() throws ResourceException;
 }

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ops4j.ora.adapter.impl;
+package org.ops4j.orient.adapter.impl;
 
 import static javax.resource.spi.ConnectionEvent.CONNECTION_CLOSED;
 import static javax.resource.spi.ConnectionEvent.LOCAL_TRANSACTION_COMMITTED;
@@ -38,7 +38,7 @@ import javax.resource.spi.ManagedConnectionMetaData;
 import javax.security.auth.Subject;
 import javax.transaction.xa.XAResource;
 
-import org.ops4j.ora.adapter.api.ObjectDatabase;
+import org.ops4j.orient.adapter.api.ObjectDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

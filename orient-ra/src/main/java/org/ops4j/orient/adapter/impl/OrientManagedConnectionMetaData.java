@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ops4j.ora.adapter.impl;
+package org.ops4j.orient.adapter.impl;
 
 import javax.resource.ResourceException;
 import javax.resource.spi.ManagedConnectionMetaData;

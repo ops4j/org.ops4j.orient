@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ops4j.ora.client;
+package org.ops4j.orient.sample1;
 
 import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
@@ -24,8 +24,8 @@ import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.resource.ResourceException;
 
-import org.ops4j.ora.adapter.api.ObjectDatabase;
-import org.ops4j.ora.adapter.api.ObjectDatabaseConnectionFactory;
+import org.ops4j.orient.adapter.api.ObjectDatabase;
+import org.ops4j.orient.adapter.api.ObjectDatabaseConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

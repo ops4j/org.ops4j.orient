@@ -16,19 +16,15 @@
  * limitations under the License.
  */
 
-package org.ops4j.ora.adapter.api;
+package org.ops4j.orient.adapter.api;
 
-import com.orientechnologies.orient.core.db.ODatabaseSchemaAware;
-import com.orientechnologies.orient.core.db.object.ODatabaseObject;
+import javax.resource.spi.ManagedConnection;
 
 
 /**
  * @author Harald Wellmann
  *
  */
-public interface ObjectDatabase extends ODatabaseSchemaAware<Object>, ODatabaseObject {
-
-    void attach(Object pojo);
-    Object detach(Object pojo);
+public interface OrientManagedConnection extends ManagedConnection {
 
 }

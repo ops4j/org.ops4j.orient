@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ops4j.ora.adapter.impl;
+package org.ops4j.orient.adapter.impl;
 
 import java.io.PrintWriter;
 import java.util.Set;
@@ -30,9 +30,9 @@ import javax.resource.spi.ManagedConnection;
 import javax.resource.spi.ResourceAdapter;
 import javax.security.auth.Subject;
 
-import org.ops4j.ora.adapter.api.ObjectDatabase;
-import org.ops4j.ora.adapter.api.ObjectDatabaseConnectionFactory;
-import org.ops4j.ora.adapter.api.OrientManagedConnectionFactory;
+import org.ops4j.orient.adapter.api.ObjectDatabase;
+import org.ops4j.orient.adapter.api.ObjectDatabaseConnectionFactory;
+import org.ops4j.orient.adapter.api.OrientManagedConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

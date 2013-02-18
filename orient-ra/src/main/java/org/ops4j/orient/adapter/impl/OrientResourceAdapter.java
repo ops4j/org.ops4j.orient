@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ops4j.ora.adapter.impl;
+package org.ops4j.orient.adapter.impl;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,7 +31,7 @@ import javax.resource.spi.TransactionSupport;
 import javax.resource.spi.endpoint.MessageEndpointFactory;
 import javax.transaction.xa.XAResource;
 
-import org.ops4j.ora.adapter.api.OrientManagedConnectionFactory;
+import org.ops4j.orient.adapter.api.OrientManagedConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
