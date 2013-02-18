@@ -24,10 +24,12 @@ import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.resource.ResourceException;
 
-import org.ops4j.orient.adapter.api.ObjectDatabase;
+import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
 import org.ops4j.orient.adapter.api.ObjectDatabaseConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
 
 /**
@@ -43,20 +45,25 @@ public class ObjectDatabaseProducer {
     private ObjectDatabaseConnectionFactory cf;
 
     @Produces
-    public ObjectDatabase openDatabase() {
+    public OrientDatabaseConnection openDatabase() {
         try {
             log.info("opening database");
-            ObjectDatabase db = cf.createConnection();
+            OrientDatabaseConnection db = cf.createConnection();
             return db;
         }
         catch (ResourceException exc) {
             throw new RuntimeException(exc);
         }
     }
+    
+    @Produces
+    public OObjectDatabaseTx objectDatabase(OrientDatabaseConnection connection) {
+        return connection.object();
+    }
 
-    public void close(@Disposes ObjectDatabase db) {
+    public void close(@Disposes OrientDatabaseConnection connection) {
         log.info("closing database");
-        db.close();
+        connection.close();
     }
 
 }

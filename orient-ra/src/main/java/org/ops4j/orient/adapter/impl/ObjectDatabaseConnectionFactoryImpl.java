@@ -23,7 +23,7 @@ import javax.naming.Reference;
 import javax.resource.ResourceException;
 import javax.resource.spi.ConnectionManager;
 
-import org.ops4j.orient.adapter.api.ObjectDatabase;
+import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
 import org.ops4j.orient.adapter.api.ObjectDatabaseConnectionFactory;
 import org.ops4j.orient.adapter.api.OrientManagedConnectionFactory;
 
@@ -59,8 +59,8 @@ public class ObjectDatabaseConnectionFactoryImpl implements ObjectDatabaseConnec
     }
 
     @Override
-    public ObjectDatabase createConnection() throws ResourceException {
-        return (ObjectDatabase) cm.allocateConnection(mcf, null);
+    public OrientDatabaseConnection createConnection() throws ResourceException {
+        return (OrientDatabaseConnection) cm.allocateConnection(mcf, null);
     }
 
 }

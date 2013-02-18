@@ -23,7 +23,7 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
 
-import org.ops4j.orient.adapter.api.ObjectDatabase;
+import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
 
 /**
@@ -36,12 +36,10 @@ public class OrientClient {
     
 
     @Inject
-    private ObjectDatabase db;
+    private OObjectDatabaseTx db;
     
     @PostConstruct
     public void init() {
         System.out.println("DB exists: "+ db.exists());
-            //db.close();
     }
-
 }

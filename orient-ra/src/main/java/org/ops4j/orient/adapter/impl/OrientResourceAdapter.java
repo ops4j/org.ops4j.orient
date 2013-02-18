@@ -56,15 +56,11 @@ public class OrientResourceAdapter implements ResourceAdapter {
     @Override
     public void start(BootstrapContext ctx) throws ResourceAdapterInternalException {
         log.debug("starting OrientResourceAdapter");
-        for (OrientManagedConnectionFactory factory : factories) {
-        }
     }
 
     @Override
     public void stop() {
         log.debug("stopping OrientResourceAdapter");
-        for (OrientManagedConnectionFactory factory : factories) {
-        }
     }
 
     @Override

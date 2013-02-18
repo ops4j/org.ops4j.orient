@@ -29,5 +29,5 @@ import javax.resource.ResourceException;
  *
  */
 public interface ObjectDatabaseConnectionFactory extends Serializable, Referenceable {
-    ObjectDatabase createConnection() throws ResourceException;
+    OrientDatabaseConnection createConnection() throws ResourceException;
 }

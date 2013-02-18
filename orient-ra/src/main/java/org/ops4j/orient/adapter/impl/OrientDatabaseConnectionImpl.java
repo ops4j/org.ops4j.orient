@@ -18,9 +18,11 @@
 
 package org.ops4j.orient.adapter.impl;
 
-import org.ops4j.orient.adapter.api.ObjectDatabase;
+import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
 
-import com.orientechnologies.orient.core.db.ODatabase;
+import com.orientechnologies.orient.core.db.ODatabaseComplex;
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.db.graph.OGraphDatabase;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
 
@@ -28,27 +30,33 @@ import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
  * @author Harald Wellmann
  *
  */
-public class ObjectDatabaseImpl extends OObjectDatabaseTx implements ObjectDatabase {
+public class OrientDatabaseConnectionImpl implements OrientDatabaseConnection {
 
     private OrientManagedConnectionImpl mc;
+    private ODatabaseComplex<?> db;
 
-    public ObjectDatabaseImpl(String iURL, OrientManagedConnectionImpl mc) {
-        super(iURL);
+    public OrientDatabaseConnectionImpl(ODatabaseComplex<?> db, OrientManagedConnectionImpl mc) {
+        this.db = db;
         this.mc = mc;
     }
-    
+
     @Override
-    public Object detach(Object iPojo) {
-        return super.detach(iPojo);
+    public ODatabaseDocumentTx document() {
+        return (ODatabaseDocumentTx) db;
     }
-    
+
+    @Override
+    public OObjectDatabaseTx object() {
+        return (OObjectDatabaseTx) db;
+    }
+
+    @Override
+    public OGraphDatabase graph() {
+        return (OGraphDatabase) db;
+    }
+
     @Override
     public void close() {
-        super.close();        
         mc.close();
-    }
-    
-    void closeInternal() {
-        super.close();
-    }
+    }    
 }

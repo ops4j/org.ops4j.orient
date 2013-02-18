@@ -38,9 +38,13 @@ import javax.resource.spi.ManagedConnectionMetaData;
 import javax.security.auth.Subject;
 import javax.transaction.xa.XAResource;
 
-import org.ops4j.orient.adapter.api.ObjectDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.orientechnologies.orient.core.db.ODatabaseComplex;
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.db.graph.OGraphDatabase;
+import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
 
 /**
@@ -52,10 +56,12 @@ public class OrientManagedConnectionImpl implements ManagedConnection, LocalTran
     private static Logger log = LoggerFactory.getLogger(OrientManagedConnectionImpl.class);
 
     private OrientManagedConnectionFactoryImpl mcf;
-    private ObjectDatabaseImpl db;
+    private ODatabaseComplex<?> db;
     private PrintWriter logWriter;
     private List<ConnectionEventListener> listeners = new ArrayList<ConnectionEventListener>();
     private ConnectionRequestInfo cri;
+
+    private OrientDatabaseConnectionImpl connection;
 
     /**
      * @param orientManagedConnectionFactoryImpl
@@ -65,17 +71,34 @@ public class OrientManagedConnectionImpl implements ManagedConnection, LocalTran
         ConnectionRequestInfo cri) {
         this.mcf = mcf;
         this.cri = cri;
-        log.debug("instatiating ObjectDataseImpl for {}", mcf.getConnectionUrl());
-        this.db = new ObjectDatabaseImpl(mcf.getConnectionUrl(), this);
-        log.debug("opening database for user = {}", mcf.getUsername());
-        db.open(mcf.getUsername(), mcf.getPassword());
+        openDatabase();
     }
 
     @Override
     public Object getConnection(Subject subject, ConnectionRequestInfo cxRequestInfo)
         throws ResourceException {
         log.debug("getConnection()");
-        return db;
+
+        connection = new OrientDatabaseConnectionImpl(db, this);
+        return connection;
+    }
+
+    private void openDatabase() {
+        String type = mcf.getType();
+        String url = mcf.getConnectionUrl();
+        
+        log.debug("instantiating ObjectDataseImpl for type={} url={}", type, url);
+        if (type.equals("document")) {
+            this.db = new ODatabaseDocumentTx(url);
+        }
+        else if (type.equals("object")){
+            this.db = new OObjectDatabaseTx(url);
+        }
+        else if (type.equals("graph")) {
+            this.db = new OGraphDatabase(url);
+        }
+        log.debug("opening database for user = {}", mcf.getUsername());
+        db.open(mcf.getUsername(), mcf.getPassword());
     }
 
     @Override
@@ -93,7 +116,7 @@ public class OrientManagedConnectionImpl implements ManagedConnection, LocalTran
     @Override
     public void associateConnection(Object connection) throws ResourceException {
         log.debug("associateConnection()");
-        this.db = (ObjectDatabaseImpl) connection;
+        this.connection = (OrientDatabaseConnectionImpl) connection;
     }
 
     @Override
@@ -184,7 +207,7 @@ public class OrientManagedConnectionImpl implements ManagedConnection, LocalTran
     public void close() {
         log.debug("close()");
         if (!db.isClosed()) {
-            db.closeInternal();
+            db.close();
         }
         fireConnectionEvent(CONNECTION_CLOSED);
     }

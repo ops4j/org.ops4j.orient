@@ -18,17 +18,21 @@
 
 package org.ops4j.orient.adapter.api;
 
-import com.orientechnologies.orient.core.db.ODatabaseSchemaAware;
-import com.orientechnologies.orient.core.db.object.ODatabaseObject;
+import java.io.Closeable;
+
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.db.graph.OGraphDatabase;
+import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
 
 /**
  * @author Harald Wellmann
  *
  */
-public interface ObjectDatabase extends ODatabaseSchemaAware<Object>, ODatabaseObject {
+public interface OrientDatabaseConnection extends Closeable {
 
-    void attach(Object pojo);
-    Object detach(Object pojo);
-
+    ODatabaseDocumentTx document();
+    OObjectDatabaseTx object();
+    OGraphDatabase graph();
+    void close();
 }

@@ -30,14 +30,11 @@ import javax.resource.spi.ManagedConnection;
 import javax.resource.spi.ResourceAdapter;
 import javax.security.auth.Subject;
 
-import org.ops4j.orient.adapter.api.ObjectDatabase;
 import org.ops4j.orient.adapter.api.ObjectDatabaseConnectionFactory;
+import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
 import org.ops4j.orient.adapter.api.OrientManagedConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.orientechnologies.orient.object.db.OObjectDatabasePool;
-import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
 /**
  * @author Harald Wellmann
@@ -47,8 +44,8 @@ import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 @ConnectionDefinition(
     connectionFactory = ObjectDatabaseConnectionFactory.class, 
     connectionFactoryImpl = ObjectDatabaseConnectionFactoryImpl.class, 
-    connection = ObjectDatabase.class,
-    connectionImpl = ObjectDatabaseImpl.class)
+    connection = OrientDatabaseConnection.class,
+    connectionImpl = OrientDatabaseConnectionImpl.class)
 // @formatter:on
 public class OrientManagedConnectionFactoryImpl implements OrientManagedConnectionFactory {
 
@@ -60,6 +57,9 @@ public class OrientManagedConnectionFactoryImpl implements OrientManagedConnecti
     private PrintWriter logWriter;
     private OrientResourceAdapter ra;
 
+    @ConfigProperty(defaultValue = "document")
+    private String type;
+    
     @ConfigProperty
     private String connectionUrl;
     
@@ -214,6 +214,22 @@ public class OrientManagedConnectionFactoryImpl implements OrientManagedConnecti
             return false;
         }
         return true;
+    }
+
+    
+    /**
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
+
+    
+    /**
+     * @param type the type to set
+     */
+    public void setType(String type) {
+        this.type = type;
     }
     
     

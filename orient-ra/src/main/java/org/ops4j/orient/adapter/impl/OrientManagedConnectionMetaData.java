@@ -28,8 +28,6 @@ import javax.resource.spi.ManagedConnectionMetaData;
  */
 public class OrientManagedConnectionMetaData implements ManagedConnectionMetaData {
     
-    private ObjectDatabaseConnectionFactoryImpl connectionFactory;
-
     @Override
     public String getEISProductName() throws ResourceException {
         return "OrientDB";
