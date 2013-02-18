@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure>
+    <deployment>
+        <dependencies>
+            <module name="deployment.ora-rar-0.1.0-SNAPSHOT.rar" />
+            <module name="org.javassist"/>
+        </dependencies>
+    </deployment>
+</jboss-deployment-structure>
