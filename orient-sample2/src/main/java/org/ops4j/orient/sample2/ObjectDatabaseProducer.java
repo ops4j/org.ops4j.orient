@@ -41,7 +41,7 @@ public class ObjectDatabaseProducer {
 
     private static Logger log = LoggerFactory.getLogger(ObjectDatabaseProducer.class);
 
-    @Resource(mappedName = "java:/orient/library")
+    @Resource(lookup = "orient/library")
     private OrientDatabaseConnectionFactory cf;
 
     @Produces
