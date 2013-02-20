@@ -19,6 +19,7 @@
 package org.ops4j.orient.sample2;
 
 import static org.ops4j.orient.sample2.OrientDatabaseConnectionProducer.db;
+
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -34,34 +35,33 @@ import org.slf4j.LoggerFactory;
 
 import com.orientechnologies.orient.core.entity.OEntityManager;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
-import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
 
 /**
  * @author Harald Wellmann
- *
+ * 
  */
 @Stateless
 public class LibraryService {
-    
+
     private static Logger log = LoggerFactory.getLogger(LibraryService.class);
-    
+
     @Inject
     private OrientDatabaseConnection con;
-    
+
     @TransactionAttribute(TransactionAttributeType.NEVER)
     public void registerEntityClasses() {
         OEntityManager em = db(con).getEntityManager();
         em.registerEntityClass(Author.class);
         em.registerEntityClass(Book.class);
     }
-    
+
     public void createEntities() {
         Book hobbit = db(con).newInstance(Book.class);
         hobbit.setTitle("The Hobbit");
         con.object().save(hobbit);
     }
-    
+
     public List<Book> findBooks() {
         log.info("finding books");
         try {

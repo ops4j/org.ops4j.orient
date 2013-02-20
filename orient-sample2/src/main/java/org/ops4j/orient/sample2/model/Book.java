@@ -17,21 +17,20 @@
 
 package org.ops4j.orient.sample2.model;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 
 public class Book {
-    
+
     @Id
     private Object id;
-    
+
     @Version
     private Integer version;
-    
+
     private String title;
-    
+
     @ManyToOne
     private Author author;
 

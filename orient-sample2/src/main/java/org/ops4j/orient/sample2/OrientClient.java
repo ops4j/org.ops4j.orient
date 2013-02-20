@@ -28,19 +28,16 @@ import javax.inject.Inject;
 
 /**
  * @author Harald Wellmann
- *
+ * 
  */
 @Singleton
 @Startup
 @TransactionManagement(TransactionManagementType.BEAN)
 public class OrientClient {
-    
+
     @Inject
     private LibraryService initializer;
 
-    @Inject
-    private ObjectDatabase odb;
-    
     @PostConstruct
     public void init() {
         initializer.registerEntityClasses();
