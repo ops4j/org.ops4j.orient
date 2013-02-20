@@ -9,19 +9,13 @@
     <artifactId>orient-sample2</artifactId>
     <packaging>war</packaging>
 
-    <name>OPS4J OrientDB Extensions Sample 1</name>
+    <name>OPS4J OrientDB Extensions Sample 2</name>
 
     <dependencies>
         <dependency>
             <groupId>org.ops4j.orient</groupId>
-            <artifactId>orient-ra</artifactId>
+            <artifactId>orient-ra-api</artifactId>
             <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.javassist</groupId>
-                    <artifactId>javassist</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>javax.faces</groupId>
@@ -56,6 +50,12 @@
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-j2ee-connector_1.6_spec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.6.2</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

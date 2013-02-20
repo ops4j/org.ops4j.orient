@@ -37,9 +37,9 @@ import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
  * 
  */
 @ApplicationScoped
-public class ObjectDatabaseProducer {
+public class OrientDatabaseConnectionProducer {
 
-    private static Logger log = LoggerFactory.getLogger(ObjectDatabaseProducer.class);
+    private static Logger log = LoggerFactory.getLogger(OrientDatabaseConnectionProducer.class);
 
     @Resource(lookup = "orient/library")
     private OrientDatabaseConnectionFactory cf;
@@ -58,6 +58,10 @@ public class ObjectDatabaseProducer {
     public void close(@Disposes OrientDatabaseConnection connection) {
         log.info("closing connection");
         connection.close();
+    }
+    
+    public static OObjectDatabaseTx db(OrientDatabaseConnection connection) {
+        return connection.object();
     }
 
 }

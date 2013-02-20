@@ -18,7 +18,7 @@
 
 package org.ops4j.orient.sample2;
 
-
+import static org.ops4j.orient.sample2.OrientDatabaseConnectionProducer.db;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -26,6 +26,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
 import org.ops4j.orient.sample2.model.Author;
 import org.ops4j.orient.sample2.model.Book;
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import com.orientechnologies.orient.core.entity.OEntityManager;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
 
 /**
@@ -45,19 +47,19 @@ public class LibraryService {
     private static Logger log = LoggerFactory.getLogger(LibraryService.class);
     
     @Inject
-    private ObjectDatabase odb;
+    private OrientDatabaseConnection con;
     
     @TransactionAttribute(TransactionAttributeType.NEVER)
     public void registerEntityClasses() {
-        OEntityManager em = odb.db().getEntityManager();
+        OEntityManager em = db(con).getEntityManager();
         em.registerEntityClass(Author.class);
         em.registerEntityClass(Book.class);
     }
     
     public void createEntities() {
-        Book hobbit = odb.db().newInstance(Book.class);
+        Book hobbit = db(con).newInstance(Book.class);
         hobbit.setTitle("The Hobbit");
-        odb.db().save(hobbit);
+        con.object().save(hobbit);
     }
     
     public List<Book> findBooks() {
@@ -69,7 +71,7 @@ public class LibraryService {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return odb.db().query(new OSQLSynchQuery<Book>("select from Book"));
+        return db(con).query(new OSQLSynchQuery<Book>("select from Book"));
     }
 
 }

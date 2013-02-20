@@ -44,7 +44,6 @@ public class OrientClient {
     @PostConstruct
     public void init() {
         initializer.registerEntityClasses();
-        System.out.println("DB exists: "+ odb.db().exists());
         initializer.createEntities();
     }
 }

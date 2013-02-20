@@ -7,24 +7,14 @@
         <version>0.1.0-SNAPSHOT</version>
     </parent>
     <groupId>org.ops4j.orient</groupId>
-    <artifactId>orient-ra</artifactId>
+    <artifactId>orient-ra-api</artifactId>
     
-    <name>OPS4J OrientDB Resource Adapter</name>
+    <name>OPS4J OrientDB Resource Adapter API</name>
     
     <dependencies>
         <dependency>
-            <groupId>org.ops4j.orient</groupId>
-            <artifactId>orient-ra-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.orientechnologies</groupId>
             <artifactId>orientdb-object</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.6.6</version>
         </dependency>
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>

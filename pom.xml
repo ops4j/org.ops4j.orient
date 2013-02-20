@@ -19,6 +19,7 @@
     </properties>
 
     <modules>
+        <module>orient-ra-api</module>
         <module>orient-ra</module>
         <module>orient-rar</module>
         <module>orient-sample1</module>

@@ -19,6 +19,7 @@
 package org.ops4j.orient.sample2;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
 import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
@@ -37,11 +38,12 @@ public class ObjectDatabase {
     
     private OObjectDatabaseTx db;
     
-    @PostConstruct
+    //@PostConstruct
     public void init() {
         db = connection.object();
     }
 
+    //@Produces
     public OObjectDatabaseTx db() {
         return db;
     }
