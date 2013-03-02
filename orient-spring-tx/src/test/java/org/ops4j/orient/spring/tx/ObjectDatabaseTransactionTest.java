@@ -31,59 +31,57 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.iterator.ORecordIteratorClass;
-import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
+import com.orientechnologies.orient.object.iterator.OObjectIteratorClass;
 
 /**
  * @author Harald Wellmann
  * 
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = DocumentSpringTestConfig.class)
-public class OrientTransactionManagerTest {
+@ContextConfiguration(classes = ObjectSpringTestConfig.class)
+public class ObjectDatabaseTransactionTest {
 
     @Autowired
-    private TransactionalService service;
+    private TransactionalObjectService service;
 
     @Autowired
-    private OrientDocumentDatabaseManager dbManager;
+    private OrientObjectDatabaseManager dbManager;
 
-    private ODatabaseDocumentTx db;
+    private OObjectDatabaseTx db;
 
     @Before
     public void setUp() {
         db = dbManager.openDatabase();
-        OSchema schema = db.getMetadata().getSchema();
-        if (!schema.existsClass("TestDoc")) {
-            schema.createClass("TestDoc");
-        }
-        ORecordIteratorClass<ODocument> it = db.browseClass("TestDoc");
+        db.getEntityManager().registerEntityClass(Person.class);
+        OObjectIteratorClass<Person> it = db.browseClass(Person.class);
         while (it.hasNext()) {
-            it.next().delete();
+            db.delete(it.next());
         }
     }
 
     @Test
     public void shouldCommit() {
-        service.commitAutomatically("TestDoc");
+        service.commitAutomatically();
         assertTrue(!db.getTransaction().isActive());
 
-        assertTrue(db.countClass("TestDoc") == 1);
+        assertTrue(service.count() == 1);
     }
 
     @Test
     public void rollbackWithAnnotationTest() {
         assertTrue(!db.getTransaction().isActive());
         try {
-            service.rollbackOnError("TestDoc");
+            service.rollbackOnError();
         }
         catch (Exception e) {
 
         }
+        db = dbManager.db();
         assertTrue(!db.getTransaction().isActive());
-        assertTrue(db.countClass("TestDoc") == 0);
+        assertTrue(service.count() == 0);
     }
     
     @Test
@@ -102,9 +100,7 @@ public class OrientTransactionManagerTest {
 
         @Override
         public void run() {
-            service.commitAutomatically("TestDoc");            
-        }
-        
+            service.commitAutomatically();            
+        }        
     }
-
 }

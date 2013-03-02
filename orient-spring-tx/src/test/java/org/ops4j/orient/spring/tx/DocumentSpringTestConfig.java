@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Configuration
 @EnableTransactionManagement
-public class SpringTestConfig {
+public class DocumentSpringTestConfig {
     
     @Bean
     public OrientTransactionManager transactionManager() {
