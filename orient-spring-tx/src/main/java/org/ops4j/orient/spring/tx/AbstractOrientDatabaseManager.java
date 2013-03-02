@@ -34,6 +34,10 @@ public abstract class AbstractOrientDatabaseManager {
     private String username;
 
     private String password;
+    
+    private int minPoolSize;
+    
+    private int maxPoolSize;
 
     /**
      * @return the url
@@ -78,6 +82,40 @@ public abstract class AbstractOrientDatabaseManager {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+    
+    
+
+    
+    /**
+     * @return the minPoolSize
+     */
+    public int getMinPoolSize() {
+        return minPoolSize;
+    }
+
+    
+    /**
+     * @param minPoolSize the minPoolSize to set
+     */
+    public void setMinPoolSize(int minPoolSize) {
+        this.minPoolSize = minPoolSize;
+    }
+
+    
+    /**
+     * @return the maxPoolSize
+     */
+    public int getMaxPoolSize() {
+        return maxPoolSize;
+    }
+
+    
+    /**
+     * @param maxPoolSize the maxPoolSize to set
+     */
+    public void setMaxPoolSize(int maxPoolSize) {
+        this.maxPoolSize = maxPoolSize;
     }
 
     protected abstract ODatabaseComplex<?> openDatabase();

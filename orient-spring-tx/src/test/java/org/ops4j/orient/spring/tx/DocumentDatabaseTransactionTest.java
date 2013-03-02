@@ -54,7 +54,8 @@ public class DocumentDatabaseTransactionTest {
 
     @Before
     public void setUp() {
-        db = dbManager.openDatabase();
+        dbManager.openDatabase();
+        db = dbManager.db();
         OSchema schema = db.getMetadata().getSchema();
         if (!schema.existsClass("TestDoc")) {
             schema.createClass("TestDoc");

@@ -31,7 +31,9 @@ public class OrientGraphDatabaseManager extends AbstractOrientDatabaseManager {
 
     @Override
     public OGraphDatabase openDatabase() {
-        db = OGraphDatabasePool.global().acquire(getUrl(), getUsername(), getPassword());
+        OGraphDatabasePool pool = new OGraphDatabasePool(getUrl(), getUsername(), getPassword());
+        pool.setup(getMinPoolSize(), getMaxPoolSize());
+        db = pool.acquire();
         return db;
     }
     

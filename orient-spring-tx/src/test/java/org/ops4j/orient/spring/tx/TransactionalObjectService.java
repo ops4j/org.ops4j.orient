@@ -24,7 +24,11 @@ import static org.junit.Assert.assertThat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
+import com.orientechnologies.orient.object.iterator.OObjectIteratorClass;
 
 /**
  * @author Harald Wellmann
@@ -37,6 +41,19 @@ public class TransactionalObjectService {
     @Autowired
     private OrientObjectDatabaseManager dbm;
 
+    @Transactional(propagation = Propagation.NEVER)
+    public void registerEntityClasses() {
+        dbm.db().getEntityManager().registerEntityClass(Person.class);
+    }
+
+    @Transactional
+    public void clear() {
+        OObjectDatabaseTx db = dbm.db();
+        OObjectIteratorClass<Person> it = db.browseClass(Person.class);
+        while (it.hasNext()) {
+            db.delete(it.next());
+        }
+    }
 
     @Transactional
     public void commitAutomatically() {

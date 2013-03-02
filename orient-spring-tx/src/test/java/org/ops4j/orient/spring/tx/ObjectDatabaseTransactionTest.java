@@ -31,9 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
-import com.orientechnologies.orient.object.iterator.OObjectIteratorClass;
-
 /**
  * @author Harald Wellmann
  * 
@@ -46,39 +43,32 @@ public class ObjectDatabaseTransactionTest {
     private TransactionalObjectService service;
 
     @Autowired
-    private OrientObjectDatabaseManager dbManager;
-
-    private OObjectDatabaseTx db;
+    private OrientObjectDatabaseManager dbm;
 
     @Before
     public void setUp() {
-        db = dbManager.openDatabase();
-        db.getEntityManager().registerEntityClass(Person.class);
-        OObjectIteratorClass<Person> it = db.browseClass(Person.class);
-        while (it.hasNext()) {
-            db.delete(it.next());
-        }
+        service.registerEntityClasses();
+        service.clear();
     }
 
     @Test
     public void shouldCommit() {
         service.commitAutomatically();
-        assertTrue(!db.getTransaction().isActive());
+        assertTrue(!dbm.db().getTransaction().isActive());
 
         assertTrue(service.count() == 1);
     }
 
     @Test
     public void rollbackWithAnnotationTest() {
-        assertTrue(!db.getTransaction().isActive());
+        assertTrue(!dbm.db().getTransaction().isActive());
         try {
             service.rollbackOnError();
         }
         catch (Exception e) {
 
         }
-        db = dbManager.db();
-        assertTrue(!db.getTransaction().isActive());
+        assertTrue(!dbm.db().getTransaction().isActive());
         assertTrue(service.count() == 0);
     }
     
