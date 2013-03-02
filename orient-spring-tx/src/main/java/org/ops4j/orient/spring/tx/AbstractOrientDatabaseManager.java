@@ -19,11 +19,9 @@
 package org.ops4j.orient.spring.tx;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 
 import com.orientechnologies.orient.core.db.ODatabaseComplex;
 import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 
 /**
  * @author Harald Wellmann
@@ -112,13 +110,6 @@ public abstract class AbstractOrientDatabaseManager {
         return ODatabaseRecordThreadLocal.INSTANCE.get().getDatabaseOwner();
     }
     
-
-    @PreDestroy
-    public void destroy() throws Exception {
-        if (!getDatabase().isClosed()) {
-            getDatabase().close();
-        }
-    }
 
     protected void createOrOpenDatabase(ODatabaseComplex<?> db) {
         if (getUrl().startsWith("memory:")) {
