@@ -31,6 +31,9 @@ public class OrientDocumentDatabaseManager extends AbstractOrientDatabaseManager
 
     @Override
     public ODatabaseDocumentTx getDatabase() {
+        if (db.isClosed()) {
+            db = ODatabaseDocumentPool.global().acquire(getUrl(), getUsername(), getPassword());
+        }
         return db;
     }
 

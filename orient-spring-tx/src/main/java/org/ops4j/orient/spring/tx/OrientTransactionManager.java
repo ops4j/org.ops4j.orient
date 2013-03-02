@@ -97,7 +97,9 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
     @Override
     protected void doCleanupAfterCompletion(Object transaction) {
         OrientTransaction tx = (OrientTransaction) transaction;
-        //tx.getDatabase().close();
+        if (!tx.getDatabase().isClosed()) {
+            tx.getDatabase().close();
+        }
     }
 
     @Override

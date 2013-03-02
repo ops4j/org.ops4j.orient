@@ -109,7 +109,9 @@ public abstract class AbstractOrientDatabaseManager {
 
     @PreDestroy
     public void destroy() throws Exception {
-        getDatabase().close();
+        if (!getDatabase().isClosed()) {
+            getDatabase().close();
+        }
     }
 
     protected void createOrOpenDatabase(ODatabaseComplex<?> db) {
