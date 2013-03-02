@@ -79,7 +79,7 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
 
         ODatabaseComplex<?> db = tx.getDatabase();
         if (tx.getDatabase() == null) {
-            db = dbManager.getDatabase();
+            db = dbManager.openDatabase();
             tx.setDatabase(db);
             ODatabaseRecordThreadLocal.INSTANCE.set((ODatabaseRecord)db);
             TransactionSynchronizationManager.bindResource(dbManager, db);

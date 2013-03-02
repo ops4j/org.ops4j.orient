@@ -18,8 +18,6 @@
 
 package org.ops4j.orient.spring.tx;
 
-import com.orientechnologies.orient.core.db.ODatabaseComplex;
-import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentPool;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 
@@ -32,7 +30,7 @@ public class OrientDocumentDatabaseManager extends AbstractOrientDatabaseManager
     private ODatabaseDocumentTx db;
 
     @Override
-    public ODatabaseDocumentTx getDatabase() {
+    public ODatabaseDocumentTx openDatabase() {
         db = ODatabaseDocumentPool.global().acquire(getUrl(), getUsername(), getPassword());
         return db;
     }
@@ -43,8 +41,8 @@ public class OrientDocumentDatabaseManager extends AbstractOrientDatabaseManager
     
 
     @Override
-    protected ODatabaseDocumentTx openDatabase() {
-        ODatabaseDocumentTx db = new ODatabaseDocumentTx(getUrl());
+    protected ODatabaseDocumentTx initializeDatabase() {
+        ODatabaseDocumentTx db = newDatabase();
         createOrOpenDatabase(db);
         this.db = ODatabaseDocumentPool.global().acquire(getUrl(), getUsername(), getPassword());        
         return this.db;

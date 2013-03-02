@@ -54,7 +54,7 @@ public class OrientTransactionManagerTest {
 
     @Before
     public void setUp() {
-        db = dbManager.getDatabase();
+        db = dbManager.openDatabase();
         OSchema schema = db.getMetadata().getSchema();
         if (!schema.existsClass("TestDoc")) {
             schema.createClass("TestDoc");

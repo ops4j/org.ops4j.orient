@@ -37,7 +37,7 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 public class TransactionalService {
 
     @Autowired
-    private OrientDocumentDatabaseManager dbm;
+    private AbstractOrientDatabaseManager dbm;
 
 
     @Transactional

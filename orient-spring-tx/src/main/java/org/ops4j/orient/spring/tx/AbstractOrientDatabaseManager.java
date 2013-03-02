@@ -22,6 +22,7 @@ import javax.annotation.PostConstruct;
 
 import com.orientechnologies.orient.core.db.ODatabaseComplex;
 import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 
 /**
  * @author Harald Wellmann
@@ -97,16 +98,16 @@ public abstract class AbstractOrientDatabaseManager {
         this.password = password;
     }
 
-    public abstract ODatabaseComplex<?> getDatabase();
+    public abstract ODatabaseComplex<?> openDatabase();
 
     @PostConstruct
     public void afterPropertiesSet() throws Exception {
-        openDatabase();
+        initializeDatabase();
     }
     
-    protected abstract ODatabaseComplex<?> openDatabase();
+    protected abstract ODatabaseComplex<?> initializeDatabase();
     
-    public ODatabaseComplex<?> db() {
+    public ODatabaseComplex db() {
         return ODatabaseRecordThreadLocal.INSTANCE.get().getDatabaseOwner();
     }
     
@@ -126,6 +127,10 @@ public abstract class AbstractOrientDatabaseManager {
                 db.close();
             }
         }
+    }
+
+    protected ODatabaseDocumentTx newDatabase() {
+        return new ODatabaseDocumentTx(getUrl());
     }
     
     
