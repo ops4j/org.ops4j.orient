@@ -30,7 +30,7 @@ public class OrientDocumentDatabaseManager extends AbstractOrientDatabaseManager
     private ODatabaseDocumentTx db;
 
     @Override
-    public ODatabaseDocumentTx openDatabase() {
+    protected ODatabaseDocumentTx openDatabase() {
         db = ODatabaseDocumentPool.global().acquire(getUrl(), getUsername(), getPassword());
         return db;
     }
@@ -40,11 +40,8 @@ public class OrientDocumentDatabaseManager extends AbstractOrientDatabaseManager
     }
     
 
-    @Override
-    protected ODatabaseDocumentTx initializeDatabase() {
-        ODatabaseDocumentTx db = newDatabase();
-        createOrOpenDatabase(db);
-        this.db = ODatabaseDocumentPool.global().acquire(getUrl(), getUsername(), getPassword());        
-        return this.db;
+    protected ODatabaseDocumentTx newDatabase() {
+        return new ODatabaseDocumentTx(getUrl());
     }
+    
 }

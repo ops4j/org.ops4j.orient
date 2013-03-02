@@ -21,13 +21,11 @@ package org.ops4j.orient.spring.tx;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import javax.annotation.PostConstruct;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
 /**
@@ -35,14 +33,16 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
  * 
  */
 public class TransactionalService {
+    
+    private static Logger log = LoggerFactory.getLogger(TransactionalService.class);
 
     @Autowired
-    private AbstractOrientDatabaseManager dbm;
+    private OrientDocumentDatabaseManager dbm;
 
 
     @Transactional
     public void commitAutomatically(String className) {
-        System.out.println("commitAutomatically " + dbm.db().hashCode());
+        log.debug("commitAutomatically db.hashCode() = {}", dbm.db().hashCode());
         assertThat(dbm.db().getTransaction().isActive(), is(true));
 
         ODocument doc = new ODocument(className);

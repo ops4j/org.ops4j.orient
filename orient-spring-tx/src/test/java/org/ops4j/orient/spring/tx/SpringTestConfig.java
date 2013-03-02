@@ -18,16 +18,8 @@
 
 package org.ops4j.orient.spring.tx;
 
-import java.util.Collections;
-
-import javax.annotation.PreDestroy;
-
-import org.springbyexample.bean.scope.thread.ThreadScope;
-import org.springframework.beans.factory.config.CustomScopeConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
@@ -47,10 +39,8 @@ public class SpringTestConfig {
     }
     
     @Bean
-    //@Scope(value = "thread", proxyMode = ScopedProxyMode.TARGET_CLASS)
-    public AbstractOrientDatabaseManager databaseManager() {
-        AbstractOrientDatabaseManager manager = new OrientDocumentDatabaseManager();
-        manager.setType("document");
+    public OrientDocumentDatabaseManager databaseManager() {
+        OrientDocumentDatabaseManager manager = new OrientDocumentDatabaseManager();
         //manager.setUrl("local:target/test");
         manager.setUrl("memory:test");
         manager.setUsername("admin");
@@ -63,5 +53,4 @@ public class SpringTestConfig {
     public TransactionalService transactionalService() {
         return new TransactionalService();
     }
-
 }

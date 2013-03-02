@@ -84,7 +84,7 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
             ODatabaseRecordThreadLocal.INSTANCE.set((ODatabaseRecord)db);
             TransactionSynchronizationManager.bindResource(dbManager, db);
         }
-        log.debug("beginning transaction on {}", db.hashCode());
+        log.debug("beginning transaction on db.hashCode() = {}", db.hashCode());
         db.begin();
         tx.setTx(db.getTransaction());
     }
@@ -93,14 +93,16 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
     protected void doCommit(DefaultTransactionStatus status) throws TransactionException {
         OrientTransaction tx = (OrientTransaction) status.getTransaction();
         ODatabaseComplex<?> db = tx.getDatabase();
-        log.debug("committing transaction on {}", db.hashCode());
+        log.debug("committing transaction on db.hashCode() = {}", db.hashCode());
         db.commit();
     }
 
     @Override
     protected void doRollback(DefaultTransactionStatus status) throws TransactionException {
         OrientTransaction tx = (OrientTransaction) status.getTransaction();
-        tx.getDatabase().rollback();
+        ODatabaseComplex<?> db = tx.getDatabase();
+        log.debug("committing transaction on db.hashCode() = {}", db.hashCode());
+        db.rollback();
     }
 
     @Override
@@ -115,5 +117,4 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
     public Object getResourceFactory() {
         return dbManager;
     }
-
 }

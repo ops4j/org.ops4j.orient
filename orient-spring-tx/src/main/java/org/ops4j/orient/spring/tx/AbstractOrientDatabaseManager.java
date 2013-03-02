@@ -22,7 +22,6 @@ import javax.annotation.PostConstruct;
 
 import com.orientechnologies.orient.core.db.ODatabaseComplex;
 import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 
 /**
  * @author Harald Wellmann
@@ -31,8 +30,6 @@ import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 public abstract class AbstractOrientDatabaseManager {
 
     private String url;
-
-    private String type;
 
     private String username;
 
@@ -51,21 +48,6 @@ public abstract class AbstractOrientDatabaseManager {
      */
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    /**
-     * @return the type
-     */
-    public String getType() {
-        return type;
-    }
-
-    /**
-     * @param type
-     *            the type to set
-     */
-    public void setType(String type) {
-        this.type = type;
     }
 
     /**
@@ -98,21 +80,22 @@ public abstract class AbstractOrientDatabaseManager {
         this.password = password;
     }
 
-    public abstract ODatabaseComplex<?> openDatabase();
+    protected abstract ODatabaseComplex<?> openDatabase();
 
     @PostConstruct
     public void afterPropertiesSet() throws Exception {
-        initializeDatabase();
+        assert url != null;
+        ODatabaseComplex<?> db = newDatabase();
+        createDatabase(db);
+        openDatabase();        
     }
     
-    protected abstract ODatabaseComplex<?> initializeDatabase();
-    
-    public ODatabaseComplex db() {
+    public ODatabaseComplex<?> db() {
         return ODatabaseRecordThreadLocal.INSTANCE.get().getDatabaseOwner();
     }
     
 
-    protected void createOrOpenDatabase(ODatabaseComplex<?> db) {
+    protected void createDatabase(ODatabaseComplex<?> db) {
         if (getUrl().startsWith("memory:")) {
             if (!db.exists()) {
                 db.create();
@@ -129,10 +112,7 @@ public abstract class AbstractOrientDatabaseManager {
         }
     }
 
-    protected ODatabaseDocumentTx newDatabase() {
-        return new ODatabaseDocumentTx(getUrl());
-    }
-    
+    protected abstract ODatabaseComplex<?> newDatabase();
     
 
 }
