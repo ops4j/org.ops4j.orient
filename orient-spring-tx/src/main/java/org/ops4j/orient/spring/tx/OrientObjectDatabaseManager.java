@@ -30,7 +30,7 @@ public class OrientObjectDatabaseManager extends AbstractOrientDatabaseManager {
     private OObjectDatabaseTx db;
 
     @Override
-    public OObjectDatabaseTx openDatabase() {
+    protected OObjectDatabaseTx openDatabase() {
         db = OObjectDatabasePool.global().acquire(getUrl(), getUsername(), getPassword());
         return db;
     }
