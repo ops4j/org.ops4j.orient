@@ -32,9 +32,9 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
  * @author Harald Wellmann
  * 
  */
-public class TransactionalService {
+public class TransactionalDocumentService {
     
-    private static Logger log = LoggerFactory.getLogger(TransactionalService.class);
+    private static Logger log = LoggerFactory.getLogger(TransactionalDocumentService.class);
 
     @Autowired
     private OrientDocumentDatabaseManager dbm;

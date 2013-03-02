@@ -42,10 +42,10 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = DocumentSpringTestConfig.class)
-public class OrientTransactionManagerTest {
+public class DocumentDatabaseTransactionTest {
 
     @Autowired
-    private TransactionalService service;
+    private TransactionalDocumentService service;
 
     @Autowired
     private OrientDocumentDatabaseManager dbManager;

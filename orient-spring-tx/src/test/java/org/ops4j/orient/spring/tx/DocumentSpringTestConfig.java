@@ -50,7 +50,7 @@ public class DocumentSpringTestConfig {
     
     
     @Bean
-    public TransactionalService transactionalService() {
-        return new TransactionalService();
+    public TransactionalDocumentService transactionalService() {
+        return new TransactionalDocumentService();
     }
 }

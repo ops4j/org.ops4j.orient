@@ -39,7 +39,7 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
     ResourceTransactionManager {
 
     private static final long serialVersionUID = 1L;
-    
+
     private static Logger log = LoggerFactory.getLogger(OrientTransactionManager.class);
 
     private AbstractOrientDatabaseManager dbManager;
@@ -78,19 +78,15 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
         OrientTransaction tx = (OrientTransaction) transaction;
 
         ODatabaseComplex<?> db = tx.getDatabase();
-        if (db == null) {
+        if (db == null || db.isClosed()) {
+            boolean closed = (db != null);
             db = dbManager.openDatabase();
             tx.setDatabase(db);
-            ODatabaseRecordThreadLocal.INSTANCE.set((ODatabaseRecord)db.getUnderlying());
+            ODatabaseRecordThreadLocal.INSTANCE.set((ODatabaseRecord) db.getUnderlying());
+            if (closed) {
+                TransactionSynchronizationManager.unbindResource(dbManager);
+            }
             TransactionSynchronizationManager.bindResource(dbManager, db);
-        }
-        else if (db.isClosed()) {
-            db = dbManager.openDatabase();
-            tx.setDatabase(db);
-            ODatabaseRecordThreadLocal.INSTANCE.set((ODatabaseRecord)db.getUnderlying());
-            TransactionSynchronizationManager.unbindResource(dbManager);
-            TransactionSynchronizationManager.bindResource(dbManager, db);
-            
         }
         log.debug("beginning transaction on db.hashCode() = {}", db.hashCode());
         db.begin();
