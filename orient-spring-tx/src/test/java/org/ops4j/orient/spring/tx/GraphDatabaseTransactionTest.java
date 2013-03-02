@@ -31,32 +31,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
-import com.orientechnologies.orient.object.iterator.OObjectIteratorClass;
+import com.orientechnologies.orient.core.db.graph.OGraphDatabase;
+import com.orientechnologies.orient.core.iterator.ORecordIteratorClass;
+import com.orientechnologies.orient.core.metadata.schema.OSchema;
+import com.orientechnologies.orient.core.record.impl.ODocument;
 
 /**
  * @author Harald Wellmann
  * 
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ObjectSpringTestConfig.class)
-public class ObjectDatabaseTransactionTest {
+@ContextConfiguration(classes = GraphSpringTestConfig.class)
+public class GraphDatabaseTransactionTest {
 
     @Autowired
-    private TransactionalObjectService service;
+    private TransactionalGraphService service;
 
     @Autowired
-    private OrientObjectDatabaseManager dbManager;
+    private OrientGraphDatabaseManager dbManager;
 
-    private OObjectDatabaseTx db;
+    private OGraphDatabase db;
 
     @Before
     public void setUp() {
         db = dbManager.openDatabase();
-        db.getEntityManager().registerEntityClass(Person.class);
-        OObjectIteratorClass<Person> it = db.browseClass(Person.class);
+        OSchema schema = db.getMetadata().getSchema();
+        if (!schema.existsClass("TestVertex")) {
+            db.createVertexType("TestVertex");
+        }
+        ORecordIteratorClass<ODocument> it = db.browseClass("TestVertex");
         while (it.hasNext()) {
-            db.delete(it.next());
+            it.next().delete();
         }
     }
 
@@ -77,7 +82,6 @@ public class ObjectDatabaseTransactionTest {
         catch (Exception e) {
 
         }
-        db = dbManager.db();
         assertTrue(!db.getTransaction().isActive());
         assertTrue(service.count() == 0);
     }
@@ -99,6 +103,8 @@ public class ObjectDatabaseTransactionTest {
         @Override
         public void run() {
             service.commitAutomatically();            
-        }        
+        }
+        
     }
+
 }
