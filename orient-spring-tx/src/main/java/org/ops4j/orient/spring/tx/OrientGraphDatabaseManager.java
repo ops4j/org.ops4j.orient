@@ -18,6 +18,7 @@
 
 package org.ops4j.orient.spring.tx;
 
+import com.orientechnologies.orient.core.db.ODatabasePoolBase;
 import com.orientechnologies.orient.core.db.graph.OGraphDatabase;
 import com.orientechnologies.orient.core.db.graph.OGraphDatabasePool;
 
@@ -28,6 +29,14 @@ import com.orientechnologies.orient.core.db.graph.OGraphDatabasePool;
 public class OrientGraphDatabaseManager extends AbstractOrientDatabaseManager {
 
     private OGraphDatabase db;
+    private ODatabasePoolBase<OGraphDatabase> pool;
+
+    @Override
+    protected void createPool() {
+        pool = new OGraphDatabasePool(getUrl(), getUsername(), getPassword());
+        pool.setup(getMinPoolSize(), getMaxPoolSize());        
+    }
+
 
     @Override
     public OGraphDatabase openDatabase() {

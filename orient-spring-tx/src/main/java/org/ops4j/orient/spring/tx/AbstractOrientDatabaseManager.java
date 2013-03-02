@@ -28,17 +28,57 @@ import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
  * 
  */
 public abstract class AbstractOrientDatabaseManager {
+    
+    public static final String DEFAULT_USERNAME = "admin";
+    public static final String DEFAULT_PASSWORD = "admin";
 
     private String url;
 
-    private String username;
+    private String username = DEFAULT_USERNAME;
 
-    private String password;
+    private String password = DEFAULT_PASSWORD;
     
-    private int minPoolSize;
+    private int minPoolSize = 1;
     
-    private int maxPoolSize;
+    private int maxPoolSize = 20;
 
+    @PostConstruct
+    public void init() {
+        if (url == null) {
+            throw new IllegalArgumentException("url property must not be null");
+        }
+        createPool();
+        ODatabaseComplex<?> db = newDatabase();
+        createDatabase(db);
+        openDatabase();        
+    }
+    
+    protected abstract void createPool();
+    protected abstract ODatabaseComplex<?> openDatabase();
+    protected abstract ODatabaseComplex<?> newDatabase();
+
+    public ODatabaseComplex<?> db() {
+        return ODatabaseRecordThreadLocal.INSTANCE.get().getDatabaseOwner();
+    }
+    
+
+    protected void createDatabase(ODatabaseComplex<?> db) {
+        if (getUrl().startsWith("memory:")) {
+            if (!db.exists()) {
+                db.create();
+            }
+            else {
+                db.open(getUsername(), getPassword());
+            }
+        }
+        else {
+            if (!db.exists()) {
+                db.create();
+                db.close();
+            }
+        }
+    }
+    
     /**
      * @return the url
      */
@@ -117,40 +157,4 @@ public abstract class AbstractOrientDatabaseManager {
     public void setMaxPoolSize(int maxPoolSize) {
         this.maxPoolSize = maxPoolSize;
     }
-
-    protected abstract ODatabaseComplex<?> openDatabase();
-
-    @PostConstruct
-    public void afterPropertiesSet() throws Exception {
-        assert url != null;
-        ODatabaseComplex<?> db = newDatabase();
-        createDatabase(db);
-        openDatabase();        
-    }
-    
-    public ODatabaseComplex<?> db() {
-        return ODatabaseRecordThreadLocal.INSTANCE.get().getDatabaseOwner();
-    }
-    
-
-    protected void createDatabase(ODatabaseComplex<?> db) {
-        if (getUrl().startsWith("memory:")) {
-            if (!db.exists()) {
-                db.create();
-            }
-            else {
-                db.open(getUsername(), getPassword());
-            }
-        }
-        else {
-            if (!db.exists()) {
-                db.create();
-                db.close();
-            }
-        }
-    }
-
-    protected abstract ODatabaseComplex<?> newDatabase();
-    
-
 }
