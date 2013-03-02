@@ -26,7 +26,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.orientechnologies.orient.core.db.ODatabaseComplex;
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
 /**
@@ -36,9 +36,9 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 public class TransactionalService {
 
     @Autowired
-    private OrientDatabaseManager dbm;
+    private OrientDocumentDatabaseManager dbm;
+    private ODatabaseDocumentTx db;
 
-    private ODatabaseComplex<ODocument> db;
 
     @PostConstruct
     public void init() {

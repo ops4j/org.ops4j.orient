@@ -22,16 +22,12 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import com.orientechnologies.orient.core.db.ODatabaseComplex;
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentPool;
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
-import com.orientechnologies.orient.core.db.graph.OGraphDatabasePool;
-import com.orientechnologies.orient.object.db.OObjectDatabasePool;
 
 /**
  * @author Harald Wellmann
  * 
  */
-public class OrientDatabaseManager {
+public abstract class AbstractOrientDatabaseManager {
 
     private String url;
 
@@ -40,8 +36,6 @@ public class OrientDatabaseManager {
     private String username;
 
     private String password;
-
-    private ODatabaseComplex<?> db;
 
     /**
      * @return the url
@@ -103,45 +97,38 @@ public class OrientDatabaseManager {
         this.password = password;
     }
 
-    public ODatabaseComplex getDatabase() {
-        return (ODatabaseComplex) db;
-    }
+    public abstract ODatabaseComplex<?> getDatabase();
 
     @PostConstruct
     public void afterPropertiesSet() throws Exception {
-        if (type.equals("object")) {
-            db = OObjectDatabasePool.global().acquire(url, username, password);
-        }
-        else if (type.equals("document")) {
-            // ODatabaseDocumentTx db = new ODatabaseDocumentTx(url);
-            // this.db = db;
-            // if (!db.exists()) {
-            // db.create();
-            // // db.close();
-            // }
-            // else {
-            // // db = ODatabaseDocumentPool.global().acquire(url, username, password);
-            // db.open(username, password);
-            // }
+        openDatabase();
+    }
+    
+    protected abstract ODatabaseComplex<?> openDatabase();
+    
 
-            ODatabaseDocumentTx db = new ODatabaseDocumentTx(url);
-            this.db = db;
+    @PreDestroy
+    public void destroy() throws Exception {
+        getDatabase().close();
+    }
+
+    protected void createOrOpenDatabase(ODatabaseComplex<?> db) {
+        if (getUrl().startsWith("memory:")) {
             if (!db.exists()) {
                 db.create();
             }
             else {
-                db.open(username, password);
+                db.open(getUsername(), getPassword());
             }
-            db = ODatabaseDocumentPool.global().acquire(url, username, password);
         }
-        else if (type.equals("graph")) {
-            db = OGraphDatabasePool.global().acquire(url, username, password);
+        else {
+            if (!db.exists()) {
+                db.create();
+                db.close();
+            }
         }
     }
-
-    @PreDestroy
-    public void destroy() throws Exception {
-        db.close();
-    }
+    
+    
 
 }

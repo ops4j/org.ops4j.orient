@@ -44,7 +44,7 @@ public class OrientTransactionManagerTest {
     private TransactionalService service;
 
     @Autowired
-    private OrientDatabaseManager dbManager;
+    private AbstractOrientDatabaseManager dbManager;
 
     private ODatabaseDocumentTx db;
 

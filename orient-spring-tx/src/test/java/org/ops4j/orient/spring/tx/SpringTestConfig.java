@@ -48,10 +48,11 @@ public class SpringTestConfig {
     
     @Bean
     @Scope(value = "thread", proxyMode = ScopedProxyMode.TARGET_CLASS)
-    public OrientDatabaseManager databaseManager() {
-        OrientDatabaseManager manager = new OrientDatabaseManager();
+    public OrientDocumentDatabaseManager databaseManager() {
+        OrientDocumentDatabaseManager manager = new OrientDocumentDatabaseManager();
         manager.setType("document");
         manager.setUrl("local:target/test");
+        //manager.setUrl("memory:test");
         manager.setUsername("admin");
         manager.setPassword("admin");
         return manager;

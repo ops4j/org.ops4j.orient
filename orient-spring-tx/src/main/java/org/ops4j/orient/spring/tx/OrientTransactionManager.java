@@ -36,12 +36,12 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
 
     private static final long serialVersionUID = 1L;
 
-    private OrientDatabaseManager dbManager;
+    private AbstractOrientDatabaseManager dbManager;
 
     /**
      * @return the database
      */
-    public OrientDatabaseManager getDatabase() {
+    public AbstractOrientDatabaseManager getDatabase() {
         return dbManager;
     }
 
@@ -49,7 +49,7 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
      * @param database
      *            the database to set
      */
-    public void setDatabaseManager(OrientDatabaseManager database) {
+    public void setDatabaseManager(AbstractOrientDatabaseManager database) {
         this.dbManager = database;
     }
 
