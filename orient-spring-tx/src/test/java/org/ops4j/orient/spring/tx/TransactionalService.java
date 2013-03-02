@@ -26,6 +26,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
@@ -37,29 +38,24 @@ public class TransactionalService {
 
     @Autowired
     private OrientDocumentDatabaseManager dbm;
-    private ODatabaseDocumentTx db;
 
-
-    @PostConstruct
-    public void init() {
-        db = dbm.getDatabase();
-    }
 
     @Transactional
     public void commitAutomatically(String className) {
-        assertThat(db.getTransaction().isActive(), is(true));
+        System.out.println("commitAutomatically " + dbm.db().hashCode());
+        assertThat(dbm.db().getTransaction().isActive(), is(true));
 
         ODocument doc = new ODocument(className);
         doc.field("test", "test");
-        db.save(doc);
+        dbm.db().save(doc);
     }
 
     @Transactional
     public void rollbackOnError(String className) {
-        assertThat(db.getTransaction().isActive(), is(true));
+        assertThat(dbm.db().getTransaction().isActive(), is(true));
         ODocument doc = new ODocument(className);
         doc.field("test", "test");
-        db.save(doc);
+        dbm.db().save(doc);
 
         throw new RuntimeException();
     }

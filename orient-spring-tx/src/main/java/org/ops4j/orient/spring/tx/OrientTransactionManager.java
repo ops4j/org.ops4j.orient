@@ -18,6 +18,8 @@
 
 package org.ops4j.orient.spring.tx;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
@@ -26,6 +28,8 @@ import org.springframework.transaction.support.ResourceTransactionManager;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.orientechnologies.orient.core.db.ODatabaseComplex;
+import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
+import com.orientechnologies.orient.core.db.record.ODatabaseRecord;
 
 /**
  * @author Harald Wellmann
@@ -35,6 +39,8 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
     ResourceTransactionManager {
 
     private static final long serialVersionUID = 1L;
+    
+    private static Logger log = LoggerFactory.getLogger(OrientTransactionManager.class);
 
     private AbstractOrientDatabaseManager dbManager;
 
@@ -75,9 +81,10 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
         if (tx.getDatabase() == null) {
             db = dbManager.getDatabase();
             tx.setDatabase(db);
+            ODatabaseRecordThreadLocal.INSTANCE.set((ODatabaseRecord)db);
             TransactionSynchronizationManager.bindResource(dbManager, db);
         }
-
+        log.debug("beginning transaction on {}", db.hashCode());
         db.begin();
         tx.setTx(db.getTransaction());
     }
@@ -85,7 +92,9 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
     @Override
     protected void doCommit(DefaultTransactionStatus status) throws TransactionException {
         OrientTransaction tx = (OrientTransaction) status.getTransaction();
-        tx.getDatabase().commit();
+        ODatabaseComplex<?> db = tx.getDatabase();
+        log.debug("committing transaction on {}", db.hashCode());
+        db.commit();
     }
 
     @Override

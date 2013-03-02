@@ -22,6 +22,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import com.orientechnologies.orient.core.db.ODatabaseComplex;
+import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 
 /**
  * @author Harald Wellmann
@@ -105,6 +107,10 @@ public abstract class AbstractOrientDatabaseManager {
     }
     
     protected abstract ODatabaseComplex<?> openDatabase();
+    
+    public ODatabaseComplex<?> db() {
+        return ODatabaseRecordThreadLocal.INSTANCE.get().getDatabaseOwner();
+    }
     
 
     @PreDestroy

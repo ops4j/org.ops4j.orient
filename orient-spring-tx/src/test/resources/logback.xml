@@ -38,6 +38,6 @@
     <appender-ref ref="STDOUT"/>
     <appender-ref ref="TEST_LOG"/>
   </root>
-  <logger name="org.ops4j.orient" level="INFO"/> 
+  <logger name="org.ops4j.orient" level="DEBUG"/> 
   
 </configuration>

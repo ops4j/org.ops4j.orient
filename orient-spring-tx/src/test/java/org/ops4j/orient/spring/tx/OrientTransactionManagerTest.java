@@ -20,6 +20,10 @@ package org.ops4j.orient.spring.tx;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -80,6 +84,27 @@ public class OrientTransactionManagerTest {
         }
         assertTrue(!db.getTransaction().isActive());
         assertTrue(db.countClass("TestDoc") == 0);
+    }
+    
+    @Test
+    public void commitMultiThreaded() throws InterruptedException {
+        
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        for (int i = 0; i < 5; i++) {
+            executorService.submit(new CommitTask());
+        }
+        executorService.shutdown();
+        executorService.awaitTermination(1000, TimeUnit.SECONDS);
+        
+    }
+    
+    class CommitTask implements Runnable {
+
+        @Override
+        public void run() {
+            service.commitAutomatically("TestDoc");            
+        }
+        
     }
 
 }

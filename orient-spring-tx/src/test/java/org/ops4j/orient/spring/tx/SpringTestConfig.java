@@ -47,34 +47,17 @@ public class SpringTestConfig {
     }
     
     @Bean
-    @Scope(value = "thread", proxyMode = ScopedProxyMode.TARGET_CLASS)
+    //@Scope(value = "thread", proxyMode = ScopedProxyMode.TARGET_CLASS)
     public OrientDocumentDatabaseManager databaseManager() {
         OrientDocumentDatabaseManager manager = new OrientDocumentDatabaseManager();
         manager.setType("document");
-        manager.setUrl("local:target/test");
-        //manager.setUrl("memory:test");
+        //manager.setUrl("local:target/test");
+        manager.setUrl("memory:test");
         manager.setUsername("admin");
         manager.setPassword("admin");
         return manager;
     }
     
-    @Bean
-    public static CustomScopeConfigurer scopeConfigurer() {
-        CustomScopeConfigurer configurer = new CustomScopeConfigurer();
-        configurer.setScopes(Collections.<String,Object>singletonMap("thread", threadScope()));
-        return configurer;
-    }
-    
-    @Bean
-    public static ThreadScope threadScope() {
-        return new ThreadScope() {
-            @PreDestroy
-            public void tearDown() {
-                System.out.println("********* destroying ThreadScope");
-            }
-        };
-        
-    }
     
     @Bean
     public TransactionalService transactionalService() {
