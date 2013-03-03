@@ -43,7 +43,7 @@ public class ObjectDatabaseTransactionTest {
     private TransactionalObjectService service;
 
     @Autowired
-    private OrientObjectDatabaseManager dbm;
+    private OrientObjectDatabaseFactory dbf;
 
     @Before
     public void setUp() {
@@ -54,21 +54,21 @@ public class ObjectDatabaseTransactionTest {
     @Test
     public void shouldCommit() {
         service.commitAutomatically();
-        assertTrue(!dbm.db().getTransaction().isActive());
+        assertTrue(!dbf.db().getTransaction().isActive());
 
         assertTrue(service.count() == 1);
     }
 
     @Test
     public void rollbackWithAnnotationTest() {
-        assertTrue(!dbm.db().getTransaction().isActive());
+        assertTrue(!dbf.db().getTransaction().isActive());
         try {
             service.rollbackOnError();
         }
         catch (Exception e) {
 
         }
-        assertTrue(!dbm.db().getTransaction().isActive());
+        assertTrue(!dbf.db().getTransaction().isActive());
         assertTrue(service.count() == 0);
     }
     

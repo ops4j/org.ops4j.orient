@@ -34,13 +34,13 @@ public class ObjectSpringTestConfig {
     @Bean
     public OrientTransactionManager transactionManager() {
         OrientTransactionManager bean = new OrientTransactionManager();
-        bean.setDatabaseManager(databaseManager());
+        bean.setDatabaseManager(databaseFactory());
         return bean;        
     }
     
     @Bean
-    public OrientObjectDatabaseManager databaseManager() {
-        OrientObjectDatabaseManager manager = new OrientObjectDatabaseManager();
+    public OrientObjectDatabaseFactory databaseFactory() {
+        OrientObjectDatabaseFactory manager = new OrientObjectDatabaseFactory();
         //manager.setUrl("local:target/test");
         manager.setUrl("memory:test");
         manager.setUsername("admin");

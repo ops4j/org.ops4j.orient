@@ -26,7 +26,7 @@ import com.orientechnologies.orient.core.db.graph.OGraphDatabasePool;
  * @author Harald Wellmann
  * 
  */
-public class OrientGraphDatabaseManager extends AbstractOrientDatabaseManager {
+public class OrientGraphDatabaseFactory extends AbstractOrientDatabaseFactory {
 
     private OGraphDatabase db;
     private ODatabasePoolBase<OGraphDatabase> pool;

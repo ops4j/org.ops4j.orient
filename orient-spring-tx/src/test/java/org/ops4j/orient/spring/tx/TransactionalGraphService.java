@@ -37,32 +37,32 @@ public class TransactionalGraphService {
     private static Logger log = LoggerFactory.getLogger(TransactionalGraphService.class);
 
     @Autowired
-    private OrientGraphDatabaseManager dbm;
+    private OrientGraphDatabaseFactory dbf;
 
 
     @Transactional
     public void commitAutomatically() {
-        log.debug("commitAutomatically db.hashCode() = {}", dbm.db().hashCode());
-        assertThat(dbm.db().getTransaction().isActive(), is(true));
+        log.debug("commitAutomatically db.hashCode() = {}", dbf.db().hashCode());
+        assertThat(dbf.db().getTransaction().isActive(), is(true));
 
-        ODocument vertex = dbm.db().createVertex("TestVertex");
+        ODocument vertex = dbf.db().createVertex("TestVertex");
         vertex.field("test", "test");
-        dbm.db().save(vertex);
+        dbf.db().save(vertex);
     }
 
     @Transactional
     public void rollbackOnError() {
-        assertThat(dbm.db().getTransaction().isActive(), is(true));
+        assertThat(dbf.db().getTransaction().isActive(), is(true));
 
-        ODocument vertex = dbm.db().createVertex("TestVertex");
+        ODocument vertex = dbf.db().createVertex("TestVertex");
         vertex.field("test", "test");
-        dbm.db().save(vertex);
+        dbf.db().save(vertex);
 
         throw new RuntimeException();
     }
     
     @Transactional
     public long count() {
-        return dbm.db().countClass("TestVertex");
+        return dbf.db().countClass("TestVertex");
     }
 }

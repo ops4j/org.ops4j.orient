@@ -19,40 +19,36 @@
 package org.ops4j.orient.spring.tx;
 
 import com.orientechnologies.orient.core.db.ODatabasePoolBase;
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentPool;
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.object.db.OObjectDatabasePool;
+import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
 /**
  * @author Harald Wellmann
  * 
  */
-public class OrientDocumentDatabaseManager extends AbstractOrientDatabaseManager {
+public class OrientObjectDatabaseFactory extends AbstractOrientDatabaseFactory {
 
-    private ODatabaseDocumentTx db;
-    private ODatabasePoolBase<ODatabaseDocumentTx> pool;
+    private OObjectDatabaseTx db;
+    private ODatabasePoolBase<OObjectDatabaseTx> pool;
 
     @Override
     protected void createPool() {
-        pool = new ODatabaseDocumentPool(getUrl(), getUsername(), getPassword());
+        pool = new OObjectDatabasePool(getUrl(), getUsername(), getPassword());
         pool.setup(getMinPoolSize(), getMaxPoolSize());        
     }
 
-
     @Override
-    protected ODatabaseDocumentTx openDatabase() {
-        ODatabaseDocumentPool pool = new ODatabaseDocumentPool(getUrl(), getUsername(), getPassword());
-        pool.setup(getMinPoolSize(), getMaxPoolSize());
+    protected OObjectDatabaseTx openDatabase() {
         db = pool.acquire();
         return db;
     }
     
-    public ODatabaseDocumentTx db() {
-        return (ODatabaseDocumentTx) super.db();
+    public OObjectDatabaseTx db() {
+        return (OObjectDatabaseTx) super.db();
     }
     
 
-    protected ODatabaseDocumentTx newDatabase() {
-        return new ODatabaseDocumentTx(getUrl());
-    }
-    
+    protected OObjectDatabaseTx newDatabase() {
+        return new OObjectDatabaseTx(getUrl());
+    }    
 }

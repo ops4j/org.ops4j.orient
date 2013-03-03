@@ -34,13 +34,13 @@ public class GraphSpringTestConfig {
     @Bean
     public OrientTransactionManager transactionManager() {
         OrientTransactionManager bean = new OrientTransactionManager();
-        bean.setDatabaseManager(databaseManager());
+        bean.setDatabaseManager(databaseFactory());
         return bean;        
     }
     
     @Bean
-    public OrientGraphDatabaseManager databaseManager() {
-        OrientGraphDatabaseManager manager = new OrientGraphDatabaseManager();
+    public OrientGraphDatabaseFactory databaseFactory() {
+        OrientGraphDatabaseFactory manager = new OrientGraphDatabaseFactory();
         //manager.setUrl("local:target/test");
         manager.setUrl("memory:test");
         manager.setUsername("admin");

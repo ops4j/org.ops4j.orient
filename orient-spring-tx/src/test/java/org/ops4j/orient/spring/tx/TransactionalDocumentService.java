@@ -37,25 +37,25 @@ public class TransactionalDocumentService {
     private static Logger log = LoggerFactory.getLogger(TransactionalDocumentService.class);
 
     @Autowired
-    private OrientDocumentDatabaseManager dbm;
+    private OrientDocumentDatabaseFactory dbf;
 
 
     @Transactional
     public void commitAutomatically(String className) {
-        log.debug("commitAutomatically db.hashCode() = {}", dbm.db().hashCode());
-        assertThat(dbm.db().getTransaction().isActive(), is(true));
+        log.debug("commitAutomatically db.hashCode() = {}", dbf.db().hashCode());
+        assertThat(dbf.db().getTransaction().isActive(), is(true));
 
         ODocument doc = new ODocument(className);
         doc.field("test", "test");
-        dbm.db().save(doc);
+        dbf.db().save(doc);
     }
 
     @Transactional
     public void rollbackOnError(String className) {
-        assertThat(dbm.db().getTransaction().isActive(), is(true));
+        assertThat(dbf.db().getTransaction().isActive(), is(true));
         ODocument doc = new ODocument(className);
         doc.field("test", "test");
-        dbm.db().save(doc);
+        dbf.db().save(doc);
 
         throw new RuntimeException();
     }

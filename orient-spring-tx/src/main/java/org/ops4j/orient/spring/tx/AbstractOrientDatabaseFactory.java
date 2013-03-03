@@ -24,10 +24,12 @@ import com.orientechnologies.orient.core.db.ODatabaseComplex;
 import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
 
 /**
+ * Abstract base class for OrientDB factories. Each concrete implementation is responsible 
+ * for a given OrientDB type, i.e. document, object or graph database.
  * @author Harald Wellmann
  * 
  */
-public abstract class AbstractOrientDatabaseManager {
+public abstract class AbstractOrientDatabaseFactory {
     
     public static final String DEFAULT_USERNAME = "admin";
     public static final String DEFAULT_PASSWORD = "admin";

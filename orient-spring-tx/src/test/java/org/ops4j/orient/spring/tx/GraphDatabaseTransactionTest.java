@@ -48,13 +48,13 @@ public class GraphDatabaseTransactionTest {
     private TransactionalGraphService service;
 
     @Autowired
-    private OrientGraphDatabaseManager dbManager;
+    private OrientGraphDatabaseFactory dbf;
 
     private OGraphDatabase db;
 
     @Before
     public void setUp() {
-        db = dbManager.openDatabase();
+        db = dbf.openDatabase();
         OSchema schema = db.getMetadata().getSchema();
         if (!schema.existsClass("TestVertex")) {
             db.createVertexType("TestVertex");

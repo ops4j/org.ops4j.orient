@@ -42,21 +42,21 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
 
     private static Logger log = LoggerFactory.getLogger(OrientTransactionManager.class);
 
-    private AbstractOrientDatabaseManager dbManager;
+    private AbstractOrientDatabaseFactory dbf;
 
     /**
      * @return the database
      */
-    public AbstractOrientDatabaseManager getDatabaseManager() {
-        return dbManager;
+    public AbstractOrientDatabaseFactory getDatabaseFactory() {
+        return dbf;
     }
 
     /**
-     * @param databaseManager
+     * @param databaseFactory
      *            the database to set
      */
-    public void setDatabaseManager(AbstractOrientDatabaseManager databaseManager) {
-        this.dbManager = databaseManager;
+    public void setDatabaseManager(AbstractOrientDatabaseFactory databaseFactory) {
+        this.dbf = databaseFactory;
     }
 
     @Override
@@ -80,13 +80,13 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
         ODatabaseComplex<?> db = tx.getDatabase();
         if (db == null || db.isClosed()) {
             boolean closed = (db != null);
-            db = dbManager.openDatabase();
+            db = dbf.openDatabase();
             tx.setDatabase(db);
             ODatabaseRecordThreadLocal.INSTANCE.set((ODatabaseRecord) db.getUnderlying());
             if (closed) {
-                TransactionSynchronizationManager.unbindResource(dbManager);
+                TransactionSynchronizationManager.unbindResource(dbf);
             }
-            TransactionSynchronizationManager.bindResource(dbManager, db);
+            TransactionSynchronizationManager.bindResource(dbf, db);
         }
         log.debug("beginning transaction on db.hashCode() = {}", db.hashCode());
         db.begin();
@@ -119,6 +119,6 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
 
     @Override
     public Object getResourceFactory() {
-        return dbManager;
+        return dbf;
     }
 }

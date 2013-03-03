@@ -34,13 +34,13 @@ public class DocumentSpringTestConfig {
     @Bean
     public OrientTransactionManager transactionManager() {
         OrientTransactionManager bean = new OrientTransactionManager();
-        bean.setDatabaseManager(databaseManager());
+        bean.setDatabaseManager(databaseFactory());
         return bean;        
     }
     
     @Bean
-    public OrientDocumentDatabaseManager databaseManager() {
-        OrientDocumentDatabaseManager manager = new OrientDocumentDatabaseManager();
+    public OrientDocumentDatabaseFactory databaseFactory() {
+        OrientDocumentDatabaseFactory manager = new OrientDocumentDatabaseFactory();
         //manager.setUrl("local:target/test");
         manager.setUrl("memory:test");
         manager.setUsername("admin");

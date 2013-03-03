@@ -39,16 +39,16 @@ public class TransactionalObjectService {
     private static Logger log = LoggerFactory.getLogger(TransactionalObjectService.class);
 
     @Autowired
-    private OrientObjectDatabaseManager dbm;
+    private OrientObjectDatabaseFactory dbf;
 
     @Transactional(propagation = Propagation.NEVER)
     public void registerEntityClasses() {
-        dbm.db().getEntityManager().registerEntityClass(Person.class);
+        dbf.db().getEntityManager().registerEntityClass(Person.class);
     }
 
     @Transactional
     public void clear() {
-        OObjectDatabaseTx db = dbm.db();
+        OObjectDatabaseTx db = dbf.db();
         OObjectIteratorClass<Person> it = db.browseClass(Person.class);
         while (it.hasNext()) {
             db.delete(it.next());
@@ -57,29 +57,29 @@ public class TransactionalObjectService {
 
     @Transactional
     public void commitAutomatically() {
-        log.debug("commitAutomatically db.hashCode() = {}", dbm.db().hashCode());
-        assertThat(dbm.db().getTransaction().isActive(), is(true));
+        log.debug("commitAutomatically db.hashCode() = {}", dbf.db().hashCode());
+        assertThat(dbf.db().getTransaction().isActive(), is(true));
 
-        Person person = dbm.db().newInstance(Person.class);
+        Person person = dbf.db().newInstance(Person.class);
         person.setFirstName("Donald");
         person.setLastName("Duck");
-        dbm.db().save(person);
+        dbf.db().save(person);
     }
 
     @Transactional
     public void rollbackOnError() {
-        assertThat(dbm.db().getTransaction().isActive(), is(true));
+        assertThat(dbf.db().getTransaction().isActive(), is(true));
 
-        Person person = dbm.db().newInstance(Person.class);
+        Person person = dbf.db().newInstance(Person.class);
         person.setFirstName("Donald");
         person.setLastName("Duck");
-        dbm.db().save(person);
+        dbf.db().save(person);
 
         throw new RuntimeException();
     }
     
     @Transactional
     public long count() {
-        return dbm.db().countClass(Person.class);
+        return dbf.db().countClass(Person.class);
     }
 }

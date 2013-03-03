@@ -48,14 +48,14 @@ public class DocumentDatabaseTransactionTest {
     private TransactionalDocumentService service;
 
     @Autowired
-    private OrientDocumentDatabaseManager dbManager;
+    private OrientDocumentDatabaseFactory dbf;
 
     private ODatabaseDocumentTx db;
 
     @Before
     public void setUp() {
-        dbManager.openDatabase();
-        db = dbManager.db();
+        dbf.openDatabase();
+        db = dbf.db();
         OSchema schema = db.getMetadata().getSchema();
         if (!schema.existsClass("TestDoc")) {
             schema.createClass("TestDoc");
