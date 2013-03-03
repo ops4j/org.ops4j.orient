@@ -23,6 +23,8 @@ import com.orientechnologies.orient.core.db.document.ODatabaseDocumentPool;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 
 /**
+ * Factory for OrientDB document databases.
+ * 
  * @author Harald Wellmann
  * 
  */
@@ -39,9 +41,7 @@ public class OrientDocumentDatabaseFactory extends AbstractOrientDatabaseFactory
 
 
     @Override
-    protected ODatabaseDocumentTx openDatabase() {
-        ODatabaseDocumentPool pool = new ODatabaseDocumentPool(getUrl(), getUsername(), getPassword());
-        pool.setup(getMinPoolSize(), getMaxPoolSize());
+    public ODatabaseDocumentTx openDatabase() {
         db = pool.acquire();
         return db;
     }

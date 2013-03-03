@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ops4j.orient.spring.tx;
+package org.ops4j.orient.spring.tx.object;
 
 import javax.persistence.Id;
 import javax.persistence.Version;

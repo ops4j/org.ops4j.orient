@@ -22,6 +22,8 @@ import com.orientechnologies.orient.core.db.ODatabaseComplex;
 import com.orientechnologies.orient.core.tx.OTransaction;
 
 /**
+ * Wrapper for an OrientDB transaction and the associated database.
+ * 
  * @author Harald Wellmann
  * 
  */

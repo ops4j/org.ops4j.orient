@@ -23,6 +23,8 @@ import com.orientechnologies.orient.core.db.graph.OGraphDatabase;
 import com.orientechnologies.orient.core.db.graph.OGraphDatabasePool;
 
 /**
+ * Factory for OrientDB graph databases.
+ * 
  * @author Harald Wellmann
  * 
  */
@@ -34,24 +36,20 @@ public class OrientGraphDatabaseFactory extends AbstractOrientDatabaseFactory {
     @Override
     protected void createPool() {
         pool = new OGraphDatabasePool(getUrl(), getUsername(), getPassword());
-        pool.setup(getMinPoolSize(), getMaxPoolSize());        
+        pool.setup(getMinPoolSize(), getMaxPoolSize());
     }
-
 
     @Override
     public OGraphDatabase openDatabase() {
-        OGraphDatabasePool pool = new OGraphDatabasePool(getUrl(), getUsername(), getPassword());
-        pool.setup(getMinPoolSize(), getMaxPoolSize());
         db = pool.acquire();
         return db;
     }
-    
+
     public OGraphDatabase db() {
         return (OGraphDatabase) super.db();
     }
-    
 
     protected OGraphDatabase newDatabase() {
         return new OGraphDatabase(getUrl());
-    }    
+    }
 }

@@ -16,8 +16,10 @@
  * limitations under the License.
  */
 
-package org.ops4j.orient.spring.tx;
+package org.ops4j.orient.spring.tx.document;
 
+import org.ops4j.orient.spring.tx.OrientDocumentDatabaseFactory;
+import org.ops4j.orient.spring.tx.OrientTransactionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -29,7 +31,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Configuration
 @EnableTransactionManagement
-public class ObjectSpringTestConfig {
+public class DocumentSpringTestConfig {
     
     @Bean
     public OrientTransactionManager transactionManager() {
@@ -39,8 +41,8 @@ public class ObjectSpringTestConfig {
     }
     
     @Bean
-    public OrientObjectDatabaseFactory databaseFactory() {
-        OrientObjectDatabaseFactory manager = new OrientObjectDatabaseFactory();
+    public OrientDocumentDatabaseFactory databaseFactory() {
+        OrientDocumentDatabaseFactory manager = new OrientDocumentDatabaseFactory();
         //manager.setUrl("local:target/test");
         manager.setUrl("memory:test");
         manager.setUsername("admin");
@@ -50,7 +52,7 @@ public class ObjectSpringTestConfig {
     
     
     @Bean
-    public TransactionalObjectService transactionalService() {
-        return new TransactionalObjectService();
+    public TransactionalDocumentService transactionalService() {
+        return new TransactionalDocumentService();
     }
 }

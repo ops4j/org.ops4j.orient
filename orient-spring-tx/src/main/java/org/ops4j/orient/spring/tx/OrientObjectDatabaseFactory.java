@@ -23,6 +23,8 @@ import com.orientechnologies.orient.object.db.OObjectDatabasePool;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
 /**
+ * Factory for OrientDB object databases.
+ * 
  * @author Harald Wellmann
  * 
  */
@@ -34,21 +36,20 @@ public class OrientObjectDatabaseFactory extends AbstractOrientDatabaseFactory {
     @Override
     protected void createPool() {
         pool = new OObjectDatabasePool(getUrl(), getUsername(), getPassword());
-        pool.setup(getMinPoolSize(), getMaxPoolSize());        
+        pool.setup(getMinPoolSize(), getMaxPoolSize());
     }
 
     @Override
-    protected OObjectDatabaseTx openDatabase() {
+    public OObjectDatabaseTx openDatabase() {
         db = pool.acquire();
         return db;
     }
-    
+
     public OObjectDatabaseTx db() {
         return (OObjectDatabaseTx) super.db();
     }
-    
 
     protected OObjectDatabaseTx newDatabase() {
         return new OObjectDatabaseTx(getUrl());
-    }    
+    }
 }

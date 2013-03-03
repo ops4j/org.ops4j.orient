@@ -20,6 +20,7 @@ package org.ops4j.orient.spring.tx;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
@@ -32,6 +33,10 @@ import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
 import com.orientechnologies.orient.core.db.record.ODatabaseRecord;
 
 /**
+ * A {@link PlatformTransactionManager} for Orient databases, enabling declarative transactions for
+ * a single Orient database. This OrientTransactionManager depends on an
+ * {@link AbstractOrientDatabaseFactory}.
+ * 
  * @author Harald Wellmann
  * 
  */
@@ -43,21 +48,6 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
     private static Logger log = LoggerFactory.getLogger(OrientTransactionManager.class);
 
     private AbstractOrientDatabaseFactory dbf;
-
-    /**
-     * @return the database
-     */
-    public AbstractOrientDatabaseFactory getDatabaseFactory() {
-        return dbf;
-    }
-
-    /**
-     * @param databaseFactory
-     *            the database to set
-     */
-    public void setDatabaseManager(AbstractOrientDatabaseFactory databaseFactory) {
-        this.dbf = databaseFactory;
-    }
 
     @Override
     protected Object doGetTransaction() throws TransactionException {
@@ -120,5 +110,22 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
     @Override
     public Object getResourceFactory() {
         return dbf;
+    }
+    
+    /**
+     * Gets the database factory for the database managed by this transaction manager.
+     * @return the database
+     */
+    public AbstractOrientDatabaseFactory getDatabaseFactory() {
+        return dbf;
+    }
+
+    /**
+     * Sets the database factory for the database managed by this transaction manager.
+     * @param databaseFactory
+     *            the database to set
+     */
+    public void setDatabaseManager(AbstractOrientDatabaseFactory databaseFactory) {
+        this.dbf = databaseFactory;
     }
 }

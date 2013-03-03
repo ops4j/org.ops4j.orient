@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ops4j.orient.spring.tx;
+package org.ops4j.orient.spring.tx.object;
 
 import static org.junit.Assert.assertTrue;
 
@@ -27,85 +27,72 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.ops4j.orient.spring.tx.OrientObjectDatabaseFactory;
+import org.ops4j.orient.spring.tx.OrientTransactionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
-import com.orientechnologies.orient.core.iterator.ORecordIteratorClass;
-import com.orientechnologies.orient.core.metadata.schema.OSchema;
-import com.orientechnologies.orient.core.record.impl.ODocument;
-
 /**
+ * Tests {@link OrientTransactionManager} with a {@link OrientObjectDatabaseFactory}.
+ * 
  * @author Harald Wellmann
  * 
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = DocumentSpringTestConfig.class)
-public class DocumentDatabaseTransactionTest {
+@ContextConfiguration(classes = ObjectSpringTestConfig.class)
+public class ObjectDatabaseTransactionTest {
 
     @Autowired
-    private TransactionalDocumentService service;
+    private TransactionalObjectService service;
 
     @Autowired
-    private OrientDocumentDatabaseFactory dbf;
-
-    private ODatabaseDocumentTx db;
+    private OrientObjectDatabaseFactory dbf;
 
     @Before
     public void setUp() {
-        dbf.openDatabase();
-        db = dbf.db();
-        OSchema schema = db.getMetadata().getSchema();
-        if (!schema.existsClass("TestDoc")) {
-            schema.createClass("TestDoc");
-        }
-        ORecordIteratorClass<ODocument> it = db.browseClass("TestDoc");
-        while (it.hasNext()) {
-            it.next().delete();
-        }
+        service.registerEntityClasses();
+        service.clear();
     }
 
     @Test
     public void shouldCommit() {
-        service.commitAutomatically("TestDoc");
-        assertTrue(!db.getTransaction().isActive());
+        service.commitAutomatically();
+        assertTrue(!dbf.db().getTransaction().isActive());
 
-        assertTrue(db.countClass("TestDoc") == 1);
+        assertTrue(service.count() == 1);
     }
 
     @Test
     public void rollbackWithAnnotationTest() {
-        assertTrue(!db.getTransaction().isActive());
+        assertTrue(!dbf.db().getTransaction().isActive());
         try {
-            service.rollbackOnError("TestDoc");
+            service.rollbackOnError();
         }
         catch (Exception e) {
 
         }
-        assertTrue(!db.getTransaction().isActive());
-        assertTrue(db.countClass("TestDoc") == 0);
+        assertTrue(!dbf.db().getTransaction().isActive());
+        assertTrue(service.count() == 0);
     }
-    
+
     @Test
     public void commitMultiThreaded() throws InterruptedException {
-        
+
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         for (int i = 0; i < 5; i++) {
             executorService.submit(new CommitTask());
         }
         executorService.shutdown();
         executorService.awaitTermination(1000, TimeUnit.SECONDS);
-        
+
     }
-    
+
     class CommitTask implements Runnable {
 
         @Override
         public void run() {
-            service.commitAutomatically("TestDoc");            
+            service.commitAutomatically();
         }
-        
     }
-
 }

@@ -16,70 +16,54 @@
  * limitations under the License.
  */
 
-package org.ops4j.orient.spring.tx;
+package org.ops4j.orient.spring.tx.graph;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.ops4j.orient.spring.tx.OrientGraphDatabaseFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
-import com.orientechnologies.orient.object.iterator.OObjectIteratorClass;
+import com.orientechnologies.orient.core.record.impl.ODocument;
 
 /**
  * @author Harald Wellmann
  * 
  */
-public class TransactionalObjectService {
+public class TransactionalGraphService {
     
-    private static Logger log = LoggerFactory.getLogger(TransactionalObjectService.class);
+    private static Logger log = LoggerFactory.getLogger(TransactionalGraphService.class);
 
     @Autowired
-    private OrientObjectDatabaseFactory dbf;
+    private OrientGraphDatabaseFactory dbf;
 
-    @Transactional(propagation = Propagation.NEVER)
-    public void registerEntityClasses() {
-        dbf.db().getEntityManager().registerEntityClass(Person.class);
-    }
-
-    @Transactional
-    public void clear() {
-        OObjectDatabaseTx db = dbf.db();
-        OObjectIteratorClass<Person> it = db.browseClass(Person.class);
-        while (it.hasNext()) {
-            db.delete(it.next());
-        }
-    }
 
     @Transactional
     public void commitAutomatically() {
         log.debug("commitAutomatically db.hashCode() = {}", dbf.db().hashCode());
         assertThat(dbf.db().getTransaction().isActive(), is(true));
 
-        Person person = dbf.db().newInstance(Person.class);
-        person.setFirstName("Donald");
-        person.setLastName("Duck");
-        dbf.db().save(person);
+        ODocument vertex = dbf.db().createVertex("TestVertex");
+        vertex.field("test", "test");
+        dbf.db().save(vertex);
     }
 
     @Transactional
     public void rollbackOnError() {
         assertThat(dbf.db().getTransaction().isActive(), is(true));
 
-        Person person = dbf.db().newInstance(Person.class);
-        person.setFirstName("Donald");
-        person.setLastName("Duck");
-        dbf.db().save(person);
+        ODocument vertex = dbf.db().createVertex("TestVertex");
+        vertex.field("test", "test");
+        dbf.db().save(vertex);
 
         throw new RuntimeException();
     }
     
     @Transactional
     public long count() {
-        return dbf.db().countClass(Person.class);
+        return dbf.db().countClass("TestVertex");
     }
 }

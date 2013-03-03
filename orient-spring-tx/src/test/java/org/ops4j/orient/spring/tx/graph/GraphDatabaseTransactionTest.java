@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.ops4j.orient.spring.tx;
+package org.ops4j.orient.spring.tx.graph;
 
 import static org.junit.Assert.assertTrue;
 
@@ -27,6 +27,8 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.ops4j.orient.spring.tx.OrientGraphDatabaseFactory;
+import org.ops4j.orient.spring.tx.OrientTransactionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -37,6 +39,7 @@ import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
 /**
+ * Tests {@link OrientTransactionManager} with a {@link OrientGraphDatabaseFactory}.
  * @author Harald Wellmann
  * 
  */
