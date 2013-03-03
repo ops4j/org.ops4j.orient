@@ -21,25 +21,16 @@ package org.ops4j.orient.spring.tx;
 import com.orientechnologies.orient.core.db.ODatabaseComplex;
 import com.orientechnologies.orient.core.tx.OTransaction;
 
-
 /**
  * @author Harald Wellmann
- *
+ * 
  */
 public class OrientTransaction {
-    
+
     private OTransaction tx;
-    
+
     private ODatabaseComplex<?> database;
 
-    /**
-     * 
-     */
-    public OrientTransaction() {
-        // TODO Auto-generated constructor stub
-    }
-
-    
     /**
      * @return the tx
      */
@@ -47,16 +38,14 @@ public class OrientTransaction {
         return tx;
     }
 
-    
     /**
-     * @param tx the tx to set
+     * @param tx
+     *            the tx to set
      */
     public void setTx(OTransaction tx) {
         this.tx = tx;
     }
 
-
-    
     /**
      * @return the database
      */
@@ -64,15 +53,11 @@ public class OrientTransaction {
         return database;
     }
 
-
-    
     /**
-     * @param database the database to set
+     * @param database
+     *            the database to set
      */
     public void setDatabase(ODatabaseComplex<?> database) {
         this.database = database;
     }
-    
-    
-
 }

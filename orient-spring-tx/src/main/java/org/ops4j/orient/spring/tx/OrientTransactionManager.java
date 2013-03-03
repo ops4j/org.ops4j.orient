@@ -47,16 +47,16 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
     /**
      * @return the database
      */
-    public AbstractOrientDatabaseManager getDatabase() {
+    public AbstractOrientDatabaseManager getDatabaseManager() {
         return dbManager;
     }
 
     /**
-     * @param database
+     * @param databaseManager
      *            the database to set
      */
-    public void setDatabaseManager(AbstractOrientDatabaseManager database) {
-        this.dbManager = database;
+    public void setDatabaseManager(AbstractOrientDatabaseManager databaseManager) {
+        this.dbManager = databaseManager;
     }
 
     @Override
