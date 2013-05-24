@@ -100,8 +100,7 @@ public abstract class AbstractOrientDatabaseFactory {
      * except when the database is of type {@code memory}, since a closed memory database cannot be
      * reopened.
      * 
-     * @param db
-     *            database object
+     * @param db database object
      */
     protected void createDatabase(ODatabaseComplex<?> db) {
         if (getUrl().startsWith("memory:")) {
@@ -112,11 +111,15 @@ public abstract class AbstractOrientDatabaseFactory {
                 db.open(getUsername(), getPassword());
             }
         }
-        else {
+        else if (getUrl().startsWith("local:")) {
             if (!db.exists()) {
                 db.create();
                 db.close();
             }
+        }
+        // remote
+        else {
+            db.open(getUsername(), getPassword());
         }
     }
 
@@ -131,8 +134,7 @@ public abstract class AbstractOrientDatabaseFactory {
      * Sets the database URL for the database objects produced by this factory. The URL
      * <em>must</em> be set before invoking any non-accessor method of this factory.
      * 
-     * @param url
-     *            database URL
+     * @param url database URL
      */
     public void setUrl(String url) {
         this.url = url;
@@ -150,8 +152,7 @@ public abstract class AbstractOrientDatabaseFactory {
     /**
      * Sets the database username.
      * 
-     * @param username
-     *            the username to set
+     * @param username the username to set
      */
     public void setUsername(String username) {
         this.username = username;
@@ -169,8 +170,7 @@ public abstract class AbstractOrientDatabaseFactory {
     /**
      * Sets the database password.
      * 
-     * @param password
-     *            the password to set
+     * @param password the password to set
      */
     public void setPassword(String password) {
         this.password = password;
@@ -188,8 +188,7 @@ public abstract class AbstractOrientDatabaseFactory {
     /**
      * Sets the minimum pool size.
      * 
-     * @param minPoolSize
-     *            the minPoolSize to set
+     * @param minPoolSize the minPoolSize to set
      */
     public void setMinPoolSize(int minPoolSize) {
         this.minPoolSize = minPoolSize;
@@ -207,8 +206,7 @@ public abstract class AbstractOrientDatabaseFactory {
     /**
      * Sets the maximum pool size.
      * 
-     * @param maxPoolSize
-     *            the maxPoolSize to set
+     * @param maxPoolSize the maxPoolSize to set
      */
     public void setMaxPoolSize(int maxPoolSize) {
         this.maxPoolSize = maxPoolSize;
