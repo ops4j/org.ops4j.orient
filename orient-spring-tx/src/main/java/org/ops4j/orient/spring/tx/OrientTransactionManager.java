@@ -20,7 +20,6 @@ package org.ops4j.orient.spring.tx;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
@@ -33,15 +32,15 @@ import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
 import com.orientechnologies.orient.core.db.record.ODatabaseRecord;
 
 /**
- * A {@link PlatformTransactionManager} for Orient databases, enabling declarative transactions for
- * a single Orient database. This OrientTransactionManager depends on an
+ * A PlatformTransactionManager for Orient databases, enabling declarative transactions for a single
+ * Orient database. This OrientTransactionManager depends on an
  * {@link AbstractOrientDatabaseFactory}.
  * 
  * @author Harald Wellmann
  * 
  */
 public class OrientTransactionManager extends AbstractPlatformTransactionManager implements
-    ResourceTransactionManager {
+        ResourceTransactionManager {
 
     private static final long serialVersionUID = 1L;
 
@@ -54,7 +53,7 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
         OrientTransaction tx = new OrientTransaction();
 
         ODatabaseComplex<?> db = (ODatabaseComplex<?>) TransactionSynchronizationManager
-            .getResource(getResourceFactory());
+                .getResource(getResourceFactory());
         if (db != null) {
             tx.setDatabase(db);
         }
@@ -64,7 +63,7 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
 
     @Override
     protected void doBegin(Object transaction, TransactionDefinition definition)
-        throws TransactionException {
+            throws TransactionException {
         OrientTransaction tx = (OrientTransaction) transaction;
 
         ODatabaseComplex<?> db = tx.getDatabase();
@@ -111,9 +110,10 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
     public Object getResourceFactory() {
         return dbf;
     }
-    
+
     /**
      * Gets the database factory for the database managed by this transaction manager.
+     * 
      * @return the database
      */
     public AbstractOrientDatabaseFactory getDatabaseFactory() {
@@ -122,8 +122,8 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
 
     /**
      * Sets the database factory for the database managed by this transaction manager.
-     * @param databaseFactory
-     *            the database to set
+     * 
+     * @param databaseFactory the database to set
      */
     public void setDatabaseManager(AbstractOrientDatabaseFactory databaseFactory) {
         this.dbf = databaseFactory;
