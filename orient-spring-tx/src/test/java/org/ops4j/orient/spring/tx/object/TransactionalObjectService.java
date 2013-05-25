@@ -21,14 +21,16 @@ package org.ops4j.orient.spring.tx.object;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.List;
+
 import org.ops4j.orient.spring.tx.OrientObjectDatabaseFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.orientechnologies.orient.core.entity.OEntityManager;
+import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 import com.orientechnologies.orient.object.iterator.OObjectIteratorClass;
 
@@ -36,10 +38,9 @@ import com.orientechnologies.orient.object.iterator.OObjectIteratorClass;
  * @author Harald Wellmann
  * 
  */
+@Transactional
 public class TransactionalObjectService {
     
-    private static Logger log = LoggerFactory.getLogger(TransactionalObjectService.class);
-
     @Autowired
     private OrientObjectDatabaseFactory dbf;
 
@@ -52,27 +53,25 @@ public class TransactionalObjectService {
         }
     }
 
-    @Transactional
     public void clear() {
         OObjectDatabaseTx db = dbf.db();
-        OObjectIteratorClass<Person> it = db.browseClass(Person.class);
-        while (it.hasNext()) {
-            db.delete(it.next());
+        
+        OSQLSynchQuery<Person> q = new OSQLSynchQuery<Person>("select from Person");
+        List<Person> persons = db.query(q);
+        for (Person person : persons) {
+            db.delete(person);
         }
     }
 
-    @Transactional
     public void commitAutomatically() {
-        log.info("commitAutomatically db.hashCode() = {}", dbf.db().hashCode());
         assertThat(dbf.db().getTransaction().isActive(), is(true));
 
         Person person = dbf.db().newInstance(Person.class);
         person.setFirstName("Donald");
         person.setLastName("Duck");
-        dbf.db().save(person);
+        person = dbf.db().save(person);
     }
 
-    @Transactional
     public void rollbackOnError() {
         assertThat(dbf.db().getTransaction().isActive(), is(true));
 
@@ -84,18 +83,28 @@ public class TransactionalObjectService {
         throw new RuntimeException();
     }
     
-    /**
-     * Note: db.countClass() produces incorrect results.
-     * @return number of persons
-     */
-    @Transactional    
-    public long count() {
-        long numPersons = 0;
-        OObjectIteratorClass<Person> it = dbf.db().browseClass(Person.class);
+    public long countByQuery() {
+        OObjectDatabaseTx db = dbf.db();
+        
+        OSQLSynchQuery<ODocument> q = new OSQLSynchQuery<ODocument>("select count(*) from Person");
+        List<ODocument> results = db.query(q);
+        assert results.size() == 1;
+        return results.get(0).field("count");
+    }
+
+    public long countByClass() {
+        OObjectDatabaseTx db = dbf.db();
+        return db.countClass(Person.class);
+    }
+
+    public long countByIterator() {
+        OObjectDatabaseTx db = dbf.db();
+        OObjectIteratorClass<Person> it = db.browseClass(Person.class);
+        long numObjects = 0;
         while (it.hasNext()) {
             it.next();
-            numPersons++;
+            numObjects++;
         }
-        return numPersons;
+        return numObjects;
     }
 }

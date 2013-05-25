@@ -32,7 +32,7 @@ import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
 import com.orientechnologies.orient.core.db.record.ODatabaseRecord;
 
 /**
- * A PlatformTransactionManager for Orient databases, enabling declarative transactions for a single
+ * A PlatformTransactionManager for OrientDB, enabling declarative transactions for a single
  * Orient database. This OrientTransactionManager depends on an
  * {@link AbstractOrientDatabaseFactory}.
  * 
@@ -102,6 +102,11 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
         ODatabaseComplex<?> db = tx.getDatabase();
         log.debug("committing transaction on db.hashCode() = {}", db.hashCode());
         db.rollback();
+    }
+    
+    @Override
+    protected void doSetRollbackOnly(DefaultTransactionStatus status) throws TransactionException {
+        status.setRollbackOnly();
     }
 
     @Override

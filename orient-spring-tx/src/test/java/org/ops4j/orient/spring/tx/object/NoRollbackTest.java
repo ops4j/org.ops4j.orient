@@ -21,6 +21,7 @@ package org.ops4j.orient.spring.tx.object;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,13 +30,10 @@ import org.ops4j.orient.spring.tx.OrientObjectDatabaseFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.BeforeTransaction;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
- * This test verifies transaction propagation and rollback behaviour. The test class is transactional,
- * i.e. each test method is wrapped in a transaction which is started before the test method 
- * and rolled back by the test container after the test method.
+ * This test verifies transaction propagation and rollback behaviour. The test class is not
+ * transactional, so the test methods use real transactions at service level.
  * <p>
  * The methods of this test class need to be executed in the given order
  * 
@@ -44,10 +42,9 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = ObjectSpringTestConfig.class)
-@Transactional
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TransactionalAutoRollbackTest {
-    
+public class NoRollbackTest {
+
     private static boolean dbCleared;
 
     @Autowired
@@ -56,7 +53,7 @@ public class TransactionalAutoRollbackTest {
     @Autowired
     private OrientObjectDatabaseFactory dbf;
 
-    @BeforeTransaction
+    @Before
     public void setUp() {
         service.registerEntityClasses();
         if (!dbCleared) {
@@ -74,11 +71,11 @@ public class TransactionalAutoRollbackTest {
     public void test02SaveOneObject() {
         assertThat(service.countByQuery(), is(0L));
         service.commitAutomatically();
-        // we cannot reliably count or query uncommitted objects
+        assertThat(service.countByQuery(), is(1L));
     }
 
     @Test
-    public void test03DbShouldBeEmpty() {
-        assertThat(service.countByQuery(), is(0L));
+    public void test03DbShouldNotBeEmpty() {
+        assertThat(service.countByQuery(), is(1L));
     }
 }
