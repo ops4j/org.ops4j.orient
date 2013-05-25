@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.orientechnologies.orient.core.entity.OEntityManager;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 import com.orientechnologies.orient.object.iterator.OObjectIteratorClass;
 
@@ -44,7 +45,11 @@ public class TransactionalObjectService {
 
     @Transactional(propagation = Propagation.NEVER)
     public void registerEntityClasses() {
-        dbf.db().getEntityManager().registerEntityClass(Person.class);
+        OObjectDatabaseTx db = dbf.db();
+        OEntityManager em = db.getEntityManager();
+        if (em.getEntityClass(getClass().getSimpleName()) == null) {
+            em.registerEntityClass(Person.class);
+        }
     }
 
     @Transactional
@@ -58,7 +63,7 @@ public class TransactionalObjectService {
 
     @Transactional
     public void commitAutomatically() {
-        log.debug("commitAutomatically db.hashCode() = {}", dbf.db().hashCode());
+        log.info("commitAutomatically db.hashCode() = {}", dbf.db().hashCode());
         assertThat(dbf.db().getTransaction().isActive(), is(true));
 
         Person person = dbf.db().newInstance(Person.class);
@@ -79,8 +84,18 @@ public class TransactionalObjectService {
         throw new RuntimeException();
     }
     
-    @Transactional
+    /**
+     * Note: db.countClass() produces incorrect results.
+     * @return number of persons
+     */
+    @Transactional    
     public long count() {
-        return dbf.db().countClass(Person.class);
+        long numPersons = 0;
+        OObjectIteratorClass<Person> it = dbf.db().browseClass(Person.class);
+        while (it.hasNext()) {
+            it.next();
+            numPersons++;
+        }
+        return numPersons;
     }
 }
