@@ -56,9 +56,16 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
                 .getResource(getResourceFactory());
         if (db != null) {
             tx.setDatabase(db);
+            tx.setTx(db.getTransaction());
         }
 
         return tx;
+    }
+    
+    @Override
+    protected boolean isExistingTransaction(Object transaction) throws TransactionException {
+        OrientTransaction tx = (OrientTransaction) transaction;
+        return tx.getTx() == null ? false : tx.getTx().isActive();
     }
 
     @Override
@@ -79,7 +86,6 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
         }
         log.debug("beginning transaction on db.hashCode() = {}", db.hashCode());
         db.begin();
-        tx.setTx(db.getTransaction());
     }
 
     @Override
