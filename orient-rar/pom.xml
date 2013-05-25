@@ -13,22 +13,25 @@
     <name>OPS4J OrientDB Resource Adapter Archive</name>
 
     <dependencies>
+        
         <dependency>
             <groupId>org.ops4j.orient</groupId>
             <artifactId>orient-ra</artifactId>
             <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hibernate.javax.persistence</groupId>
-                    <artifactId>hibernate-jpa-2.0-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.javassist</groupId>
-                    <artifactId>javassist</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
+        
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-client</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+        </dependency>
+    
     </dependencies>
+    
     <build>
         <plugins>
             <plugin>
