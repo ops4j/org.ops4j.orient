@@ -21,6 +21,7 @@ package org.ops4j.orient.spring.tx.object;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,6 +48,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TransactionalAutoRollbackTest {
+    
+    private static boolean dbCleared;
 
     @Autowired
     private TransactionalObjectService service;
@@ -57,6 +60,14 @@ public class TransactionalAutoRollbackTest {
     @BeforeTransaction
     public void setUp() {
         service.registerEntityClasses();
+    }
+    
+    @Before
+    public void clearDbOnce() {
+        if (!dbCleared) {
+            service.clear();
+            dbCleared = true;
+        }
     }
 
     @Test
