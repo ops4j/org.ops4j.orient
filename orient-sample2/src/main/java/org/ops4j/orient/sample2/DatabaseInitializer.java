@@ -33,7 +33,7 @@ import javax.inject.Inject;
 @Singleton
 @Startup
 @TransactionManagement(TransactionManagementType.BEAN)
-public class OrientClient {
+public class DatabaseInitializer {
 
     @Inject
     private LibraryService initializer;

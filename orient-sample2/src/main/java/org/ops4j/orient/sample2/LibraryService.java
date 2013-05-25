@@ -60,18 +60,14 @@ public class LibraryService {
         Book hobbit = db(con).newInstance(Book.class);
         hobbit.setTitle("The Hobbit");
         con.object().save(hobbit);
+
+        Book timeMachine = db(con).newInstance(Book.class);
+        hobbit.setTitle("The Time Machine");
+        con.object().save(timeMachine);
     }
 
     public List<Book> findBooks() {
         log.info("finding books");
-        try {
-            Thread.sleep(1000);
-        }
-        catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         return db(con).query(new OSQLSynchQuery<Book>("select from Book"));
     }
-
 }

@@ -29,8 +29,6 @@ import org.ops4j.orient.adapter.api.OrientDatabaseConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
-
 
 /**
  * @author Harald Wellmann
@@ -41,7 +39,7 @@ public class ObjectDatabaseProducer {
 
     private static Logger log = LoggerFactory.getLogger(ObjectDatabaseProducer.class);
 
-    @Resource(mappedName = "java:/orient/ConnectionFactory")
+    @Resource(lookup = "orient/library")
     private OrientDatabaseConnectionFactory cf;
 
     @Produces
@@ -56,19 +54,8 @@ public class ObjectDatabaseProducer {
         }
     }
     
-//    @Produces
-//    public OObjectDatabaseTx objectDatabase(OrientDatabaseConnection connection) {
-//        return connection.object();
-//    }
-//
-//    public void close(@Disposes OObjectDatabaseTx db) {
-//        log.info("closing database");
-//        db.close();
-//    }
-
     public void close(@Disposes OrientDatabaseConnection connection) {
         log.info("closing connection");
         connection.close();
     }
-
 }
