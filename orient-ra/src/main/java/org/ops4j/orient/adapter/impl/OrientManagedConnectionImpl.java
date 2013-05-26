@@ -144,7 +144,7 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
 
     @Override
     public void addConnectionEventListener(ConnectionEventListener listener) {
-        log.debug("addConnectinEventListener()");
+        log.debug("addConnectionEventListener()");
         synchronized (listeners) {
             listeners.add(listener);
         }
