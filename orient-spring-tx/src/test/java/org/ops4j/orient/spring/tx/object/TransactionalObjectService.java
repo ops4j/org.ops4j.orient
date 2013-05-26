@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.orientechnologies.orient.core.entity.OEntityManager;
+import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
@@ -46,12 +47,20 @@ public class TransactionalObjectService {
 
     @Transactional(propagation = Propagation.NEVER)
     public void registerEntityClasses() {
-        OObjectDatabaseTx db = dbf.db();
-        OEntityManager em = db.getEntityManager();
-        if (em.getEntityClass(getClass().getSimpleName()) == null) {
-            em.registerEntityClass(Person.class);
-        }
+        registerClass(Person.class);
     }
+    
+    private <T> void registerClass(Class<T> klass) {
+        OObjectDatabaseTx db = dbf.openDatabase();
+        OEntityManager em = db.getEntityManager();
+        OSchema schema = db.getMetadata().getSchema();
+        if (schema.getClass(klass) == null) {
+            schema.createClass(klass);
+        }
+        em.registerEntityClass(klass);
+        db.close();
+    }
+    
 
     public void clear() {
         OObjectDatabaseTx db = dbf.db();

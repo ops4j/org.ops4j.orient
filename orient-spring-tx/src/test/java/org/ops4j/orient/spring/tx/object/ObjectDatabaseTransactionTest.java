@@ -59,8 +59,6 @@ public class ObjectDatabaseTransactionTest {
     public void shouldCommit() {
         service.commitAutomatically();
         assertTrue(!dbf.db().getTransaction().isActive());
-
-        //assertTrue(service.count() == 1);
     }
 
     @Test
@@ -80,20 +78,11 @@ public class ObjectDatabaseTransactionTest {
     public void commitMultiThreaded() throws InterruptedException {
 
         ExecutorService executorService = Executors.newFixedThreadPool(5);
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 5; i++) {
             executorService.submit(new CommitTask());
         }
         executorService.shutdown();
         executorService.awaitTermination(1000, TimeUnit.SECONDS);
-    }
-
-    // @Test
-    public void doubleCommit() throws InterruptedException {
-        service.registerEntityClasses();
-        service.clear();
-
-        service.commitAutomatically();
-        service.commitAutomatically();
     }
 
     class CommitTask implements Runnable {
