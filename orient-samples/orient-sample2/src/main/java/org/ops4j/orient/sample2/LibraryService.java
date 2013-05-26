@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.orientechnologies.orient.core.entity.OEntityManager;
+import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 
 
@@ -51,18 +52,26 @@ public class LibraryService {
 
     @TransactionAttribute(TransactionAttributeType.NEVER)
     public void registerEntityClasses() {
+        registerClass(Author.class);
+        registerClass(Book.class);
+    }
+
+    private <T> void registerClass(Class<T> klass) {
         OEntityManager em = db(con).getEntityManager();
-        em.registerEntityClass(Author.class);
-        em.registerEntityClass(Book.class);
+        OSchema schema = db(con).getMetadata().getSchema();
+        if (schema.getClass(klass) == null) {
+            schema.createClass(klass);
+        }
+        em.registerEntityClass(klass);
     }
 
     public void createEntities() {
-        Book hobbit = db(con).newInstance(Book.class);
+        Book hobbit = new Book();
         hobbit.setTitle("The Hobbit");
         db(con).save(hobbit);
 
-        Book timeMachine = db(con).newInstance(Book.class);
-        hobbit.setTitle("The Time Machine");
+        Book timeMachine = new Book();
+        timeMachine.setTitle("The Time Machine");
         db(con).save(timeMachine);
     }
 

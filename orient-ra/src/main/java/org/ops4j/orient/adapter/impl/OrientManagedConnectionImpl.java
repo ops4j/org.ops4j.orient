@@ -63,6 +63,8 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
 
     private OrientDatabaseConnectionImpl connection;
 
+    private String engine;
+
     class OrientLocalTransaction implements LocalTransaction {
 
         @Override
@@ -88,10 +90,12 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
     }
 
     public OrientManagedConnectionImpl(OrientManagedConnectionFactoryImpl mcf,
-        ConnectionRequestInfo cri) {
+        ConnectionRequestInfo cri) throws ResourceException {
         this.mcf = mcf;
         this.cri = cri;
+        determineEngine();
         createDatabaseHandle();
+        createDatabaseIfNeeded();
     }
 
     @Override
@@ -101,10 +105,9 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
 
         connection = new OrientDatabaseConnectionImpl(db, this);
         if (db.isClosed()) {
-            log.debug("opening database for user [{}]", mcf.getUsername());
-            db.open(mcf.getUsername(), mcf.getPassword());
+            openDatabase();
         }
-        
+
         return connection;
     }
 
@@ -124,16 +127,45 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
         }
     }
 
+    private synchronized void createDatabaseIfNeeded() {
+        if (!engine.equals("remote")) {
+            if (!db.exists()) {
+                db.create();
+            }
+        }
+    }
+
+    private void determineEngine() throws ResourceException {
+        int colon = mcf.getConnectionUrl().indexOf(':');
+        if (colon == -1) {
+            throw new ResourceException();
+        }
+        this.engine = mcf.getConnectionUrl().substring(0, colon);
+    }
+    
+    private void openDatabase() {
+        log.debug("opening database for user [{}]", mcf.getUsername());
+        if (db.isClosed()) {
+            db.open(mcf.getUsername(), mcf.getPassword());
+        }
+    }
+
+    private void closeDatabase() {
+        if (!engine.equals("memory")) {
+            db.close();
+        }
+    }
+
     @Override
     public void destroy() throws ResourceException {
         log.debug("destroy()");
-        db.close();
+        closeDatabase();
     }
 
     @Override
     public void cleanup() throws ResourceException {
         log.debug("cleanup()");
-        db.close();
+        closeDatabase();
     }
 
     @Override
