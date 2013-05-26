@@ -19,6 +19,7 @@
 package org.ops4j.orient.adapter.impl;
 
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Set;
 
 import javax.resource.ResourceException;
@@ -77,7 +78,18 @@ public class OrientManagedConnectionFactoryImpl implements OrientManagedConnecti
     @Override
     public Object createConnectionFactory(ConnectionManager cxManager) throws ResourceException {
         log.debug("creating managed connection factory");
+        validate();
         return new OrientDatabaseConnectionFactoryImpl(this, cxManager);
+    }
+    
+    private void validate() throws ResourceException {
+        if (connectionUrl == null || connectionUrl.trim().isEmpty()) {
+            throw new ResourceException("configuration property [connectionUrl] must not be empty");
+        }
+        
+        if (!Arrays.asList("document", "graph", "object").contains(type)) {
+            throw new ResourceException("configuration property [type] must be one of 'document', 'graph', 'object'");            
+        }
     }
 
     @Override
@@ -228,5 +240,4 @@ public class OrientManagedConnectionFactoryImpl implements OrientManagedConnecti
         }
         return true;
     }
-
 }
