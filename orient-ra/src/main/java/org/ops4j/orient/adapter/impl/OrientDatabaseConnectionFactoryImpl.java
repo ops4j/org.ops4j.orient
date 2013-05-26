@@ -40,9 +40,6 @@ public class OrientDatabaseConnectionFactoryImpl implements OrientDatabaseConnec
     private ConnectionManager cm;
     private Reference reference;
     
-    /**
-     * 
-     */
     public OrientDatabaseConnectionFactoryImpl(OrientManagedConnectionFactory mcf, ConnectionManager cm) {
         this.mcf = mcf;
         this.cm = cm;
@@ -62,5 +59,4 @@ public class OrientDatabaseConnectionFactoryImpl implements OrientDatabaseConnec
     public OrientDatabaseConnection createConnection() throws ResourceException {
         return (OrientDatabaseConnection) cm.allocateConnection(mcf, null);
     }
-
 }

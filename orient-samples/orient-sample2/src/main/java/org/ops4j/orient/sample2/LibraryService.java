@@ -59,11 +59,11 @@ public class LibraryService {
     public void createEntities() {
         Book hobbit = db(con).newInstance(Book.class);
         hobbit.setTitle("The Hobbit");
-        con.object().save(hobbit);
+        db(con).save(hobbit);
 
         Book timeMachine = db(con).newInstance(Book.class);
         hobbit.setTitle("The Time Machine");
-        con.object().save(timeMachine);
+        db(con).save(timeMachine);
     }
 
     public List<Book> findBooks() {
