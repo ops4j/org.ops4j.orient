@@ -28,8 +28,6 @@ import org.springframework.transaction.support.ResourceTransactionManager;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.orientechnologies.orient.core.db.ODatabaseComplex;
-import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
-import com.orientechnologies.orient.core.db.record.ODatabaseRecord;
 
 /**
  * A PlatformTransactionManager for OrientDB, enabling declarative transactions for a single
@@ -75,16 +73,11 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
 
         ODatabaseComplex<?> db = tx.getDatabase();
         if (db == null || db.isClosed()) {
-            boolean closed = (db != null);
             db = dbf.openDatabase();
             tx.setDatabase(db);
-            ODatabaseRecordThreadLocal.INSTANCE.set((ODatabaseRecord) db.getUnderlying());
-            if (closed) {
-                TransactionSynchronizationManager.unbindResource(dbf);
-            }
             TransactionSynchronizationManager.bindResource(dbf, db);
         }
-        log.debug("beginning transaction on db.hashCode() = {}", db.hashCode());
+        log.debug("beginning transaction, db.hashCode() = {}", db.hashCode());
         db.begin();
     }
 
@@ -92,7 +85,7 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
     protected void doCommit(DefaultTransactionStatus status) throws TransactionException {
         OrientTransaction tx = (OrientTransaction) status.getTransaction();
         ODatabaseComplex<?> db = tx.getDatabase();
-        log.debug("committing transaction on db.hashCode() = {}", db.hashCode());
+        log.debug("committing transaction, db.hashCode() = {}", db.hashCode());
         db.commit();
     }
 
@@ -100,7 +93,7 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
     protected void doRollback(DefaultTransactionStatus status) throws TransactionException {
         OrientTransaction tx = (OrientTransaction) status.getTransaction();
         ODatabaseComplex<?> db = tx.getDatabase();
-        log.debug("committing transaction on db.hashCode() = {}", db.hashCode());
+        log.debug("committing transaction, db.hashCode() = {}", db.hashCode());
         db.rollback();
     }
     
@@ -115,6 +108,7 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
         if (!tx.getDatabase().isClosed()) {
             tx.getDatabase().close();
         }
+        TransactionSynchronizationManager.unbindResource(dbf);
     }
 
     @Override
