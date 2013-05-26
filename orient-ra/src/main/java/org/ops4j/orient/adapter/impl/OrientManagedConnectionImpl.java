@@ -19,6 +19,7 @@
 package org.ops4j.orient.adapter.impl;
 
 import static javax.resource.spi.ConnectionEvent.CONNECTION_CLOSED;
+import static javax.resource.spi.ConnectionEvent.CONNECTION_ERROR_OCCURRED;
 import static javax.resource.spi.ConnectionEvent.LOCAL_TRANSACTION_COMMITTED;
 import static javax.resource.spi.ConnectionEvent.LOCAL_TRANSACTION_ROLLEDBACK;
 import static javax.resource.spi.ConnectionEvent.LOCAL_TRANSACTION_STARTED;
@@ -86,10 +87,6 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
         }
     }
 
-    /**
-     * @param orientManagedConnectionFactoryImpl
-     * @param database
-     */
     public OrientManagedConnectionImpl(OrientManagedConnectionFactoryImpl mcf,
         ConnectionRequestInfo cri) {
         this.mcf = mcf;
@@ -104,7 +101,7 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
 
         connection = new OrientDatabaseConnectionImpl(db, this);
         if (db.isClosed()) {
-            log.debug("opening database for user = {}", mcf.getUsername());
+            log.debug("opening database for user [{}]", mcf.getUsername());
             db.open(mcf.getUsername(), mcf.getPassword());
         }
         
@@ -115,7 +112,7 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
         String type = mcf.getType();
         String url = mcf.getConnectionUrl();
 
-        log.debug("instantiating Orient Database for type={} url={}", type, url);
+        log.debug("instantiating Orient Database of type [{}] with URL [{}]", type, url);
         if (type.equals("document")) {
             this.db = new ODatabaseDocumentTx(url);
         }
@@ -136,6 +133,7 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
     @Override
     public void cleanup() throws ResourceException {
         log.debug("cleanup()");
+        db.close();
     }
 
     @Override
@@ -146,6 +144,7 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
 
     @Override
     public void addConnectionEventListener(ConnectionEventListener listener) {
+        log.debug("addConnectinEventListener()");
         synchronized (listeners) {
             listeners.add(listener);
         }
@@ -165,6 +164,7 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
 
     @Override
     public LocalTransaction getLocalTransaction() throws ResourceException {
+        log.debug("getLocalTransaction()");
         return new OrientLocalTransaction();
     }
 
@@ -201,6 +201,9 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
                     case CONNECTION_CLOSED:
                         listener.connectionClosed(connectionEvent);
                         break;
+                    case CONNECTION_ERROR_OCCURRED:
+                        listener.connectionErrorOccurred(connectionEvent);
+                        break;
                     default:
                         throw new IllegalArgumentException("Unknown event: " + event);
                 }
@@ -208,10 +211,13 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
         }
     }
 
+    /**
+     * Do not close the underlying connection now, as it may be used in a container-managed
+     * transaction. The connection will be closed in {@link #cleanup()}.
+     */
     @Override
     public void close() {
         log.debug("close()");
-        db.close();
         fireConnectionEvent(CONNECTION_CLOSED);
     }
 
