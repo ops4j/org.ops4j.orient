@@ -20,6 +20,7 @@ package org.ops4j.orient.sample1;
 
 import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.resource.ResourceException;
@@ -43,9 +44,10 @@ public class ObjectDatabaseProducer {
     private OrientDatabaseConnectionFactory cf;
 
     @Produces
+    @RequestScoped
     public OrientDatabaseConnection openDatabase() {
         try {
-            log.info("opening database");
+            log.info("producing database connection");
             OrientDatabaseConnection db = cf.createConnection();
             return db;
         }
@@ -55,7 +57,7 @@ public class ObjectDatabaseProducer {
     }
     
     public void close(@Disposes OrientDatabaseConnection connection) {
-        log.info("closing connection");
+        log.info("disposing database connection");
         connection.close();
     }
 }
