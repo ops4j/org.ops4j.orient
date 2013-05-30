@@ -28,6 +28,8 @@ import org.springframework.transaction.support.ResourceTransactionManager;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.orientechnologies.orient.core.db.ODatabaseComplex;
+import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
+import com.orientechnologies.orient.core.db.record.ODatabaseRecord;
 
 /**
  * A PlatformTransactionManager for OrientDB, enabling declarative transactions for a single
@@ -109,6 +111,26 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
             tx.getDatabase().close();
         }
         TransactionSynchronizationManager.unbindResource(dbf);
+    }
+    
+    @Override
+    protected Object doSuspend(Object transaction) throws TransactionException {
+        OrientTransaction tx = (OrientTransaction) transaction;
+        ODatabaseComplex<?> db = tx.getDatabase();
+        return db;
+    }
+    
+    @Override
+    protected void doResume(Object transaction, Object suspendedResources)
+        throws TransactionException {
+        OrientTransaction tx = (OrientTransaction) transaction;
+        ODatabaseComplex<?> db = tx.getDatabase();
+        if (!db.isClosed()) {
+            db.close();
+        }
+        ODatabaseComplex<?> oldDb = (ODatabaseComplex<?>) suspendedResources;
+        TransactionSynchronizationManager.bindResource(dbf, oldDb);
+        ODatabaseRecordThreadLocal.INSTANCE.set((ODatabaseRecord) oldDb.getUnderlying());
     }
 
     @Override

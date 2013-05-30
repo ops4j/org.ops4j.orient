@@ -81,6 +81,16 @@ public class TransactionalObjectService {
         person = dbf.db().save(person);
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void commitInNewTransaction() {
+        assertThat(dbf.db().getTransaction().isActive(), is(true));
+
+        Person person = dbf.db().newInstance(Person.class);
+        person.setFirstName("Donald");
+        person.setLastName("Duck");
+        person = dbf.db().save(person);
+    }
+
     public void rollbackOnError() {
         assertThat(dbf.db().getTransaction().isActive(), is(true));
 
