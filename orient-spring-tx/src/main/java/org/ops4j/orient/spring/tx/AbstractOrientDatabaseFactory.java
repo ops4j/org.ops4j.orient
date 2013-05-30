@@ -62,9 +62,9 @@ public abstract class AbstractOrientDatabaseFactory {
         if (url == null) {
             throw new IllegalArgumentException("url property must not be null");
         }
-        createPool();
         ODatabaseComplex<?> db = newDatabase();
         createDatabase(db);
+        createPool();
     }
 
     /**
@@ -107,19 +107,12 @@ public abstract class AbstractOrientDatabaseFactory {
             if (!db.exists()) {
                 db.create();
             }
-            else {
-                db.open(getUsername(), getPassword());
-            }
         }
         else if (getUrl().startsWith("local:")) {
             if (!db.exists()) {
                 db.create();
                 db.close();
             }
-        }
-        // remote
-        else {
-            db.open(getUsername(), getPassword());
         }
     }
 
