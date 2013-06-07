@@ -26,7 +26,7 @@ Run Build:
 
 Releases go to Maven Central.
 
-OPS4J Orient is incubating, there is no public release yet.
+OPS4J Orient is incubating. The current release is *OPS4J Orient 0.1.0*.
 
 ## Issue Tracking
 
@@ -36,7 +36,7 @@ OPS4J Orient is incubating, there is no public release yet.
 
 We have a continuous integration build set up here:
 
-* <http://ci.ops4j.org/hudson/job/org.ops4j.orient>
+* <http://ci.ops4j.org/jenkins/job/org.ops4j.orient>
 
 Snapshot artifacts are being published to:
 
