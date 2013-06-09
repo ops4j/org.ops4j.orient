@@ -18,10 +18,12 @@
 
 package org.ops4j.orient.spring.tx.object;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import javax.persistence.Id;
 import javax.persistence.Version;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
@@ -30,11 +32,12 @@ import com.orientechnologies.orient.object.iterator.OObjectIteratorClass;
 /**
  * Iterators seem to be broken in OrientDB 1.3.0. In this test, the iterator internally goes into
  * an infinite loop.
+ * <p>
+ * The issue is fixed in OrientDB 1.4.0.
  * 
  * @author Harald Wellmann
  *
  */
-@Ignore
 public class IteratorIssueTest {
     
     public static class Person {
@@ -75,10 +78,12 @@ public class IteratorIssueTest {
         Person person2 = new Person();
         person2 = db.save(person2);
         OObjectIteratorClass<Person> it = db.browseClass(Person.class);
+        int numPersons = 0;
         while (it.hasNext()) {
-            System.out.println(it.next());
+            numPersons++;
+            it.next();
         }
-
-        db.commit();        
+        db.commit();
+        assertThat(numPersons, is(1));
     }
 }
