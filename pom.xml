@@ -36,6 +36,7 @@
         <module>orient-rar</module>
         <module>orient-samples</module>
         <module>orient-spring-tx</module>
+        <module>orient-itest</module>
     </modules>
 
     <dependencyManagement>
@@ -242,6 +243,7 @@
                         <artifactId>maven-dependency-plugin</artifactId>
                         <executions>
                             <execution>
+                                <id>copy-endorsed</id>
                                 <phase>validate</phase>
                                 <goals>
                                     <goal>copy</goal>
@@ -251,9 +253,9 @@
                                     <silent>true</silent>
                                     <artifactItems>
                                         <artifactItem>
-                                            <groupId>javax</groupId>
-                                            <artifactId>javaee-endorsed-api</artifactId>
-                                            <version>6.0</version>
+                                            <groupId>org.apache.geronimo.specs</groupId>
+                                            <artifactId>geronimo-annotation_1.1_spec</artifactId>
+                                            <version>1.0.1</version>
                                         </artifactItem>
                                     </artifactItems>
                                 </configuration>
