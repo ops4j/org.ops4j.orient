@@ -31,6 +31,8 @@ import javax.transaction.xa.XAResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.orientechnologies.orient.core.Orient;
+
 /**
  * @author Harald Wellmann
  * 
@@ -39,7 +41,7 @@ import org.slf4j.LoggerFactory;
 @Connector(
     reauthenticationSupport = false, 
     transactionSupport = TransactionSupport.TransactionSupportLevel.LocalTransaction, 
-    version = "0.1.0", 
+    version = "0.2.0", 
     vendorName = "OPS4J",
     eisType = "OrientDB")
 // @formatter:on
@@ -50,6 +52,11 @@ public class OrientResourceAdapter implements ResourceAdapter {
     @Override
     public void start(BootstrapContext ctx) throws ResourceAdapterInternalException {
         log.debug("starting OrientResourceAdapter");
+        
+        // The VM running the app server may live longer than this adapter,
+        // so we cannot use the default shutdown hook.
+        
+        Orient.instance().removeShutdownHook();
     }
 
     @Override
