@@ -27,6 +27,8 @@ import javax.resource.ResourceException;
 
 import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
 import org.ops4j.orient.adapter.api.OrientDatabaseConnectionFactory;
+import org.ops4j.orient.adapter.api.OrientDatabaseConnectionInvalidException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +49,6 @@ import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
  */
 @ApplicationScoped
 public class OrientDatabaseConnectionProducer {
-
     private static Logger log = LoggerFactory.getLogger(OrientDatabaseConnectionProducer.class);
 
     @Resource(lookup = "orient/library")
@@ -70,7 +71,7 @@ public class OrientDatabaseConnectionProducer {
         connection.close();
     }
     
-    public static OObjectDatabaseTx db(OrientDatabaseConnection connection) {
+    public static OObjectDatabaseTx db(OrientDatabaseConnection connection) throws OrientDatabaseConnectionInvalidException {
         return connection.object();
     }
 }
