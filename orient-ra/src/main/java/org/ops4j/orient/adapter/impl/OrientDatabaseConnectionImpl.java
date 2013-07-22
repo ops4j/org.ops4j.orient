@@ -19,6 +19,7 @@
 package org.ops4j.orient.adapter.impl;
 
 import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
+import org.ops4j.orient.adapter.api.OrientDatabaseConnectionInvalidException;
 
 import com.orientechnologies.orient.core.db.ODatabaseComplex;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
@@ -31,9 +32,9 @@ import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
  *
  */
 public class OrientDatabaseConnectionImpl implements OrientDatabaseConnection {
-
     private OrientManagedConnectionImpl mc;
     private ODatabaseComplex<?> db;
+		private boolean valid = true;
 
     public OrientDatabaseConnectionImpl(ODatabaseComplex<?> db, OrientManagedConnectionImpl mc) {
         this.db = db;
@@ -41,22 +42,39 @@ public class OrientDatabaseConnectionImpl implements OrientDatabaseConnection {
     }
 
     @Override
-    public ODatabaseDocumentTx document() {
+    public ODatabaseDocumentTx document() throws OrientDatabaseConnectionInvalidException {
+	      checkValidity();
         return (ODatabaseDocumentTx) db;
     }
 
     @Override
-    public OObjectDatabaseTx object() {
+    public OObjectDatabaseTx object() throws OrientDatabaseConnectionInvalidException {
+	      checkValidity();
         return (OObjectDatabaseTx) db;
     }
 
     @Override
-    public OGraphDatabase graph() {
+    public OGraphDatabase graph() throws OrientDatabaseConnectionInvalidException {
+	      checkValidity();
         return (OGraphDatabase) db;
     }
 
     @Override
     public void close() {
         mc.close();
-    }    
+    }
+
+		protected synchronized void setValid(boolean valid) {
+				this.valid = valid;
+		}
+
+		protected synchronized boolean isValid() {
+				return valid;
+		}
+
+		private void checkValidity() throws OrientDatabaseConnectionInvalidException {
+			if (!isValid()) {
+				throw new OrientDatabaseConnectionInvalidException();
+			}
+		}
 }

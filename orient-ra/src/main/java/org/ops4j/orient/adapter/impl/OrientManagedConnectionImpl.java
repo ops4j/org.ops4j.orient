@@ -165,7 +165,8 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
     @Override
     public void cleanup() throws ResourceException {
         log.debug("cleanup()");
-        closeDatabase();
+	      this.connection.setValid(false);
+	      this.connection = null;
     }
 
     @Override
