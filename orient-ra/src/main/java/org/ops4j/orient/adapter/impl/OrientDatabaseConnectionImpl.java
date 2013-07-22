@@ -19,21 +19,22 @@
 package org.ops4j.orient.adapter.impl;
 
 import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
+import org.ops4j.orient.adapter.api.OrientDatabaseConnectionInvalidException;
 
 import com.orientechnologies.orient.core.db.ODatabaseComplex;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.db.graph.OGraphDatabase;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
-
 /**
  * @author Harald Wellmann
- *
+ * 
  */
 public class OrientDatabaseConnectionImpl implements OrientDatabaseConnection {
 
     private OrientManagedConnectionImpl mc;
     private ODatabaseComplex<?> db;
+    private boolean valid = true;
 
     public OrientDatabaseConnectionImpl(ODatabaseComplex<?> db, OrientManagedConnectionImpl mc) {
         this.db = db;
@@ -42,21 +43,38 @@ public class OrientDatabaseConnectionImpl implements OrientDatabaseConnection {
 
     @Override
     public ODatabaseDocumentTx document() {
+        checkValidity();
         return (ODatabaseDocumentTx) db;
     }
 
     @Override
     public OObjectDatabaseTx object() {
+        checkValidity();
         return (OObjectDatabaseTx) db;
     }
 
     @Override
     public OGraphDatabase graph() {
+        checkValidity();
         return (OGraphDatabase) db;
     }
 
     @Override
     public void close() {
         mc.close();
-    }    
+    }
+
+    protected synchronized void setValid(boolean valid) {
+        this.valid = valid;
+    }
+
+    protected synchronized boolean isValid() {
+        return valid;
+    }
+
+    private void checkValidity() {
+        if (!isValid()) {
+            throw new OrientDatabaseConnectionInvalidException();
+        }
+    }
 }

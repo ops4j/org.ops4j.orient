@@ -35,8 +35,6 @@ import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 @Singleton
 @Startup
 public class OrientClient {
-    
-
     @Inject
     private OrientDatabaseConnection connection;
     

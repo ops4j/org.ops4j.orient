@@ -29,6 +29,7 @@ import org.ops4j.orient.sample2.LibraryService;
 import org.ops4j.orient.sample2.model.Book;
 
 
+
 /**
  * @author Harald Wellmann
  *

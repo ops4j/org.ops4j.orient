@@ -44,7 +44,6 @@ import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
  */
 @Stateless
 public class LibraryService {
-
     private static Logger log = LoggerFactory.getLogger(LibraryService.class);
 
     @Inject

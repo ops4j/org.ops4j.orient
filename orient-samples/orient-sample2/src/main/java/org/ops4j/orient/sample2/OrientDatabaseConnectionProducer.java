@@ -47,7 +47,6 @@ import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
  */
 @ApplicationScoped
 public class OrientDatabaseConnectionProducer {
-
     private static Logger log = LoggerFactory.getLogger(OrientDatabaseConnectionProducer.class);
 
     @Resource(lookup = "orient/library")
