@@ -28,8 +28,6 @@ import javax.inject.Named;
 import org.ops4j.orient.sample2.LibraryService;
 import org.ops4j.orient.sample2.model.Book;
 
-import org.ops4j.orient.adapter.api.OrientDatabaseConnectionInvalidException;
-
 
 
 /**
@@ -46,7 +44,7 @@ public class LibraryController {
     private List<Book> books;
     
     @PostConstruct
-    public void init() throws OrientDatabaseConnectionInvalidException {
+    public void init() {
         books = libraryService.findBooks();
     }
 

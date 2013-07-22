@@ -28,8 +28,6 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
-import org.ops4j.orient.adapter.api.OrientDatabaseConnectionInvalidException;
-
 import org.ops4j.orient.sample2.model.Author;
 import org.ops4j.orient.sample2.model.Book;
 import org.slf4j.Logger;
@@ -52,12 +50,12 @@ public class LibraryService {
     private OrientDatabaseConnection con;
 
     @TransactionAttribute(TransactionAttributeType.NEVER)
-    public void registerEntityClasses() throws OrientDatabaseConnectionInvalidException {
+    public void registerEntityClasses() {
         registerClass(Author.class);
         registerClass(Book.class);
     }
 
-    private <T> void registerClass(Class<T> klass) throws OrientDatabaseConnectionInvalidException {
+    private <T> void registerClass(Class<T> klass) {
         OEntityManager em = db(con).getEntityManager();
         OSchema schema = db(con).getMetadata().getSchema();
         if (schema.getClass(klass) == null) {
@@ -66,7 +64,7 @@ public class LibraryService {
         em.registerEntityClass(klass);
     }
 
-    public void createEntities() throws OrientDatabaseConnectionInvalidException {
+    public void createEntities() {
         Book hobbit = new Book();
         hobbit.setTitle("The Hobbit");
         db(con).save(hobbit);
@@ -76,7 +74,7 @@ public class LibraryService {
         db(con).save(timeMachine);
     }
 
-    public List<Book> findBooks() throws OrientDatabaseConnectionInvalidException {
+    public List<Book> findBooks() {
         log.info("finding books");
         return db(con).query(new OSQLSynchQuery<Book>("select from Book"));
     }

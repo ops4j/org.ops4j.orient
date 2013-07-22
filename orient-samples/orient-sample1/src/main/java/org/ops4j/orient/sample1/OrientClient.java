@@ -24,7 +24,6 @@ import javax.ejb.Startup;
 import javax.inject.Inject;
 
 import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
-import org.ops4j.orient.adapter.api.OrientDatabaseConnectionInvalidException;
 
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
@@ -40,7 +39,7 @@ public class OrientClient {
     private OrientDatabaseConnection connection;
     
     @PostConstruct
-    public void init() throws OrientDatabaseConnectionInvalidException {
+    public void init() {
         OObjectDatabaseTx db = connection.object();
         System.out.println("DB exists: "+ db.exists());
     }

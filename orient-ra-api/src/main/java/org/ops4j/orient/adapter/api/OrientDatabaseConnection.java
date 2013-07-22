@@ -30,8 +30,8 @@ import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
  *
  */
 public interface OrientDatabaseConnection extends Closeable {
-    ODatabaseDocumentTx document() throws OrientDatabaseConnectionInvalidException;
-    OObjectDatabaseTx object() throws OrientDatabaseConnectionInvalidException;
-    OGraphDatabase graph() throws OrientDatabaseConnectionInvalidException;
+    ODatabaseDocumentTx document();
+    OObjectDatabaseTx object();
+    OGraphDatabase graph();
     void close();
 }

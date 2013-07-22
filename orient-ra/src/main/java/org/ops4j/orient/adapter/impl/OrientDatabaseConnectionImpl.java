@@ -26,15 +26,15 @@ import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.db.graph.OGraphDatabase;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
-
 /**
  * @author Harald Wellmann
- *
+ * 
  */
 public class OrientDatabaseConnectionImpl implements OrientDatabaseConnection {
+
     private OrientManagedConnectionImpl mc;
     private ODatabaseComplex<?> db;
-		private boolean valid = true;
+    private boolean valid = true;
 
     public OrientDatabaseConnectionImpl(ODatabaseComplex<?> db, OrientManagedConnectionImpl mc) {
         this.db = db;
@@ -42,20 +42,20 @@ public class OrientDatabaseConnectionImpl implements OrientDatabaseConnection {
     }
 
     @Override
-    public ODatabaseDocumentTx document() throws OrientDatabaseConnectionInvalidException {
-	      checkValidity();
+    public ODatabaseDocumentTx document() {
+        checkValidity();
         return (ODatabaseDocumentTx) db;
     }
 
     @Override
-    public OObjectDatabaseTx object() throws OrientDatabaseConnectionInvalidException {
-	      checkValidity();
+    public OObjectDatabaseTx object() {
+        checkValidity();
         return (OObjectDatabaseTx) db;
     }
 
     @Override
-    public OGraphDatabase graph() throws OrientDatabaseConnectionInvalidException {
-	      checkValidity();
+    public OGraphDatabase graph() {
+        checkValidity();
         return (OGraphDatabase) db;
     }
 
@@ -64,17 +64,17 @@ public class OrientDatabaseConnectionImpl implements OrientDatabaseConnection {
         mc.close();
     }
 
-		protected synchronized void setValid(boolean valid) {
-				this.valid = valid;
-		}
+    protected synchronized void setValid(boolean valid) {
+        this.valid = valid;
+    }
 
-		protected synchronized boolean isValid() {
-				return valid;
-		}
+    protected synchronized boolean isValid() {
+        return valid;
+    }
 
-		private void checkValidity() throws OrientDatabaseConnectionInvalidException {
-			if (!isValid()) {
-				throw new OrientDatabaseConnectionInvalidException();
-			}
-		}
+    private void checkValidity() {
+        if (!isValid()) {
+            throw new OrientDatabaseConnectionInvalidException();
+        }
+    }
 }

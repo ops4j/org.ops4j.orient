@@ -27,8 +27,6 @@ import javax.resource.ResourceException;
 
 import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
 import org.ops4j.orient.adapter.api.OrientDatabaseConnectionFactory;
-import org.ops4j.orient.adapter.api.OrientDatabaseConnectionInvalidException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +69,7 @@ public class OrientDatabaseConnectionProducer {
         connection.close();
     }
     
-    public static OObjectDatabaseTx db(OrientDatabaseConnection connection) throws OrientDatabaseConnectionInvalidException {
+    public static OObjectDatabaseTx db(OrientDatabaseConnection connection) {
         return connection.object();
     }
 }
