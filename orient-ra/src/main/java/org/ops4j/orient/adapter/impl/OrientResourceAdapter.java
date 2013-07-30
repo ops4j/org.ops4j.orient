@@ -55,6 +55,7 @@ public class OrientResourceAdapter implements ResourceAdapter {
         
         // The VM running the app server may live longer than this adapter,
         // so we cannot use the default shutdown hook.
+        // shutdown() is called directly in stop().
         
         Orient.instance().removeShutdownHook();
     }
@@ -62,6 +63,7 @@ public class OrientResourceAdapter implements ResourceAdapter {
     @Override
     public void stop() {
         log.debug("stopping OrientResourceAdapter");
+        Orient.instance().shutdown();
     }
 
     @Override
