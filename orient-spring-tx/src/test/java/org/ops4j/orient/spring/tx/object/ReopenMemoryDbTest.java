@@ -28,7 +28,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.orientechnologies.orient.core.exception.ODatabaseException;
-import com.orientechnologies.orient.core.exception.OStorageException;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
 public class ReopenMemoryDbTest {
@@ -60,13 +59,13 @@ public class ReopenMemoryDbTest {
     }
 
     @Test
-    public void cannotOpenClosedMemoryDb() {
+    public void canReopenClosedMemoryDb() {
         OObjectDatabaseTx db = new OObjectDatabaseTx("memory:memtest");        
         db.create();
         db.close();
-        
-        thrown.expect(OStorageException.class);
-        thrown.expectMessage("does not exist in path");
+        assertThat(db.isClosed(), is(true));
         db.open("admin", "admin");
+        assertThat(db.isClosed(), is(false));
+        db.close();
     }
 }
