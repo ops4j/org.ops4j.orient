@@ -61,7 +61,7 @@ public class IteratorIssueTest {
 
     @Test
     public void iteratorShouldTerminate() {
-        OObjectDatabaseTx db = new OObjectDatabaseTx("memory:test");
+        OObjectDatabaseTx db = new OObjectDatabaseTx("memory:iterator");
         db.create();
         db.getEntityManager().registerEntityClass(Person.class);
 

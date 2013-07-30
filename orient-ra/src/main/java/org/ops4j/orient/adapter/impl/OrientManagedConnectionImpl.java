@@ -151,9 +151,7 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
     }
 
     private void closeDatabase() {
-        if (!engine.equals("memory")) {
-            db.close();
-        }
+        db.close();
     }
 
     @Override

@@ -103,12 +103,7 @@ public abstract class AbstractOrientDatabaseFactory {
      * @param db database object
      */
     protected void createDatabase(ODatabaseComplex<?> db) {
-        if (getUrl().startsWith("memory:")) {
-            if (!db.exists()) {
-                db.create();
-            }
-        }
-        else if (getUrl().startsWith("local:")) {
+        if (! getUrl().startsWith("remote:")) {
             if (!db.exists()) {
                 db.create();
                 db.close();
