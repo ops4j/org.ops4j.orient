@@ -25,6 +25,7 @@ import com.orientechnologies.orient.core.db.ODatabaseComplex;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.db.graph.OGraphDatabase;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 /**
  * @author Harald Wellmann
@@ -57,6 +58,12 @@ public class OrientDatabaseConnectionImpl implements OrientDatabaseConnection {
     public OGraphDatabase graph() {
         checkValidity();
         return (OGraphDatabase) db;
+    }
+
+    @Override
+    public OrientGraph ograph() {
+        checkValidity();
+        return new OrientGraph((ODatabaseDocumentTx) db);
     }
 
     @Override
