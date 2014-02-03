@@ -52,7 +52,7 @@ public class OrientGraphFactory extends AbstractOrientDatabaseFactory {
     }
     
     public OrientGraph graph() {
-        return new OrientGraph((ODatabaseDocumentTx) super.db());
+		return new OrientGraph((ODatabaseDocumentTx) super.db(), false);
     }
     
 

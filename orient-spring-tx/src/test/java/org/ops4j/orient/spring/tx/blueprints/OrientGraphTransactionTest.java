@@ -73,7 +73,7 @@ public class OrientGraphTransactionTest {
     @Test
     public void shouldCommit() {
         service.commitAutomatically();
-        assertThat(db.getTransaction().isActive(), is(false));
+		assertThat(db.getTransaction().isActive(), is(false));
 
         assertThat(service.count(), is(1L));
     }

@@ -45,6 +45,7 @@ public class OrientGraphDatabaseFactory extends AbstractOrientDatabaseFactory {
         return db;
     }
 
+	@Override
     public OGraphDatabase db() {
         return (OGraphDatabase) super.db();
     }

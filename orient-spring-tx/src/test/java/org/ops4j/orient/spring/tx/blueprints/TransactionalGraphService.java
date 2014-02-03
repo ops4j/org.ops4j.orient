@@ -48,6 +48,9 @@ public class TransactionalGraphService {
         assertThat(dbf.db().getTransaction().isActive(), is(true));
         OrientGraph graph = dbf.graph();
         graph.setAutoStartTx(false);
+		// setAutoStartTx does not affect running transactions. Running commit (or rollback)
+		// on the already running tx shouldn't start a new one:
+		graph.commit();
 
         OrientVertex vertex = graph.addVertex("TestVertex");
         vertex.setProperty("test", "test");
