@@ -18,8 +18,6 @@
 
 package org.ops4j.orient.spring.tx.graph;
 
-import static org.junit.Assert.assertTrue;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -27,19 +25,21 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.ops4j.orient.spring.tx.OrientGraphDatabaseFactory;
+import org.ops4j.orient.spring.tx.OrientBlueprintsGraphFactory;
 import org.ops4j.orient.spring.tx.OrientTransactionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.orientechnologies.orient.core.db.graph.OGraphDatabase;
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.iterator.ORecordIteratorClass;
 import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
+import static org.junit.Assert.assertTrue;
+
 /**
- * Tests {@link OrientTransactionManager} with a {@link OrientGraphDatabaseFactory}.
+ * Tests {@link OrientTransactionManager} with a {@link OrientBlueprintsGraphFactory}.
  * @author Harald Wellmann
  * 
  */
@@ -51,16 +51,16 @@ public class GraphDatabaseTransactionTest {
     private TransactionalGraphService service;
 
     @Autowired
-    private OrientGraphDatabaseFactory dbf;
+    private OrientBlueprintsGraphFactory dbf;
 
-    private OGraphDatabase db;
+    private ODatabaseDocumentTx db;
 
     @Before
     public void setUp() {
         db = dbf.openDatabase();
         OSchema schema = db.getMetadata().getSchema();
         if (!schema.existsClass("TestVertex")) {
-            db.createVertexType("TestVertex");
+			dbf.graph().createVertexType("TestVertex");
         }
         ORecordIteratorClass<ODocument> it = db.browseClass("TestVertex");
         while (it.hasNext()) {
@@ -73,7 +73,7 @@ public class GraphDatabaseTransactionTest {
         service.commitAutomatically();
         assertTrue(!db.getTransaction().isActive());
 
-        assertTrue(service.count() == 1);
+		assertTrue(service.count() == 1);
     }
 
     @Test

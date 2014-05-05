@@ -18,10 +18,6 @@
 
 package org.ops4j.orient.spring.tx.blueprints;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -29,8 +25,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.ops4j.orient.spring.tx.OrientGraphDatabaseFactory;
-import org.ops4j.orient.spring.tx.OrientGraphFactory;
+import org.ops4j.orient.spring.tx.OrientBlueprintsGraphFactory;
 import org.ops4j.orient.spring.tx.OrientTransactionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -40,8 +35,12 @@ import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 /**
- * Tests {@link OrientTransactionManager} with a {@link OrientGraphDatabaseFactory}.
+ * Tests {@link OrientTransactionManager} with a {@link OrientBlueprintsGraphFactory}.
  * @author Harald Wellmann
  * 
  */
@@ -53,7 +52,7 @@ public class OrientGraphTransactionTest {
     private TransactionalGraphService service;
 
     @Autowired
-    private OrientGraphFactory dbf;
+    private OrientBlueprintsGraphFactory dbf;
 
     private ODatabaseDocumentTx db;
     
@@ -72,6 +71,7 @@ public class OrientGraphTransactionTest {
 
     @Test
     public void shouldCommit() {
+		assertThat(service.count(), is(0L));
         service.commitAutomatically();
 		assertThat(db.getTransaction().isActive(), is(false));
 
@@ -100,7 +100,7 @@ public class OrientGraphTransactionTest {
             executorService.submit(new CommitTask());
         }
         executorService.shutdown();
-        executorService.awaitTermination(1000, TimeUnit.SECONDS);        
+        executorService.awaitTermination(1000, TimeUnit.SECONDS);
     }
     
     class CommitTask implements Runnable {

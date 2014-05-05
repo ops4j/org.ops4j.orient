@@ -29,7 +29,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
  * @author Harald Wellmann
  * 
  */
-public class OrientGraphFactory extends AbstractOrientDatabaseFactory {
+public class OrientBlueprintsGraphFactory extends AbstractOrientDatabaseFactory {
 
     private ODatabaseDocumentTx db;
     private ODatabasePoolBase<ODatabaseDocumentTx> pool;
@@ -37,7 +37,7 @@ public class OrientGraphFactory extends AbstractOrientDatabaseFactory {
     @Override
     protected void createPool() {
         pool = new ODatabaseDocumentPool(getUrl(), getUsername(), getPassword());
-        pool.setup(getMinPoolSize(), getMaxPoolSize());        
+        pool.setup(getMinPoolSize(), getMaxPoolSize());
     }
 
 
@@ -54,7 +54,6 @@ public class OrientGraphFactory extends AbstractOrientDatabaseFactory {
     public OrientGraph graph() {
 		return new OrientGraph((ODatabaseDocumentTx) super.db(), false);
     }
-    
 
     protected ODatabaseDocumentTx newDatabase() {
         return new ODatabaseDocumentTx(getUrl());

@@ -18,11 +18,6 @@
 
 package org.ops4j.orient.spring.tx.object;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.isA;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -30,29 +25,34 @@ import org.junit.rules.ExpectedException;
 import com.orientechnologies.orient.core.exception.ODatabaseException;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.isA;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+
 public class ReopenMemoryDbTest {
     
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-    
+
     @Test
     public void createAndCheckStorageType() {
-        OObjectDatabaseTx db = new OObjectDatabaseTx("memory:memtest");        
+        OObjectDatabaseTx db = new OObjectDatabaseTx("memory:memtest1");
         db.create();
         assertThat(db.getStorage().getType(), is("memory"));
     }
 
     @Test
     public void cannotCheckStorageTypeBeforeCreate() {
-        OObjectDatabaseTx db = new OObjectDatabaseTx("memory:memtest");        
+        OObjectDatabaseTx db = new OObjectDatabaseTx("memory:memtest2");
         assertThat(db.getStorage(), is(nullValue()));
     }
 
     @Test
     public void cannotOpenCreatedMemoryDb() {
-        OObjectDatabaseTx db = new OObjectDatabaseTx("memory:memtest");        
+        OObjectDatabaseTx db = new OObjectDatabaseTx("memory:memtest3");
         db.create();
-        
+
         thrown.expect(ODatabaseException.class);
         thrown.expectCause(isA(IllegalStateException.class));
         db.open("admin", "admin");
@@ -60,7 +60,7 @@ public class ReopenMemoryDbTest {
 
     @Test
     public void canReopenClosedMemoryDb() {
-        OObjectDatabaseTx db = new OObjectDatabaseTx("memory:memtest");        
+        OObjectDatabaseTx db = new OObjectDatabaseTx("memory:memtest4");
         db.create();
         db.close();
         assertThat(db.isClosed(), is(true));
