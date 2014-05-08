@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.tinkerpop.blueprints:blueprints-core:2.5.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/tinkerpop/blueprints/blueprints-core/2.5.0-SNAPSHOT/blueprints-core-2.5.0-20140326.210910-38.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/tinkerpop/blueprints/blueprints-core/2.5.0-SNAPSHOT/blueprints-core-2.5.0-20140326.210910-38-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/tinkerpop/blueprints/blueprints-core/2.5.0-SNAPSHOT/blueprints-core-2.5.0-20140326.210910-38-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

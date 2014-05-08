@@ -21,17 +21,13 @@ package org.ops4j.orient.adapter.api;
 import java.io.Closeable;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
-import com.orientechnologies.orient.core.db.graph.OGraphDatabase;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
-
 
 /**
  * @author Harald Wellmann
- *
  */
 public interface OrientDatabaseConnection extends Closeable {
-    ODatabaseDocumentTx document();
-    OObjectDatabaseTx object();
-    OGraphDatabase graph();
-    void close();
+  ODatabaseDocumentTx document();
+  OObjectDatabaseTx object();
+	void close();
 }

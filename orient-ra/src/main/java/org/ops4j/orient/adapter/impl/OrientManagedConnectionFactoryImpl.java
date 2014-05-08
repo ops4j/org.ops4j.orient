@@ -87,8 +87,8 @@ public class OrientManagedConnectionFactoryImpl implements OrientManagedConnecti
             throw new ResourceException("configuration property [connectionUrl] must not be empty");
         }
         
-        if (!Arrays.asList("document", "graph", "object").contains(type)) {
-            throw new ResourceException("configuration property [type] must be one of 'document', 'graph', 'object'");            
+        if (!Arrays.asList("document", "object").contains(type)) {
+            throw new ResourceException("configuration property [type] must be one of 'document', 'object'");
         }
     }
 

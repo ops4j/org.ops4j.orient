@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.orientechnologies:orientdb-tools:1.7-rc2">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/orientechnologies/orientdb-tools/1.7-rc2/orientdb-tools-1.7-rc2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/orientechnologies/orientdb-tools/1.7-rc2/orientdb-tools-1.7-rc2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/orientechnologies/orientdb-tools/1.7-rc2/orientdb-tools-1.7-rc2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,30 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="orient-sample1:war exploded">
+    <output-path>$PROJECT_DIR$/orient-samples/orient-sample1/target/orient-sample1-0.5.0-SNAPSHOT</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="orient-sample1/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="orient-sample1" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="archive" name="orient-ra-0.5.0-SNAPSHOT.jar">
+            <element id="module-output" name="orient-ra" />
+          </element>
+          <element id="archive" name="orient-ra-api-0.5.0-SNAPSHOT.jar">
+            <element id="module-output" name="orient-ra-api" />
+          </element>
+          <element id="library" level="project" name="Maven: com.orientechnologies:orientdb-object:1.7-rc2" />
+          <element id="library" level="project" name="Maven: com.orientechnologies:orientdb-core:1.7-rc2" />
+          <element id="library" level="project" name="Maven: com.orientechnologies:orient-commons:1.7-rc2" />
+          <element id="library" level="project" name="Maven: com.orientechnologies:orientdb-nativeos:1.7-rc2" />
+          <element id="library" level="project" name="Maven: net.java.dev.jna:jna:4.0.0" />
+          <element id="library" level="project" name="Maven: net.java.dev.jna:jna-platform:4.0.0" />
+          <element id="library" level="project" name="Maven: org.iq80.snappy:snappy:0.3" />
+          <element id="library" level="project" name="Maven: com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.6.6" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

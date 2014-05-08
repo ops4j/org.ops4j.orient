@@ -23,58 +23,58 @@ import org.ops4j.orient.adapter.api.OrientDatabaseConnectionInvalidException;
 
 import com.orientechnologies.orient.core.db.ODatabaseComplex;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
-import com.orientechnologies.orient.core.db.graph.OGraphDatabase;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
+
+import com.orientechnologies.common.exception.OException;
 
 /**
  * @author Harald Wellmann
- * 
  */
 public class OrientDatabaseConnectionImpl implements OrientDatabaseConnection {
+  private OrientManagedConnectionImpl mc;
+  private ODatabaseComplex<?> db;
+  private boolean valid = true;
 
-    private OrientManagedConnectionImpl mc;
-    private ODatabaseComplex<?> db;
-    private boolean valid = true;
+  public OrientDatabaseConnectionImpl(ODatabaseComplex<?> db, OrientManagedConnectionImpl mc) {
+    this.db = db;
+    this.mc = mc;
+  }
 
-    public OrientDatabaseConnectionImpl(ODatabaseComplex<?> db, OrientManagedConnectionImpl mc) {
-        this.db = db;
-        this.mc = mc;
+  @Override
+  public ODatabaseDocumentTx document() {
+    checkValidity();
+    return (ODatabaseDocumentTx) db;
+  }
+
+  @Override
+  public OObjectDatabaseTx object() {
+    checkValidity();
+    return (OObjectDatabaseTx) db;
+  }
+
+  @Override
+  public void close() {
+    mc.close();
+  }
+
+	protected synchronized void setValid(boolean valid) {
+    this.valid = valid;
+  }
+
+  protected synchronized boolean isValid() {
+    return valid;
+  }
+
+  private void checkValidity() {
+    if (!isValid()) {
+      throw new OrientDatabaseConnectionInvalidException();
     }
+  }
 
-    @Override
-    public ODatabaseDocumentTx document() {
-        checkValidity();
-        return (ODatabaseDocumentTx) db;
-    }
-
-    @Override
-    public OObjectDatabaseTx object() {
-        checkValidity();
-        return (OObjectDatabaseTx) db;
-    }
-
-    @Override
-    public OGraphDatabase graph() {
-        checkValidity();
-        return (OGraphDatabase) db;
-    }
-
-    @Override
-    public void close() {
-        mc.close();
-    }
-
-    protected synchronized void setValid(boolean valid) {
-        this.valid = valid;
-    }
-
-    protected synchronized boolean isValid() {
-        return valid;
-    }
-
-    private void checkValidity() {
-        if (!isValid()) {
-            throw new OrientDatabaseConnectionInvalidException();
-        }
-    }
+	/**
+	 * exception to be thrown upon commit - used for unit testing 2pc
+	 */
+	public void setCommitException(OException commitException) {
+		mc.setCommitException(commitException);
+	}
 }

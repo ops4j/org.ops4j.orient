@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.tinkerpop.gremlin:gremlin-java:2.5.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/tinkerpop/gremlin/gremlin-java/2.5.0-SNAPSHOT/gremlin-java-2.5.0-20140125.153323-8.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/tinkerpop/gremlin/gremlin-java/2.5.0-SNAPSHOT/gremlin-java-2.5.0-20140125.153323-8-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/tinkerpop/gremlin/gremlin-java/2.5.0-SNAPSHOT/gremlin-java-2.5.0-20140125.153323-8-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
