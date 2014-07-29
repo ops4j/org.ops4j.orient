@@ -35,7 +35,7 @@ public class OrientManagedConnectionMetaData implements ManagedConnectionMetaDat
 
     @Override
     public String getEISProductVersion() throws ResourceException {
-        return "1.3.0";
+        return "1.7.7";
     }
 
     @Override

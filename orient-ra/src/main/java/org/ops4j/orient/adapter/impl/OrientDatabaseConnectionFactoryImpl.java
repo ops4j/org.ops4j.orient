@@ -22,10 +22,10 @@ import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.resource.ResourceException;
 import javax.resource.spi.ConnectionManager;
+import javax.resource.spi.ManagedConnectionFactory;
 
 import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
 import org.ops4j.orient.adapter.api.OrientDatabaseConnectionFactory;
-import org.ops4j.orient.adapter.api.OrientManagedConnectionFactory;
 
 
 /**
@@ -36,11 +36,11 @@ public class OrientDatabaseConnectionFactoryImpl implements OrientDatabaseConnec
 
     private static final long serialVersionUID = 1L;
 
-    private OrientManagedConnectionFactory mcf;
+    private ManagedConnectionFactory mcf;
     private ConnectionManager cm;
     private Reference reference;
     
-    public OrientDatabaseConnectionFactoryImpl(OrientManagedConnectionFactory mcf, ConnectionManager cm) {
+    public OrientDatabaseConnectionFactoryImpl(ManagedConnectionFactory mcf, ConnectionManager cm) {
         this.mcf = mcf;
         this.cm = cm;
     }

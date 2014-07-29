@@ -21,7 +21,6 @@ package org.ops4j.orient.adapter.api;
 import java.io.Closeable;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
-import com.orientechnologies.orient.core.db.graph.OGraphDatabase;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
@@ -33,7 +32,6 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 public interface OrientDatabaseConnection extends Closeable {
     ODatabaseDocumentTx document();
     OObjectDatabaseTx object();
-    OGraphDatabase graph();
     OrientGraph ograph();
     void close();
 }
