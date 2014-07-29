@@ -37,8 +37,8 @@
         <module>orient-ra</module>
         <module>orient-rar</module>
         <module>orient-samples</module>
-        <module>orient-spring-tx</module>
-        <module>orient-itest</module>
+        <!-- <module>orient-spring-tx</module>
+        <module>orient-itest</module> -->
     </modules>
 
     <dependencyManagement>
@@ -184,7 +184,7 @@
                 <version>3.16.1-GA</version>
             </dependency>
 
-            <dependency>
+            <!-- <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-tx</artifactId>
                 <version>${spring.version}</version>
@@ -212,7 +212,7 @@
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
+            </dependency> -->
 
             <dependency>
                 <groupId>junit</groupId>
