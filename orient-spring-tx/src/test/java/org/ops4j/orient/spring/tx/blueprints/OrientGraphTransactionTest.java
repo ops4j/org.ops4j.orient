@@ -29,7 +29,6 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.ops4j.orient.spring.tx.OrientGraphDatabaseFactory;
 import org.ops4j.orient.spring.tx.OrientGraphFactory;
 import org.ops4j.orient.spring.tx.OrientTransactionManager;
 import org.springframework.beans.factory.annotation.Autowired;
