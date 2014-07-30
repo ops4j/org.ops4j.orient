@@ -21,6 +21,12 @@
         <dependency>
             <groupId>com.tinkerpop.blueprints</groupId>
             <artifactId>blueprints-orient-graph</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>orient-commons</artifactId>
+                    <groupId>com.orientechnologies</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
