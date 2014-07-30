@@ -37,8 +37,8 @@
         <module>orient-ra</module>
         <module>orient-rar</module>
         <module>orient-samples</module>
-        <!-- <module>orient-spring-tx</module>
-        <module>orient-itest</module> -->
+        <!-- <module>orient-spring-tx</module> -->
+        <module>orient-itest</module>
     </modules>
 
     <dependencyManagement>
