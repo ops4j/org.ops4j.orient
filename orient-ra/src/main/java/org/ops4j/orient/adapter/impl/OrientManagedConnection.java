@@ -44,18 +44,17 @@ import org.slf4j.LoggerFactory;
 
 import com.orientechnologies.orient.core.db.ODatabaseComplex;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
-import com.orientechnologies.orient.core.db.graph.OGraphDatabase;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
 /**
  * @author Harald Wellmann
  * 
  */
-public class OrientManagedConnectionImpl implements ManagedConnection, Closeable {
+public class OrientManagedConnection implements ManagedConnection, Closeable {
 
-    private static Logger log = LoggerFactory.getLogger(OrientManagedConnectionImpl.class);
+    private static Logger log = LoggerFactory.getLogger(OrientManagedConnection.class);
 
-    private OrientManagedConnectionFactoryImpl mcf;
+    private OrientManagedConnectionFactory mcf;
     private ODatabaseComplex<?> db;
     private PrintWriter logWriter;
     private List<ConnectionEventListener> listeners = new ArrayList<ConnectionEventListener>();
@@ -89,7 +88,7 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
         }
     }
 
-    public OrientManagedConnectionImpl(OrientManagedConnectionFactoryImpl mcf,
+    public OrientManagedConnection(OrientManagedConnectionFactory mcf,
         ConnectionRequestInfo cri) throws ResourceException {
         this.mcf = mcf;
         this.cri = cri;
@@ -116,14 +115,11 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
         String url = mcf.getConnectionUrl();
 
         log.debug("instantiating Orient Database of type [{}] with URL [{}]", type, url);
-        if (type.equals("document")) {
+        if (type.equals("document") || type.equals("graph")) {
             this.db = new ODatabaseDocumentTx(url);
         }
         else if (type.equals("object")) {
             this.db = new OObjectDatabaseTx(url);
-        }
-        else if (type.equals("graph")) {
-            this.db = new OGraphDatabase(url);
         }
     }
 

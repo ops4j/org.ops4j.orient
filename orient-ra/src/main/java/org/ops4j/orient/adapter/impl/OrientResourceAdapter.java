@@ -40,8 +40,8 @@ import com.orientechnologies.orient.core.Orient;
 // @formatter:off
 @Connector(
     reauthenticationSupport = false, 
-    transactionSupport = TransactionSupport.TransactionSupportLevel.LocalTransaction, 
-    version = "0.2.0", 
+    transactionSupport = TransactionSupport.TransactionSupportLevel.LocalTransaction,
+    version = "0.4.0", 
     vendorName = "OPS4J",
     eisType = "OrientDB")
 // @formatter:on
