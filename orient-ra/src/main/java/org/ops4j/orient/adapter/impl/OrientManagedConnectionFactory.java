@@ -28,12 +28,14 @@ import javax.resource.spi.ConnectionDefinition;
 import javax.resource.spi.ConnectionManager;
 import javax.resource.spi.ConnectionRequestInfo;
 import javax.resource.spi.ManagedConnection;
+import javax.resource.spi.ManagedConnectionFactory;
 import javax.resource.spi.ResourceAdapter;
+import javax.resource.spi.ResourceAdapterAssociation;
+import javax.resource.spi.TransactionSupport;
 import javax.security.auth.Subject;
 
 import org.ops4j.orient.adapter.api.OrientDatabaseConnectionFactory;
 import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
-import org.ops4j.orient.adapter.api.OrientManagedConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,11 +50,11 @@ import org.slf4j.LoggerFactory;
     connection = OrientDatabaseConnection.class,
     connectionImpl = OrientDatabaseConnectionImpl.class)
 // @formatter:on
-public class OrientManagedConnectionFactoryImpl implements OrientManagedConnectionFactory {
+public class OrientManagedConnectionFactory implements ManagedConnectionFactory, ResourceAdapterAssociation, TransactionSupport {
 
     private static final long serialVersionUID = 1L;
 
-    private static Logger log = LoggerFactory.getLogger(OrientManagedConnectionFactoryImpl.class);
+    private static Logger log = LoggerFactory.getLogger(OrientManagedConnectionFactory.class);
     
     
     private PrintWriter logWriter;
@@ -71,7 +73,7 @@ public class OrientManagedConnectionFactoryImpl implements OrientManagedConnecti
     private String password;
     
 
-    public OrientManagedConnectionFactoryImpl() {
+    public OrientManagedConnectionFactory() {
         this.logWriter = new PrintWriter(System.out);
     }
 
@@ -101,7 +103,7 @@ public class OrientManagedConnectionFactoryImpl implements OrientManagedConnecti
     public ManagedConnection createManagedConnection(Subject subject,
         ConnectionRequestInfo cxRequestInfo) throws ResourceException {
         log.debug("creating managed connection");
-        return new OrientManagedConnectionImpl(this, cxRequestInfo);
+        return new OrientManagedConnection(this, cxRequestInfo);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked", "resource" })
@@ -112,8 +114,8 @@ public class OrientManagedConnectionFactoryImpl implements OrientManagedConnecti
         Set<ManagedConnection> connections = connectionSet;
 
         for (ManagedConnection connection : connections) {
-            if (connection instanceof OrientManagedConnectionImpl) {
-                OrientManagedConnectionImpl orientConnection = (OrientManagedConnectionImpl) connection;
+            if (connection instanceof OrientManagedConnection) {
+                OrientManagedConnection orientConnection = (OrientManagedConnection) connection;
                 ConnectionRequestInfo cri = orientConnection.getConnectionRequestInfo();
                 if (cri == null || cri.equals(cxRequestInfo)) {
                     return connection;
@@ -229,7 +231,7 @@ public class OrientManagedConnectionFactoryImpl implements OrientManagedConnecti
         if (getClass() != obj.getClass()) {
             return false;
         }
-        OrientManagedConnectionFactoryImpl other = (OrientManagedConnectionFactoryImpl) obj;
+        OrientManagedConnectionFactory other = (OrientManagedConnectionFactory) obj;
         if (ra == null) {
             if (other.ra != null) {
                 return false;
