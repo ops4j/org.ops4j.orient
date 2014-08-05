@@ -143,32 +143,6 @@
                 </exclusions>
             </dependency>
 
-			<!-- the following blueprints dependencies are redundant
-				 due to a bug in OrientDB 1.7-rc2 -->
-            <dependency>
-                <groupId>com.tinkerpop.blueprints</groupId>
-                <artifactId>blueprints-core</artifactId>
-                <version>${blueprints.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.tinkerpop</groupId>
-                <artifactId>pipes</artifactId>
-                <version>${blueprints.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.tinkerpop.gremlin</groupId>
-                <artifactId>gremlin-java</artifactId>
-                <version>${blueprints.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.tinkerpop.gremlin</groupId>
-                <artifactId>gremlin-groovy</artifactId>
-                <version>${blueprints.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
