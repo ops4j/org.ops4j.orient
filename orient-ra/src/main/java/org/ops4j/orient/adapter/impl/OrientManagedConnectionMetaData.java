@@ -21,6 +21,8 @@ package org.ops4j.orient.adapter.impl;
 import javax.resource.ResourceException;
 import javax.resource.spi.ManagedConnectionMetaData;
 
+import com.orientechnologies.orient.core.OConstants;
+
 
 /**
  * @author Harald Wellmann
@@ -35,7 +37,7 @@ public class OrientManagedConnectionMetaData implements ManagedConnectionMetaDat
 
     @Override
     public String getEISProductVersion() throws ResourceException {
-        return "1.3.0";
+        return OConstants.getVersion();
     }
 
     @Override
