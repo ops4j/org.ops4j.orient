@@ -41,14 +41,14 @@ import com.orientechnologies.orient.core.Orient;
 @Connector(
     reauthenticationSupport = false, 
     transactionSupport = TransactionSupport.TransactionSupportLevel.LocalTransaction, 
-    version = "0.2.0", 
+    version = OrientResourceAdapterVersion.OPS4J_ORIENT_VERSION, 
     vendorName = "OPS4J",
     eisType = "OrientDB")
 // @formatter:on
 public class OrientResourceAdapter implements ResourceAdapter {
-    
-    private static Logger log = LoggerFactory.getLogger(OrientResourceAdapter.class);
 
+    private static Logger log = LoggerFactory.getLogger(OrientResourceAdapter.class);
+    
     @Override
     public void start(BootstrapContext ctx) throws ResourceAdapterInternalException {
         log.debug("starting OrientResourceAdapter");
