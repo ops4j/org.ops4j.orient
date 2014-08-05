@@ -35,23 +35,22 @@ import static org.junit.Assert.assertThat;
  * 
  */
 public class TransactionalGraphService {
-    
+
     private static Logger log = LoggerFactory.getLogger(TransactionalGraphService.class);
 
     @Autowired
     private OrientBlueprintsGraphFactory dbf;
-
 
     @Transactional
     public void commitAutomatically() {
         log.debug("commitAutomatically db.hashCode() = {}", dbf.db().hashCode());
         assertThat(dbf.db().getTransaction().isActive(), is(true));
         OrientGraph graph = dbf.graph();
-		graph.setAutoStartTx(false);
-		// setAutoStartTx does not affect running transactions. Running commit (or rollback)
-		// on the already running tx shouldn't start a new one:
-		graph.commit();
-		assertThat(graph.getRawGraph().getTransaction().isActive(), is(false));
+        graph.setAutoStartTx(false);
+        // setAutoStartTx does not affect running transactions. Running commit (or rollback)
+        // on the already running tx shouldn't start a new one:
+        graph.commit();
+        assertThat(graph.getRawGraph().getTransaction().isActive(), is(false));
 
         OrientVertex vertex = graph.addVertex("TestVertex");
         vertex.setProperty("test", "test");
@@ -68,7 +67,7 @@ public class TransactionalGraphService {
 
         throw new RuntimeException();
     }
-    
+
     @Transactional
     public long count() {
         OrientGraph graph = dbf.graph();

@@ -48,15 +48,15 @@ import com.orientechnologies.orient.core.Orient;
 public class OrientResourceAdapter implements ResourceAdapter {
 
     private static Logger log = LoggerFactory.getLogger(OrientResourceAdapter.class);
-    
+
     @Override
     public void start(BootstrapContext ctx) throws ResourceAdapterInternalException {
         log.debug("starting OrientResourceAdapter");
-        
+
         // The VM running the app server may live longer than this adapter,
         // so we cannot use the default shutdown hook.
         // shutdown() is called directly in stop().
-        
+
         Orient.instance().removeShutdownHook();
     }
 
@@ -86,7 +86,7 @@ public class OrientResourceAdapter implements ResourceAdapter {
     public int hashCode() {
         return super.hashCode();
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         return super.equals(obj);

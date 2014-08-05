@@ -18,6 +18,9 @@
 
 package org.ops4j.orient.spring.tx.graph;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import org.ops4j.orient.spring.tx.OrientBlueprintsGraphFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,20 +29,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 /**
  * @author Harald Wellmann
  * 
  */
 public class TransactionalGraphService {
-    
+
     private static Logger log = LoggerFactory.getLogger(TransactionalGraphService.class);
 
     @Autowired
     private OrientBlueprintsGraphFactory dbf;
-
 
     @Transactional
     public void commitAutomatically() {
@@ -61,7 +60,7 @@ public class TransactionalGraphService {
 
         throw new RuntimeException();
     }
-    
+
     @Transactional
     public long count() {
         return dbf.db().countClass("TestVertex");

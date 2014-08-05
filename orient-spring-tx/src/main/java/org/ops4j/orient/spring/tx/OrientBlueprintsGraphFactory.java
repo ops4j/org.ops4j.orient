@@ -40,23 +40,22 @@ public class OrientBlueprintsGraphFactory extends AbstractOrientDatabaseFactory 
         pool.setup(getMinPoolSize(), getMaxPoolSize());
     }
 
-
     @Override
     public ODatabaseDocumentTx openDatabase() {
         db = pool.acquire();
         return db;
     }
-    
+
     public ODatabaseDocumentTx db() {
         return (ODatabaseDocumentTx) super.db();
     }
-    
+
     public OrientGraph graph() {
-		return new OrientGraph((ODatabaseDocumentTx) super.db(), false);
+        return new OrientGraph((ODatabaseDocumentTx) super.db(), false);
     }
 
     protected ODatabaseDocumentTx newDatabase() {
         return new ODatabaseDocumentTx(getUrl());
     }
-    
+
 }

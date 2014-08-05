@@ -18,6 +18,8 @@
 
 package org.ops4j.orient.spring.tx.graph;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -36,10 +38,9 @@ import com.orientechnologies.orient.core.iterator.ORecordIteratorClass;
 import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
-import static org.junit.Assert.assertTrue;
-
 /**
  * Tests {@link OrientTransactionManager} with a {@link OrientBlueprintsGraphFactory}.
+ * 
  * @author Harald Wellmann
  * 
  */
@@ -60,7 +61,7 @@ public class GraphDatabaseTransactionTest {
         db = dbf.openDatabase();
         OSchema schema = db.getMetadata().getSchema();
         if (!schema.existsClass("TestVertex")) {
-			dbf.graph().createVertexType("TestVertex");
+            dbf.graph().createVertexType("TestVertex");
         }
         ORecordIteratorClass<ODocument> it = db.browseClass("TestVertex");
         while (it.hasNext()) {
@@ -73,7 +74,7 @@ public class GraphDatabaseTransactionTest {
         service.commitAutomatically();
         assertTrue(!db.getTransaction().isActive());
 
-		assertTrue(service.count() == 1);
+        assertTrue(service.count() == 1);
     }
 
     @Test
@@ -88,26 +89,26 @@ public class GraphDatabaseTransactionTest {
         assertTrue(!db.getTransaction().isActive());
         assertTrue(service.count() == 0);
     }
-    
+
     @Test
     public void commitMultiThreaded() throws InterruptedException {
-        
+
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         for (int i = 0; i < 5; i++) {
             executorService.submit(new CommitTask());
         }
         executorService.shutdown();
         executorService.awaitTermination(1000, TimeUnit.SECONDS);
-        
+
     }
-    
+
     class CommitTask implements Runnable {
 
         @Override
         public void run() {
-            service.commitAutomatically();            
+            service.commitAutomatically();
         }
-        
+
     }
 
 }

@@ -18,6 +18,12 @@
 
 package org.ops4j.orient.adapter.impl;
 
+import static javax.resource.spi.ConnectionEvent.CONNECTION_CLOSED;
+import static javax.resource.spi.ConnectionEvent.CONNECTION_ERROR_OCCURRED;
+import static javax.resource.spi.ConnectionEvent.LOCAL_TRANSACTION_COMMITTED;
+import static javax.resource.spi.ConnectionEvent.LOCAL_TRANSACTION_ROLLEDBACK;
+import static javax.resource.spi.ConnectionEvent.LOCAL_TRANSACTION_STARTED;
+
 import java.io.Closeable;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -39,12 +45,6 @@ import org.slf4j.LoggerFactory;
 import com.orientechnologies.orient.core.db.ODatabaseComplex;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
-
-import static javax.resource.spi.ConnectionEvent.CONNECTION_CLOSED;
-import static javax.resource.spi.ConnectionEvent.CONNECTION_ERROR_OCCURRED;
-import static javax.resource.spi.ConnectionEvent.LOCAL_TRANSACTION_COMMITTED;
-import static javax.resource.spi.ConnectionEvent.LOCAL_TRANSACTION_ROLLEDBACK;
-import static javax.resource.spi.ConnectionEvent.LOCAL_TRANSACTION_STARTED;
 
 /**
  * @author Harald Wellmann

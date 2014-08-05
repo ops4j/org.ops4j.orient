@@ -38,20 +38,20 @@ import com.orientechnologies.orient.object.db.OObjectDatabasePool;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
 /**
- * This test verifies some properties of pooled database we rely on for suspending and
- * resuming transactions.
+ * This test verifies some properties of pooled database we rely on for suspending and resuming
+ * transactions.
  * 
  * @author Harald Wellmann
  * @author André Frimberger
  * 
  */
 public class ObjectDatabasePoolTest {
-    
+
     private static final String URL = "local:target/poolTest";
     private static final String USER = "admin";
     private static final String PASSWORD = "admin";
 
-	private final ExecutorService executor = Executors.newFixedThreadPool(2);
+    private final ExecutorService executor = Executors.newFixedThreadPool(2);
 
     /**
      * We cannot open a database from a pool unless the underlying database exists.
@@ -70,45 +70,44 @@ public class ObjectDatabasePoolTest {
         OObjectDatabasePool pool = new OObjectDatabasePool(URL, USER, PASSWORD);
         pool.setup();
 
-		// Since 1.7 connections are reused on a per thread basis
-		Future<OObjectDatabaseTx> future1 = executor.submit(new PooledConnectionThread(pool));
-		Future<OObjectDatabaseTx> future2 = executor.submit(new PooledConnectionThread(pool));
+        // Since 1.7 connections are reused on a per thread basis
+        Future<OObjectDatabaseTx> future1 = executor.submit(new PooledConnectionThread(pool));
+        Future<OObjectDatabaseTx> future2 = executor.submit(new PooledConnectionThread(pool));
 
         // Get DB from pool
         OObjectDatabaseTx db1 = future1.get();
 
         // Get another DB from pool
         OObjectDatabaseTx db2 = future2.get();
-        
+
         // This is a different instance which is now current.
         assertThat(db1, is(not(sameInstance(db2))));
-        
+
         // Close first DB. Second DB remains current.
         ODatabaseRecordThreadLocal.INSTANCE.set(db1.getUnderlying());
         db1.close();
-        
+
         db2.close();
     }
 
+    private class PooledConnectionThread implements Callable<OObjectDatabaseTx> {
 
-	private class PooledConnectionThread implements Callable<OObjectDatabaseTx> {
+        private final OObjectDatabasePool pool;
+        private ODatabaseRecordThreadLocal record = ODatabaseRecordThreadLocal.INSTANCE;
 
-		private final OObjectDatabasePool pool;
-		private ODatabaseRecordThreadLocal record = ODatabaseRecordThreadLocal.INSTANCE;
+        private PooledConnectionThread(OObjectDatabasePool pool) {
+            this.pool = pool;
+        }
 
-		private PooledConnectionThread(OObjectDatabasePool pool) {
-			this.pool = pool;
-		}
+        @Override
+        public OObjectDatabaseTx call() throws Exception {
+            // Get DB from pool
+            OObjectDatabaseTx db = pool.acquire();
 
-		@Override
-		public OObjectDatabaseTx call() throws Exception {
-			// Get DB from pool
-			OObjectDatabaseTx db = pool.acquire();
+            assertThat(record.get(), is((ODatabaseRecord) db.getUnderlying()));
+            assertThat((OObjectDatabaseTx) record.get().getDatabaseOwner(), is(db));
 
-			assertThat(record.get(), is((ODatabaseRecord) db.getUnderlying()));
-			assertThat((OObjectDatabaseTx) record.get().getDatabaseOwner(), is(db));
-
-			return db;
-		}
-	}
+            return db;
+        }
+    }
 }

@@ -41,6 +41,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Tests {@link OrientTransactionManager} with a {@link OrientBlueprintsGraphFactory}.
+ * 
  * @author Harald Wellmann
  * 
  */
@@ -55,7 +56,7 @@ public class OrientGraphTransactionTest {
     private OrientBlueprintsGraphFactory dbf;
 
     private ODatabaseDocumentTx db;
-    
+
     private OrientGraph graph;
 
     @Before
@@ -71,9 +72,9 @@ public class OrientGraphTransactionTest {
 
     @Test
     public void shouldCommit() {
-		assertThat(service.count(), is(0L));
+        assertThat(service.count(), is(0L));
         service.commitAutomatically();
-		assertThat(db.getTransaction().isActive(), is(false));
+        assertThat(db.getTransaction().isActive(), is(false));
 
         assertThat(service.count(), is(1L));
     }
@@ -91,10 +92,10 @@ public class OrientGraphTransactionTest {
         assertThat(db.getTransaction().isActive(), is(false));
         assertThat(service.count(), is(0L));
     }
-    
+
     @Test
     public void commitMultiThreaded() throws InterruptedException {
-        
+
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         for (int i = 0; i < 5; i++) {
             executorService.submit(new CommitTask());
@@ -102,12 +103,12 @@ public class OrientGraphTransactionTest {
         executorService.shutdown();
         executorService.awaitTermination(1000, TimeUnit.SECONDS);
     }
-    
+
     class CommitTask implements Runnable {
 
         @Override
         public void run() {
-            service.commitAutomatically();            
-        }        
+            service.commitAutomatically();
+        }
     }
 }

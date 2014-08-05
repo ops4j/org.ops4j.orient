@@ -24,7 +24,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-
 /**
  * @author Harald Wellmann
  *
@@ -32,25 +31,24 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 public class GraphSpringTestConfig {
-    
+
     @Bean
     public OrientTransactionManager transactionManager() {
         OrientTransactionManager bean = new OrientTransactionManager();
         bean.setDatabaseManager(databaseFactory());
-        return bean;        
+        return bean;
     }
-    
+
     @Bean
     public OrientBlueprintsGraphFactory databaseFactory() {
-		OrientBlueprintsGraphFactory manager = new OrientBlueprintsGraphFactory();
-        //manager.setUrl("local:target/test");
+        OrientBlueprintsGraphFactory manager = new OrientBlueprintsGraphFactory();
+        // manager.setUrl("local:target/test");
         manager.setUrl("memory:test");
         manager.setUsername("admin");
         manager.setPassword("admin");
         return manager;
     }
-    
-    
+
     @Bean
     public TransactionalGraphService transactionalService() {
         return new TransactionalGraphService();
