@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>orient</artifactId>
-    <version>0.3.0-SNAPSHOT</version>
+    <version>0.5.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>OPS4J OrientDB Extensions Reactor</name>
@@ -25,9 +25,9 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
 
-        <blueprints.version>2.4.0</blueprints.version>
+        <blueprints.version>2.5.0</blueprints.version>
         <logback.version>1.0.4</logback.version>
-        <orientdb.version>1.5.1</orientdb.version>
+        <orientdb.version>1.7-rc2</orientdb.version>
         <slf4j.version>1.6.6</slf4j.version>
         <spring.version>3.2.3.RELEASE</spring.version>
     </properties>
@@ -119,6 +119,12 @@
                 <version>${orientdb.version}</version>
             </dependency>
 
+			<dependency>
+				<groupId>com.orientechnologies</groupId>
+				<artifactId>orientdb-graphdb</artifactId>
+				<version>${orientdb.version}</version>
+			</dependency>
+
             <dependency>
                 <groupId>com.orientechnologies</groupId>
                 <artifactId>orientdb-object</artifactId>
@@ -137,21 +143,31 @@
                 </exclusions>
             </dependency>
 
-            <dependency>
-                <groupId>com.tinkerpop.blueprints</groupId>
-                <artifactId>blueprints-orient-graph</artifactId>
-                <version>${blueprints.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>stax</groupId>
-                        <artifactId>stax-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
+			<!-- the following blueprints dependencies are redundant
+				 due to a bug in OrientDB 1.7-rc2 -->
+			<dependency>
+				<groupId>com.tinkerpop.blueprints</groupId>
+				<artifactId>blueprints-core</artifactId>
+				<version>${blueprints.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.tinkerpop</groupId>
+				<artifactId>pipes</artifactId>
+				<version>${blueprints.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.tinkerpop.gremlin</groupId>
+				<artifactId>gremlin-java</artifactId>
+				<version>${blueprints.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.tinkerpop.gremlin</groupId>
+				<artifactId>gremlin-groovy</artifactId>
+				<version>${blueprints.version}</version>
+			</dependency>
 
             <dependency>
                 <groupId>org.slf4j</groupId>

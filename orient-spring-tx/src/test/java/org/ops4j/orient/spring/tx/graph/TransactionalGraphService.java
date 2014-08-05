@@ -18,16 +18,16 @@
 
 package org.ops4j.orient.spring.tx.graph;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import org.ops4j.orient.spring.tx.OrientGraphDatabaseFactory;
+import org.ops4j.orient.spring.tx.OrientBlueprintsGraphFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.orientechnologies.orient.core.record.impl.ODocument;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Harald Wellmann
@@ -38,7 +38,7 @@ public class TransactionalGraphService {
     private static Logger log = LoggerFactory.getLogger(TransactionalGraphService.class);
 
     @Autowired
-    private OrientGraphDatabaseFactory dbf;
+    private OrientBlueprintsGraphFactory dbf;
 
 
     @Transactional
@@ -46,7 +46,7 @@ public class TransactionalGraphService {
         log.debug("commitAutomatically db.hashCode() = {}", dbf.db().hashCode());
         assertThat(dbf.db().getTransaction().isActive(), is(true));
 
-        ODocument vertex = dbf.db().createVertex("TestVertex");
+        ODocument vertex = dbf.db().newInstance("TestVertex");
         vertex.field("test", "test");
         dbf.db().save(vertex);
     }
@@ -55,7 +55,7 @@ public class TransactionalGraphService {
     public void rollbackOnError() {
         assertThat(dbf.db().getTransaction().isActive(), is(true));
 
-        ODocument vertex = dbf.db().createVertex("TestVertex");
+        ODocument vertex = dbf.graph().addVertex("TestVertex").getRecord();
         vertex.field("test", "test");
         dbf.db().save(vertex);
 

@@ -18,7 +18,7 @@
 
 package org.ops4j.orient.spring.tx.blueprints;
 
-import org.ops4j.orient.spring.tx.OrientGraphFactory;
+import org.ops4j.orient.spring.tx.OrientBlueprintsGraphFactory;
 import org.ops4j.orient.spring.tx.OrientTransactionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,8 +41,8 @@ public class GraphSpringTestConfig {
     }
     
     @Bean
-    public OrientGraphFactory graphFactory() {
-        OrientGraphFactory manager = new OrientGraphFactory();
+    public OrientBlueprintsGraphFactory graphFactory() {
+        OrientBlueprintsGraphFactory manager = new OrientBlueprintsGraphFactory();
         //manager.setUrl("local:target/test");
         manager.setUrl("memory:test");
         manager.setUsername("admin");

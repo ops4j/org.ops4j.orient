@@ -18,10 +18,11 @@
 
 package org.ops4j.orient.spring.tx.object;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertThat;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,11 +32,17 @@ import com.orientechnologies.orient.core.db.record.ODatabaseRecord;
 import com.orientechnologies.orient.object.db.OObjectDatabasePool;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertThat;
+
 /**
  * This test verifies some properties of pooled database we rely on for suspending and
  * resuming transactions.
  * 
  * @author Harald Wellmann
+ * @author André Frimberger
  * 
  */
 public class ObjectDatabasePoolTest {
@@ -43,8 +50,8 @@ public class ObjectDatabasePoolTest {
     private static final String URL = "local:target/poolTest";
     private static final String USER = "admin";
     private static final String PASSWORD = "admin";
-    
-    private ODatabaseRecordThreadLocal record = ODatabaseRecordThreadLocal.INSTANCE;
+
+	private final ExecutorService executor = Executors.newFixedThreadPool(2);
 
     /**
      * We cannot open a database from a pool unless the underlying database exists.
@@ -59,27 +66,48 @@ public class ObjectDatabasePoolTest {
     }
 
     @Test
-    public void pooledInstancesAreNotSame() {
+    public void pooledInstancesAreNotSame() throws ExecutionException, InterruptedException {
         OObjectDatabasePool pool = new OObjectDatabasePool(URL, USER, PASSWORD);
         pool.setup();
 
+		// Since 1.7 connections are reused on a per thread basis
+		Future<OObjectDatabaseTx> future1 = executor.submit(new PooledConnectionThread(pool));
+		Future<OObjectDatabaseTx> future2 = executor.submit(new PooledConnectionThread(pool));
+
         // Get DB from pool
-        OObjectDatabaseTx db1 = pool.acquire();
-        // This one is now current
-        assertThat(record.get(), is((ODatabaseRecord) db1.getUnderlying()));
-        assertThat((OObjectDatabaseTx) record.get().getDatabaseOwner(), is(db1));
+        OObjectDatabaseTx db1 = future1.get();
 
         // Get another DB from pool
-        OObjectDatabaseTx db2 = pool.acquire();
+        OObjectDatabaseTx db2 = future2.get();
         
         // This is a different instance which is now current.
         assertThat(db1, is(not(sameInstance(db2))));
-        assertThat((OObjectDatabaseTx) record.get().getDatabaseOwner(), is(db2));
         
         // Close first DB. Second DB remains current.
         db1.close();
-        assertThat((OObjectDatabaseTx) record.get().getDatabaseOwner(), is(db2));
         
         db2.close();
     }
+
+
+	private class PooledConnectionThread implements Callable<OObjectDatabaseTx> {
+
+		private final OObjectDatabasePool pool;
+		private ODatabaseRecordThreadLocal record = ODatabaseRecordThreadLocal.INSTANCE;
+
+		private PooledConnectionThread(OObjectDatabasePool pool) {
+			this.pool = pool;
+		}
+
+		@Override
+		public OObjectDatabaseTx call() throws Exception {
+			// Get DB from pool
+			OObjectDatabaseTx db = pool.acquire();
+
+			assertThat(record.get(), is((ODatabaseRecord) db.getUnderlying()));
+			assertThat((OObjectDatabaseTx) record.get().getDatabaseOwner(), is(db));
+
+			return db;
+		}
+	}
 }
