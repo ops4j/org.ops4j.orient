@@ -85,5 +85,6 @@ public class IteratorIssueTest {
         }
         db.commit();
         assertThat(numPersons, is(1));
+        db.close();
     }
 }

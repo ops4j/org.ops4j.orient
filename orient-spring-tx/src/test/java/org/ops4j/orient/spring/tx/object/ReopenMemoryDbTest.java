@@ -40,12 +40,14 @@ public class ReopenMemoryDbTest {
         OObjectDatabaseTx db = new OObjectDatabaseTx("memory:memtest1");
         db.create();
         assertThat(db.getStorage().getType(), is("memory"));
+        db.close();
     }
 
     @Test
     public void cannotCheckStorageTypeBeforeCreate() {
         OObjectDatabaseTx db = new OObjectDatabaseTx("memory:memtest2");
         assertThat(db.getStorage(), is(nullValue()));
+        db.close();
     }
 
     @Test
@@ -56,6 +58,7 @@ public class ReopenMemoryDbTest {
         thrown.expect(ODatabaseException.class);
         thrown.expectCause(isA(IllegalStateException.class));
         db.open("admin", "admin");
+        db.close();
     }
 
     @Test
