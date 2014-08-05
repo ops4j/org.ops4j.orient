@@ -18,6 +18,11 @@
 
 package org.ops4j.orient.spring.tx.object;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertThat;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -31,11 +36,6 @@ import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
 import com.orientechnologies.orient.core.db.record.ODatabaseRecord;
 import com.orientechnologies.orient.object.db.OObjectDatabasePool;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertThat;
 
 /**
  * This test verifies some properties of pooled database we rely on for suspending and
@@ -84,6 +84,7 @@ public class ObjectDatabasePoolTest {
         assertThat(db1, is(not(sameInstance(db2))));
         
         // Close first DB. Second DB remains current.
+        ODatabaseRecordThreadLocal.INSTANCE.set(db1.getUnderlying());
         db1.close();
         
         db2.close();

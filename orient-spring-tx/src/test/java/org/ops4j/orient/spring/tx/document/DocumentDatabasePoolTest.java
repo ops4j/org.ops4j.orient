@@ -84,6 +84,7 @@ public class DocumentDatabasePoolTest {
         assertThat(db1, is(not(sameInstance(db2))));
 
         // Close first DB. Second DB remains current.
+        ODatabaseRecordThreadLocal.INSTANCE.set(db1);
         db1.close();
 
         db2.close();
