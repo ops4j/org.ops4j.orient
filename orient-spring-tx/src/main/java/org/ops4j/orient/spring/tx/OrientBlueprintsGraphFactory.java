@@ -18,7 +18,6 @@
 
 package org.ops4j.orient.spring.tx;
 
-import com.orientechnologies.orient.core.db.OPartitionedDatabasePool;
 import com.orientechnologies.orient.core.db.ODatabase;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
@@ -26,9 +25,8 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 
 /**
  * Factory for OrientDB graphs with Blueprints API.
- * 
+ *
  * @author Harald Wellmann
- * 
  */
 public class OrientBlueprintsGraphFactory extends AbstractOrientDatabaseFactory {
     private OrientGraphFactory orientGraphFactory;
@@ -37,11 +35,11 @@ public class OrientBlueprintsGraphFactory extends AbstractOrientDatabaseFactory 
     @Override
     public void init() {
         createPool();
-        openDatabase();
     }
-    
+
     @Override
     protected void createPool() {
+        //graph factory maintains its own pool
         orientGraphFactory = new OrientGraphFactory(getUrl(), getUsername(), getPassword());
         orientGraphFactory.getDatabase(true, true);
         orientGraphFactory.setupPool(getMinPoolSize(), getMaxPoolSize());
@@ -54,6 +52,9 @@ public class OrientBlueprintsGraphFactory extends AbstractOrientDatabaseFactory 
     }
 
     public OrientGraph graph() {
+        if (orientGraph == null) {
+            openDatabase();
+        }
         return orientGraph;
     }
 
