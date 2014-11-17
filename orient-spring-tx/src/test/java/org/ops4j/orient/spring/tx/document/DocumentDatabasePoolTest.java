@@ -29,6 +29,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import com.orientechnologies.orient.core.db.ODatabaseDocumentInternal;
+import com.orientechnologies.orient.core.db.OPartitionedDatabasePool;
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -67,8 +70,7 @@ public class DocumentDatabasePoolTest {
 
     @Test
     public void pooledInstancesAreNotSame() throws ExecutionException, InterruptedException {
-        ODatabaseDocumentPool pool = new ODatabaseDocumentPool(URL, USER, PASSWORD);
-        pool.setup(1, 5);
+        OPartitionedDatabasePool pool = new OPartitionedDatabasePool(URL, USER, PASSWORD, 5);
 
         // Since 1.7 connections are reused on a per thread basis
         Future<ODatabaseDocumentTx> future1 = executor.submit(new PooledConnectionThread(pool));
@@ -92,10 +94,10 @@ public class DocumentDatabasePoolTest {
 
     private class PooledConnectionThread implements Callable<ODatabaseDocumentTx> {
 
-        private final ODatabaseDocumentPool pool;
+        private final OPartitionedDatabasePool pool;
         private final ODatabaseRecordThreadLocal record = ODatabaseRecordThreadLocal.INSTANCE;
 
-        private PooledConnectionThread(ODatabaseDocumentPool pool) {
+        private PooledConnectionThread(OPartitionedDatabasePool pool) {
             this.pool = pool;
         }
 
@@ -104,7 +106,7 @@ public class DocumentDatabasePoolTest {
             // Get DB from pool
             ODatabaseDocumentTx db = pool.acquire();
 
-            assertThat(record.get(), is((ODatabaseDocument) db.getUnderlying()));
+            assertThat(record.get(), CoreMatchers.<ODatabaseDocumentInternal>is(db));
             assertThat((ODatabaseDocumentTx) record.get().getDatabaseOwner(), is(db));
 
             return db;

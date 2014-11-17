@@ -18,8 +18,7 @@
 
 package org.ops4j.orient.spring.tx;
 
-import com.orientechnologies.orient.core.db.ODatabasePoolBase;
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentPool;
+import com.orientechnologies.orient.core.db.OPartitionedDatabasePool;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
@@ -32,12 +31,11 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 public class OrientBlueprintsGraphFactory extends AbstractOrientDatabaseFactory {
 
     private ODatabaseDocumentTx db;
-    private ODatabasePoolBase<ODatabaseDocumentTx> pool;
+    private OPartitionedDatabasePool pool;
 
     @Override
     protected void createPool() {
-        pool = new ODatabaseDocumentPool(getUrl(), getUsername(), getPassword());
-        pool.setup(getMinPoolSize(), getMaxPoolSize());
+        pool = new OPartitionedDatabasePool(getUrl(), getUsername(), getPassword(), getMaxPoolSize());
     }
 
     @Override
