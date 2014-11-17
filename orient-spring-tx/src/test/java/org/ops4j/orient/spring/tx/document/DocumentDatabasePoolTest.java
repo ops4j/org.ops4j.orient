@@ -35,7 +35,7 @@ import org.junit.Test;
 import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentPool;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
-import com.orientechnologies.orient.core.db.record.ODatabaseRecord;
+import com.orientechnologies.orient.core.db.document.ODatabaseDocument;
 
 /**
  * This test verifies some properties of pooled database we rely on for suspending and resuming
@@ -104,7 +104,7 @@ public class DocumentDatabasePoolTest {
             // Get DB from pool
             ODatabaseDocumentTx db = pool.acquire();
 
-            assertThat(record.get(), is((ODatabaseRecord) db.getUnderlying()));
+            assertThat(record.get(), is((ODatabaseDocument) db.getUnderlying()));
             assertThat((ODatabaseDocumentTx) record.get().getDatabaseOwner(), is(db));
 
             return db;

@@ -18,7 +18,7 @@
 
 package org.ops4j.orient.spring.tx;
 
-import com.orientechnologies.orient.core.db.ODatabaseComplex;
+import com.orientechnologies.orient.core.db.ODatabase;
 import com.orientechnologies.orient.core.tx.OTransaction;
 
 /**
@@ -31,7 +31,7 @@ public class OrientTransaction {
 
     private OTransaction tx;
 
-    private ODatabaseComplex<?> database;
+    private ODatabase<?> database;
 
     /**
      * @return the tx
@@ -51,7 +51,7 @@ public class OrientTransaction {
     /**
      * @return the database
      */
-    public ODatabaseComplex<?> getDatabase() {
+    public ODatabase<?> getDatabase() {
         return database;
     }
 
@@ -59,7 +59,7 @@ public class OrientTransaction {
      * @param database
      *            the database to set
      */
-    public void setDatabase(ODatabaseComplex<?> database) {
+    public void setDatabase(ODatabase<?> database) {
         this.database = database;
     }
 }

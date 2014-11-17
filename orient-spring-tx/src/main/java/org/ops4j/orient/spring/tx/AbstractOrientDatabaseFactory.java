@@ -20,7 +20,7 @@ package org.ops4j.orient.spring.tx;
 
 import javax.annotation.PostConstruct;
 
-import com.orientechnologies.orient.core.db.ODatabaseComplex;
+import com.orientechnologies.orient.core.db.ODatabase;
 import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
 
 /**
@@ -29,9 +29,9 @@ import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
  * encapsulate a pool for the given database type.
  * <p>
  * All properties are optional and have default values, except the {@code url} property.
- * 
+ *
  * @author Harald Wellmann
- * 
+ *
  */
 public abstract class AbstractOrientDatabaseFactory {
 
@@ -62,7 +62,7 @@ public abstract class AbstractOrientDatabaseFactory {
         if (url == null) {
             throw new IllegalArgumentException("url property must not be null");
         }
-        ODatabaseComplex<?> db = newDatabase();
+        ODatabase<?> db = newDatabase();
         createDatabase(db);
         createPool();
     }
@@ -74,24 +74,24 @@ public abstract class AbstractOrientDatabaseFactory {
 
     /**
      * Gets a new database object from the pool. The returned database is open.
-     * 
+     *
      * @return database object
      */
-    public abstract ODatabaseComplex<?> openDatabase();
+    public abstract ODatabase<?> openDatabase();
 
     /**
      * Creates a new transactional database object for the URL set on this factory.
-     * 
+     *
      * @return
      */
-    protected abstract ODatabaseComplex<?> newDatabase();
+    protected abstract ODatabase<?> newDatabase();
 
     /**
      * Returns the current database object for the current thread.
-     * 
+     *
      * @return current database object
      */
-    public ODatabaseComplex<?> db() {
+    public ODatabase<?> db() {
         return ODatabaseRecordThreadLocal.INSTANCE.get().getDatabaseOwner();
     }
 
@@ -99,10 +99,10 @@ public abstract class AbstractOrientDatabaseFactory {
      * Physically creates a database in the underlying storage. The returned database is closed,
      * except when the database is of type {@code memory}, since a closed memory database cannot be
      * reopened.
-     * 
+     *
      * @param db database object
      */
-    protected void createDatabase(ODatabaseComplex<?> db) {
+    protected void createDatabase(ODatabase<?> db) {
         if (! getUrl().startsWith("remote:")) {
             if (!db.exists()) {
                 db.create();
@@ -121,7 +121,7 @@ public abstract class AbstractOrientDatabaseFactory {
     /**
      * Sets the database URL for the database objects produced by this factory. The URL
      * <em>must</em> be set before invoking any non-accessor method of this factory.
-     * 
+     *
      * @param url database URL
      */
     public void setUrl(String url) {
@@ -130,7 +130,7 @@ public abstract class AbstractOrientDatabaseFactory {
 
     /**
      * Gets the database username.
-     * 
+     *
      * @return the username
      */
     public String getUsername() {
@@ -139,7 +139,7 @@ public abstract class AbstractOrientDatabaseFactory {
 
     /**
      * Sets the database username.
-     * 
+     *
      * @param username the username to set
      */
     public void setUsername(String username) {
@@ -148,7 +148,7 @@ public abstract class AbstractOrientDatabaseFactory {
 
     /**
      * Gets the database password.
-     * 
+     *
      * @return the password
      */
     public String getPassword() {
@@ -157,7 +157,7 @@ public abstract class AbstractOrientDatabaseFactory {
 
     /**
      * Sets the database password.
-     * 
+     *
      * @param password the password to set
      */
     public void setPassword(String password) {
@@ -166,7 +166,7 @@ public abstract class AbstractOrientDatabaseFactory {
 
     /**
      * Gets the minimum pool size.
-     * 
+     *
      * @return the minPoolSize
      */
     public int getMinPoolSize() {
@@ -175,7 +175,7 @@ public abstract class AbstractOrientDatabaseFactory {
 
     /**
      * Sets the minimum pool size.
-     * 
+     *
      * @param minPoolSize the minPoolSize to set
      */
     public void setMinPoolSize(int minPoolSize) {
@@ -184,7 +184,7 @@ public abstract class AbstractOrientDatabaseFactory {
 
     /**
      * Gets the maximum pool size.
-     * 
+     *
      * @return the maxPoolSize
      */
     public int getMaxPoolSize() {
@@ -193,7 +193,7 @@ public abstract class AbstractOrientDatabaseFactory {
 
     /**
      * Sets the maximum pool size.
-     * 
+     *
      * @param maxPoolSize the maxPoolSize to set
      */
     public void setMaxPoolSize(int maxPoolSize) {

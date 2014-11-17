@@ -42,7 +42,7 @@ import javax.transaction.xa.XAResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.orientechnologies.orient.core.db.ODatabaseComplex;
+import com.orientechnologies.orient.core.db.ODatabase;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
@@ -55,7 +55,7 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
     private static Logger log = LoggerFactory.getLogger(OrientManagedConnectionImpl.class);
 
     private OrientManagedConnectionFactoryImpl mcf;
-    private ODatabaseComplex<?> db;
+    private ODatabase<?> db;
     private PrintWriter logWriter;
     private List<ConnectionEventListener> listeners = new ArrayList<ConnectionEventListener>();
     private ConnectionRequestInfo cri;
