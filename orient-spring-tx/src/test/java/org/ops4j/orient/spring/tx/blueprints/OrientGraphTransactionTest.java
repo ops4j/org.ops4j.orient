@@ -61,9 +61,8 @@ public class OrientGraphTransactionTest {
 
     @Before
     public void setUp() {
-        db = dbf.openDatabase();
         graph = dbf.graph();
-
+        db = graph.getRawGraph();
         for (Vertex v : graph.getVertices()) {
             graph.removeVertex(v);
         }

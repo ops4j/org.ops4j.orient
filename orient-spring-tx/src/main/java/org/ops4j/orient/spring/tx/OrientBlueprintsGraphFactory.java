@@ -19,8 +19,10 @@
 package org.ops4j.orient.spring.tx;
 
 import com.orientechnologies.orient.core.db.OPartitionedDatabasePool;
+import com.orientechnologies.orient.core.db.ODatabase;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 
 /**
  * Factory for OrientDB graphs with Blueprints API.
@@ -29,31 +31,39 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
  * 
  */
 public class OrientBlueprintsGraphFactory extends AbstractOrientDatabaseFactory {
+    private OrientGraphFactory orientGraphFactory;
+    private OrientGraph orientGraph;
 
-    private ODatabaseDocumentTx db;
-    private OPartitionedDatabasePool pool;
-
+    @Override
+    public void init() {
+        createPool();
+        openDatabase();
+    }
+    
     @Override
     protected void createPool() {
-        pool = new OPartitionedDatabasePool(getUrl(), getUsername(), getPassword(), getMaxPoolSize());
+        orientGraphFactory = new OrientGraphFactory(getUrl(), getUsername(), getPassword());
+        orientGraphFactory.getDatabase(true, true);
+        orientGraphFactory.setupPool(getMinPoolSize(), getMaxPoolSize());
     }
 
     @Override
-    public ODatabaseDocumentTx openDatabase() {
-        db = pool.acquire();
-        return db;
-    }
-
-    public ODatabaseDocumentTx db() {
-        return (ODatabaseDocumentTx) super.db();
+    public ODatabase<?> openDatabase() {
+        orientGraph = orientGraphFactory.getTx();
+        return orientGraph.getRawGraph();
     }
 
     public OrientGraph graph() {
-        return new OrientGraph((ODatabaseDocumentTx) super.db(), false);
+        return orientGraph;
     }
 
+    public ODatabaseDocumentTx db() {
+        return graph().getRawGraph();
+    }
+
+    @Override
     protected ODatabaseDocumentTx newDatabase() {
-        return new ODatabaseDocumentTx(getUrl());
+        return null;
     }
 
 }

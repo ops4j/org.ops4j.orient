@@ -80,8 +80,11 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
             tx.setDatabase(db);
             TransactionSynchronizationManager.bindResource(dbf, db);
         }
-        log.debug("beginning transaction, db.hashCode() = {}", db.hashCode());
-        db.begin();
+        //graph dbs automatically open a transaction on creation
+        if (!db.getTransaction().isActive()){
+            log.debug("beginning transaction, db.hashCode() = {}", db.hashCode());
+            db.begin();
+        }
     }
 
     @Override

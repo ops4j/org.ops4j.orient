@@ -24,6 +24,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,10 +59,11 @@ public class GraphDatabaseTransactionTest {
 
     @Before
     public void setUp() {
-        db = dbf.openDatabase();
+        OrientGraph graph = dbf.graph();
+        db = graph.getRawGraph();
         OSchema schema = db.getMetadata().getSchema();
         if (!schema.existsClass("TestVertex")) {
-            dbf.graph().createVertexType("TestVertex");
+            graph.createVertexType("TestVertex");
         }
         ORecordIteratorClass<ODocument> it = db.browseClass("TestVertex");
         while (it.hasNext()) {
