@@ -47,7 +47,7 @@ import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
  */
 public class ObjectDatabasePoolTest {
 
-    private static final String URL = "local:target/poolTest";
+    private static final String URL = "plocal:target/poolTest";
     private static final String USER = "admin";
     private static final String PASSWORD = "admin";
 

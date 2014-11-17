@@ -47,7 +47,7 @@ import com.orientechnologies.orient.core.db.document.ODatabaseDocument;
  */
 public class DocumentDatabasePoolTest {
 
-    private static final String URL = "local:target/docPoolTest";
+    private static final String URL = "plocal:target/docPoolTest";
     private static final String USER = "admin";
     private static final String PASSWORD = "admin";
 
