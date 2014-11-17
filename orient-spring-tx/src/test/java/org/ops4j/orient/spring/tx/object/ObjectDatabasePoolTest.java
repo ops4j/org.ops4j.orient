@@ -33,7 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
-import com.orientechnologies.orient.core.db.record.ODatabaseRecord;
+import com.orientechnologies.orient.core.db.document.ODatabaseDocument;
 import com.orientechnologies.orient.object.db.OObjectDatabasePool;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
@@ -47,7 +47,7 @@ import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
  */
 public class ObjectDatabasePoolTest {
 
-    private static final String URL = "local:target/poolTest";
+    private static final String URL = "plocal:target/poolTest";
     private static final String USER = "admin";
     private static final String PASSWORD = "admin";
 
@@ -104,7 +104,7 @@ public class ObjectDatabasePoolTest {
             // Get DB from pool
             OObjectDatabaseTx db = pool.acquire();
 
-            assertThat(record.get(), is((ODatabaseRecord) db.getUnderlying()));
+            assertThat(record.get(), is((ODatabaseDocument) db.getUnderlying()));
             assertThat((OObjectDatabaseTx) record.get().getDatabaseOwner(), is(db));
 
             return db;

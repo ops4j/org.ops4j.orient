@@ -18,9 +18,7 @@
 
 package org.ops4j.orient.spring.tx.object;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.isA;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Rule;
@@ -44,9 +42,9 @@ public class ReopenMemoryDbTest {
     }
 
     @Test
-    public void cannotCheckStorageTypeBeforeCreate() {
+    public void canCheckStorageTypeBeforeCreate() {
         OObjectDatabaseTx db = new OObjectDatabaseTx("memory:memtest2");
-        assertThat(db.getStorage(), is(nullValue()));
+        assertThat(db.getStorage().getType(), is("memory"));
         db.close();
     }
 

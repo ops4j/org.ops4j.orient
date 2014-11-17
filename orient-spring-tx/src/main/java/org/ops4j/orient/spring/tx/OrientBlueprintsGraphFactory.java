@@ -18,44 +18,53 @@
 
 package org.ops4j.orient.spring.tx;
 
-import com.orientechnologies.orient.core.db.ODatabasePoolBase;
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentPool;
+import com.orientechnologies.orient.core.db.ODatabase;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 
 /**
  * Factory for OrientDB graphs with Blueprints API.
- * 
+ *
  * @author Harald Wellmann
- * 
  */
 public class OrientBlueprintsGraphFactory extends AbstractOrientDatabaseFactory {
+    private OrientGraphFactory orientGraphFactory;
+    private OrientGraph orientGraph;
 
-    private ODatabaseDocumentTx db;
-    private ODatabasePoolBase<ODatabaseDocumentTx> pool;
+    @Override
+    public void init() {
+        createPool();
+    }
 
     @Override
     protected void createPool() {
-        pool = new ODatabaseDocumentPool(getUrl(), getUsername(), getPassword());
-        pool.setup(getMinPoolSize(), getMaxPoolSize());
+        //graph factory maintains its own pool
+        orientGraphFactory = new OrientGraphFactory(getUrl(), getUsername(), getPassword());
+        orientGraphFactory.getDatabase(true, true);
+        orientGraphFactory.setupPool(getMinPoolSize(), getMaxPoolSize());
     }
 
     @Override
-    public ODatabaseDocumentTx openDatabase() {
-        db = pool.acquire();
-        return db;
-    }
-
-    public ODatabaseDocumentTx db() {
-        return (ODatabaseDocumentTx) super.db();
+    public ODatabase<?> openDatabase() {
+        orientGraph = orientGraphFactory.getTx();
+        return orientGraph.getRawGraph();
     }
 
     public OrientGraph graph() {
-        return new OrientGraph((ODatabaseDocumentTx) super.db(), false);
+        if (orientGraph == null) {
+            openDatabase();
+        }
+        return orientGraph;
     }
 
+    public ODatabaseDocumentTx db() {
+        return graph().getRawGraph();
+    }
+
+    @Override
     protected ODatabaseDocumentTx newDatabase() {
-        return new ODatabaseDocumentTx(getUrl());
+        return null;
     }
 
 }
