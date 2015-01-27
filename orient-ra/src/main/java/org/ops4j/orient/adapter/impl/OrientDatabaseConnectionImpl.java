@@ -21,9 +21,8 @@ package org.ops4j.orient.adapter.impl;
 import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
 import org.ops4j.orient.adapter.api.OrientDatabaseConnectionInvalidException;
 
-import com.orientechnologies.orient.core.db.ODatabaseComplex;
+import com.orientechnologies.orient.core.db.ODatabaseInternal;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
-
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
@@ -34,10 +33,10 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 public class OrientDatabaseConnectionImpl implements OrientDatabaseConnection {
 
     private OrientManagedConnectionImpl mc;
-    private ODatabaseComplex<?> db;
+    private ODatabaseInternal<?>        db;
     private boolean valid = true;
 
-    public OrientDatabaseConnectionImpl(ODatabaseComplex<?> db, OrientManagedConnectionImpl mc) {
+    public OrientDatabaseConnectionImpl(ODatabaseInternal<?> db, OrientManagedConnectionImpl mc) {
         this.db = db;
         this.mc = mc;
     }

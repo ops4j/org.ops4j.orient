@@ -42,7 +42,7 @@ public class GraphSpringTestConfig {
     @Bean
     public OrientBlueprintsGraphFactory databaseFactory() {
         OrientBlueprintsGraphFactory manager = new OrientBlueprintsGraphFactory();
-        // manager.setUrl("local:target/test");
+        // manager.setUrl("plocal:target/test");
         manager.setUrl("memory:test");
         manager.setUsername("admin");
         manager.setPassword("admin");

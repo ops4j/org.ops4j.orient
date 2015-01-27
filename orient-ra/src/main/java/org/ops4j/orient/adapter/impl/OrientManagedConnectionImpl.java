@@ -18,16 +18,11 @@
 
 package org.ops4j.orient.adapter.impl;
 
-import static javax.resource.spi.ConnectionEvent.CONNECTION_CLOSED;
-import static javax.resource.spi.ConnectionEvent.CONNECTION_ERROR_OCCURRED;
-import static javax.resource.spi.ConnectionEvent.LOCAL_TRANSACTION_COMMITTED;
-import static javax.resource.spi.ConnectionEvent.LOCAL_TRANSACTION_ROLLEDBACK;
-import static javax.resource.spi.ConnectionEvent.LOCAL_TRANSACTION_STARTED;
-
-import java.io.Closeable;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
+import com.orientechnologies.orient.core.db.ODatabaseInternal;
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.resource.ResourceException;
 import javax.resource.spi.ConnectionEvent;
@@ -38,13 +33,16 @@ import javax.resource.spi.ManagedConnection;
 import javax.resource.spi.ManagedConnectionMetaData;
 import javax.security.auth.Subject;
 import javax.transaction.xa.XAResource;
+import java.io.Closeable;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.orientechnologies.orient.core.db.ODatabaseComplex;
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
-import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
+import static javax.resource.spi.ConnectionEvent.CONNECTION_CLOSED;
+import static javax.resource.spi.ConnectionEvent.CONNECTION_ERROR_OCCURRED;
+import static javax.resource.spi.ConnectionEvent.LOCAL_TRANSACTION_COMMITTED;
+import static javax.resource.spi.ConnectionEvent.LOCAL_TRANSACTION_ROLLEDBACK;
+import static javax.resource.spi.ConnectionEvent.LOCAL_TRANSACTION_STARTED;
 
 /**
  * @author Harald Wellmann
@@ -55,8 +53,8 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
     private static Logger log = LoggerFactory.getLogger(OrientManagedConnectionImpl.class);
 
     private OrientManagedConnectionFactoryImpl mcf;
-    private ODatabaseComplex<?> db;
-    private PrintWriter logWriter;
+    private ODatabaseInternal<?>               db;
+    private PrintWriter                        logWriter;
     private List<ConnectionEventListener> listeners = new ArrayList<ConnectionEventListener>();
     private ConnectionRequestInfo cri;
 
@@ -88,8 +86,7 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
         }
     }
 
-    public OrientManagedConnectionImpl(OrientManagedConnectionFactoryImpl mcf,
-        ConnectionRequestInfo cri) throws ResourceException {
+    public OrientManagedConnectionImpl(OrientManagedConnectionFactoryImpl mcf, ConnectionRequestInfo cri) throws ResourceException {
         this.mcf = mcf;
         this.cri = cri;
         determineEngine();
@@ -98,8 +95,7 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
     }
 
     @Override
-    public Object getConnection(Subject subject, ConnectionRequestInfo cxRequestInfo)
-        throws ResourceException {
+    public Object getConnection(Subject subject, ConnectionRequestInfo cxRequestInfo) throws ResourceException {
         log.debug("getConnection()");
 
         connection = new OrientDatabaseConnectionImpl(db, this);
@@ -117,11 +113,9 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
         log.debug("instantiating Orient Database of type [{}] with URL [{}]", type, url);
         if (type.equals("document")) {
             this.db = new ODatabaseDocumentTx(url);
-        }
-        else if (type.equals("object")) {
+        } else if (type.equals("object")) {
             this.db = new OObjectDatabaseTx(url);
-        }
-        else if (type.equals("graph")) {
+        } else if (type.equals("graph")) {
             this.db = new ODatabaseDocumentTx(url);
         }
     }
