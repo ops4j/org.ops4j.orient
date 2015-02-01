@@ -2,8 +2,7 @@
 <jboss-deployment-structure>
     <deployment>
         <dependencies>
-            <module name="deployment.orient-rar-0.1.0-SNAPSHOT.rar" />
-            <module name="org.javassist"/>
+            <module name="deployment.orient-rar.rar" />
         </dependencies>
     </deployment>
 </jboss-deployment-structure>
