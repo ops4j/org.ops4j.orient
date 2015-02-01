@@ -18,10 +18,12 @@
 
 package org.ops4j.orient.spring.tx.document;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertThat;
+import com.orientechnologies.orient.core.db.ODatabaseDocumentInternal;
+import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentPool;
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -29,25 +31,22 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentPool;
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
-import com.orientechnologies.orient.core.db.record.ODatabaseRecord;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertThat;
 
 /**
  * This test verifies some properties of pooled database we rely on for suspending and resuming
  * transactions.
- * 
+ *
  * @author Harald Wellmann
  * @author André Frimberger
- * 
+ *
  */
 public class DocumentDatabasePoolTest {
 
-    private static final String URL = "local:target/docPoolTest";
+    private static final String URL = "plocal:target/docPoolTest";
     private static final String USER = "admin";
     private static final String PASSWORD = "admin";
 
@@ -104,7 +103,7 @@ public class DocumentDatabasePoolTest {
             // Get DB from pool
             ODatabaseDocumentTx db = pool.acquire();
 
-            assertThat(record.get(), is((ODatabaseRecord) db.getUnderlying()));
+            assertThat(record.get(),  is( (ODatabaseDocumentInternal) db));
             assertThat((ODatabaseDocumentTx) record.get().getDatabaseOwner(), is(db));
 
             return db;

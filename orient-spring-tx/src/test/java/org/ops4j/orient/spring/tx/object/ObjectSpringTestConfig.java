@@ -43,7 +43,7 @@ public class ObjectSpringTestConfig {
     @Bean
     public OrientObjectDatabaseFactory databaseFactory() {
         OrientObjectDatabaseFactory manager = new OrientObjectDatabaseFactory();
-        // manager.setUrl("local:target/test");
+        // manager.setUrl("plocal:target/test");
         // manager.setUrl("remote://localhost/library");
         manager.setUrl("memory:test");
         manager.setUsername("admin");
