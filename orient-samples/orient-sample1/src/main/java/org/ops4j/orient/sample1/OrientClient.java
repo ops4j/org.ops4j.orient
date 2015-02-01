@@ -21,6 +21,8 @@ package org.ops4j.orient.sample1;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 
 import org.ops4j.orient.adapter.api.OrientDatabaseConnection;
@@ -34,10 +36,11 @@ import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
  */
 @Singleton
 @Startup
+@TransactionManagement(TransactionManagementType.BEAN)
 public class OrientClient {
     @Inject
     private OrientDatabaseConnection connection;
-    
+
     @PostConstruct
     public void init() {
         OObjectDatabaseTx db = connection.object();
