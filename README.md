@@ -26,7 +26,7 @@ Run Build:
 
 Releases go to Maven Central.
 
-OPS4J Orient is incubating. The current release is *OPS4J Orient 0.1.0*.
+OPS4J Orient is incubating. The current release is *OPS4J Orient 0.3.0*.
 
 ## Issue Tracking
 
