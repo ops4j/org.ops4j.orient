@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.ops4j</groupId>
         <artifactId>master</artifactId>
-        <version>3.2.0</version>
+        <version>4.2.0</version>
     </parent>
 
     <artifactId>orient</artifactId>
@@ -30,6 +30,7 @@
         <orientdb.version>2.0</orientdb.version>
         <slf4j.version>1.6.6</slf4j.version>
         <spring.version>3.2.3.RELEASE</spring.version>
+        <wildfly.version>8.2.0.Final</wildfly.version>
     </properties>
 
     <modules>
@@ -176,6 +177,12 @@
             </dependency>
 
             <dependency>
+                <groupId>org.ops4j.base</groupId>
+                <artifactId>ops4j-base-io</artifactId>
+                <version>1.5.0</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-tx</artifactId>
                 <version>${spring.version}</version>
@@ -251,6 +258,11 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>1.0.2.Final</version>
             </plugin>
         </plugins>
 

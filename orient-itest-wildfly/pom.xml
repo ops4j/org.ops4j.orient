@@ -12,7 +12,6 @@
 
     <properties>
         <wildfly.mgmt.port>9990</wildfly.mgmt.port>
-        <wildfly.version>8.2.0.Final</wildfly.version>
     </properties>
 
     <dependencies>
@@ -30,6 +29,7 @@
             <artifactId>orient-sample2</artifactId>
             <version>${project.version}</version>
             <type>war</type>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -41,7 +41,6 @@
         <dependency>
             <groupId>org.ops4j.base</groupId>
             <artifactId>ops4j-base-io</artifactId>
-            <version>1.5.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -79,7 +78,6 @@
             <plugin>
                 <groupId>org.wildfly.plugins</groupId>
                 <artifactId>wildfly-maven-plugin</artifactId>
-                <version>1.0.2.Final</version>
                 <executions>
                     <execution>
                         <id>start</id>
@@ -185,7 +183,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.18.1</version>
                 <executions>
                     <execution>
                         <goals>
