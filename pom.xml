@@ -26,6 +26,7 @@
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
 
         <blueprints.version>2.6.0</blueprints.version>
+        <glassfish.version>4.1</glassfish.version>
         <logback.version>1.0.4</logback.version>
         <orientdb.version>2.0.1</orientdb.version>
         <slf4j.version>1.6.6</slf4j.version>
