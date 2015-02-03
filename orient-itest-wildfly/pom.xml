@@ -11,7 +11,7 @@
     <name>OPS4J OrientDB WildFly Integration Tests</name>
 
     <properties>
-        <wildfly.mgmt.port>9990</wildfly.mgmt.port>
+        <wildfly.mgmt.port>19990</wildfly.mgmt.port>
     </properties>
 
     <dependencies>
@@ -89,9 +89,10 @@
                             <groupId>org.wildfly</groupId>
                             <artifactId>wildfly-dist</artifactId>
                             <version>${wildfly.version}</version>
-                            <jbossHome>${project.build.directory}/wildfly-${wildfly.version}</jbossHome>
-                            <!--port>${wildfly.mgmt.port}</port-->
+                            <jbossHome>${project.build.directory}/wildfly-${wildfly.version}</jbossHome>                            
+                            <port>${wildfly.mgmt.port}</port>
                             <serverConfig>standalone.xml</serverConfig>
+                            <jvmArgs>-Djboss.socket.binding.port-offset=10000</jvmArgs>
                         </configuration>
                     </execution>
                     <execution>
@@ -101,6 +102,7 @@
                             <goal>execute-commands</goal>
                         </goals>
                         <configuration>
+                            <port>${wildfly.mgmt.port}</port>
                             <executeCommands>
                                 <batch>true</batch>
                                 <commands>
@@ -125,6 +127,7 @@
                             <version>${project.version}</version>
                             <type>rar</type>
                             <name>orient-rar.rar</name>
+                            <port>${wildfly.mgmt.port}</port>
                         </configuration>
                     </execution>
                     <execution>
@@ -139,6 +142,7 @@
                             <version>${project.version}</version>
                             <type>war</type>
                             <name>orient-sample2.war</name>
+                            <port>${wildfly.mgmt.port}</port>
                         </configuration>
                     </execution>
                     <execution>
@@ -152,6 +156,7 @@
                             <artifactId>orient-sample2</artifactId>
                             <name>orient-sample2.war</name>
                             <ignoreMissingDeployment>true</ignoreMissingDeployment>
+                            <port>${wildfly.mgmt.port}</port>
                         </configuration>
                     </execution>
                     <execution>
@@ -165,6 +170,7 @@
                             <artifactId>orient-rar</artifactId>
                             <name>orient-rar.rar</name>
                             <ignoreMissingDeployment>true</ignoreMissingDeployment>
+                            <port>${wildfly.mgmt.port}</port>
                         </configuration>
                     </execution>
                     <execution>
@@ -174,7 +180,7 @@
                             <goal>shutdown</goal>
                         </goals>
                         <configuration>
-                            <port>${primary.wildfly.mgmt.port}</port>
+                            <port>${wildfly.mgmt.port}</port>
                         </configuration>
                     </execution>
                 </executions>

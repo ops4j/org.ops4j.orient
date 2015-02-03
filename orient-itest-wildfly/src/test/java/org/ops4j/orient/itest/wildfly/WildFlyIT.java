@@ -38,7 +38,7 @@ public class WildFlyIT {
 
     @Test
     public void shouldGetBooks() throws IOException {
-        URL url = new URL("http://localhost:8080/orient-sample2");
+        URL url = new URL("http://localhost:18080/orient-sample2");
         InputStream is = url.openStream();
         OutputStream os = new ByteArrayOutputStream();
         StreamUtils.copyStream(is, os, true);
