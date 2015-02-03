@@ -5,9 +5,10 @@
         <artifactId>orient</artifactId>
         <version>0.3.0-SNAPSHOT</version>
     </parent>
-    <artifactId>orient-itest</artifactId>
+    <groupId>org.ops4j.orient.itest</groupId>
+    <artifactId>itest-glassfish</artifactId>
     
-    <name>OPS4J OrientDB Integration Tests</name>
+    <name>OPS4J OrientDB GlassFish Integration Tests</name>
 
     <dependencies>
 
