@@ -29,7 +29,7 @@
         <logback.version>1.0.4</logback.version>
         <orientdb.version>2.0.1</orientdb.version>
         <slf4j.version>1.6.6</slf4j.version>
-        <spring.version>3.2.3.RELEASE</spring.version>
+        <spring.version>4.1.4.RELEASE</spring.version>
         <wildfly.version>8.2.0.Final</wildfly.version>
     </properties>
 
