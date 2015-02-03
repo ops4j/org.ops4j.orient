@@ -39,6 +39,7 @@
         <module>orient-samples</module>
         <module>orient-spring-tx</module>
         <module>orient-itest</module>
+        <module>orient-itest-wildfly</module>
     </modules>
 
     <dependencyManagement>
