@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.orientechnologies:orient-commons:1.7.10">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/orientechnologies/orient-commons/1.7.10/orient-commons-1.7.10.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/orientechnologies/orient-commons/1.7.10/orient-commons-1.7.10-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/orientechnologies/orient-commons/1.7.10/orient-commons-1.7.10-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

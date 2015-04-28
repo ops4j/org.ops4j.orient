@@ -42,7 +42,7 @@ import javax.transaction.xa.XAResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.orientechnologies.orient.core.db.ODatabaseComplex;
+import com.orientechnologies.orient.core.db.ODatabase;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 
@@ -56,7 +56,7 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
   private static Logger log = LoggerFactory.getLogger(OrientManagedConnectionImpl.class);
 
   private OrientManagedConnectionFactoryImpl mcf;
-  private ODatabaseComplex<?> db;
+  private ODatabase db;
   private PrintWriter logWriter;
   private List<ConnectionEventListener> listeners = new ArrayList<ConnectionEventListener>();
   private ConnectionRequestInfo cri;
@@ -82,11 +82,11 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
       try {
 	      if (commitException != null) {
 		      /* simulate error during commit */
-		      db.rollback();
+		      db.rollback(true);
 		      throw commitException;
 	      }
 	      else {
-		      db.commit();
+		      db.commit(true);
 	      }
       }
       catch (OException t) {
@@ -98,7 +98,7 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
     @Override
     public void rollback() throws ResourceException {
       log.debug("rollback()");
-      db.rollback();
+      db.rollback(true);
       fireConnectionEvent(LOCAL_TRANSACTION_ROLLEDBACK);
     }
   }

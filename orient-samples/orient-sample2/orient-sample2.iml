@@ -22,18 +22,20 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/endorsed" />
+      <excludeFolder url="file://$MODULE_DIR$/target/maven-archiver" />
+      <excludeFolder url="file://$MODULE_DIR$/target/maven-status" />
+      <excludeFolder url="file://$MODULE_DIR$/target/orient-sample2-0.5.0-SNAPSHOT" />
+      <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="orient-ra-api" />
-    <orderEntry type="library" name="Maven: com.orientechnologies:orientdb-object:1.7-rc2" level="project" />
-    <orderEntry type="library" name="Maven: com.orientechnologies:orientdb-core:1.7-rc2" level="project" />
-    <orderEntry type="library" name="Maven: com.orientechnologies:orient-commons:1.7-rc2" level="project" />
-    <orderEntry type="library" name="Maven: com.orientechnologies:orientdb-nativeos:1.7-rc2" level="project" />
+    <orderEntry type="library" name="Maven: com.orientechnologies:orientdb-object:2.0.2" level="project" />
+    <orderEntry type="library" name="Maven: com.orientechnologies:orientdb-core:2.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.xerial.snappy:snappy-java:1.1.0.1" level="project" />
+    <orderEntry type="library" name="Maven: com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.1" level="project" />
     <orderEntry type="library" name="Maven: net.java.dev.jna:jna:4.0.0" level="project" />
     <orderEntry type="library" name="Maven: net.java.dev.jna:jna-platform:4.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.iq80.snappy:snappy:0.3" level="project" />
-    <orderEntry type="library" name="Maven: com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.faces:jsf-api:2.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.geronimo.specs:geronimo-ejb_3.1_spec:1.0.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.geronimo.specs:geronimo-jpa_2.0_spec:1.1" level="project" />
@@ -44,4 +46,3 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.6.6" level="project" />
   </component>
 </module>
-
