@@ -22,6 +22,7 @@ import com.orientechnologies.orient.core.db.ODatabaseDocumentInternal;
 import com.orientechnologies.orient.core.db.ODatabaseInternal;
 import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
 import com.orientechnologies.orient.core.tx.OTransaction;
+import com.orientechnologies.orient.core.tx.OTransactionNoTx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.TransactionDefinition;
@@ -63,7 +64,11 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
     @Override
     protected boolean isExistingTransaction(Object transaction) throws TransactionException {
         OrientTransaction tx = (OrientTransaction) transaction;
-        boolean condition = tx.getTx() == null ? false : tx.getTx().isActive();
+        OTransaction tx1 = tx.getTx();
+        boolean condition = tx1 == null ? false : tx1.isActive();
+        if(tx1 instanceof OTransactionNoTx){
+            condition = true;
+        }
         if(condition){
             logger.debug("\t\\-- *** " +
                     "Participating in running transaction: db.hashCode() = {}", tx.getDatabase().hashCode());
@@ -86,11 +91,12 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
         }
 
         if(definition.isReadOnly()) {
-            logger.debug("*** Setting transaction to READ-ONLY, db.hashCode() = {}", db.hashCode());
+            logger.debug("*** Setting transaction to READ-ONLY - will ignore commits and rollbacks, db.hashCode() = {}", db.hashCode());
             db.begin(OTransaction.TXTYPE.NOTX);
+        }else {
+            logger.debug("*** Beginning transaction, db.hashCode() = {}", db.hashCode());
+            db.begin();
         }
-        logger.debug("*** Beginning transaction, db.hashCode() = {}", db.hashCode());
-        db.begin();
     }
 
     @Override
@@ -99,9 +105,10 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
         OrientTransaction tx = (OrientTransaction) status.getTransaction();
         ODatabaseInternal<?> db = tx.getDatabase();
         if(status.isReadOnly()){
-            logger.debug("*** Committing READ-ONLY transaction - will have no effect, db.hashCode() = {}", db.hashCode());
+            logger.debug("*** Committing READ-ONLY transaction - will ignore commits and rollbacks, db.hashCode() = {}", db.hashCode());
         }else {
             logger.debug("*** Committing transaction, db.hashCode() = {}", db.hashCode());
+            db.commit();
         }
 
     }
@@ -112,7 +119,7 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
         ODatabaseInternal<?> db = tx.getDatabase();
 
         if(status.isReadOnly()){
-            logger.debug("*** Rolling back READ-ONLY transaction - will have no effect, db.hashCode() = {}", db.hashCode());
+            logger.debug("*** Rolling back READ-ONLY transaction - will ignore commits and rollbacks, db.hashCode() = {}", db.hashCode());
         }else{
             logger.debug("*** Rolling back transaction, db.hashCode() = {}", db.hashCode());
         }
@@ -122,18 +129,30 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
 
     @Override
     protected void doSetRollbackOnly(DefaultTransactionStatus status) throws TransactionException {
-        logger.debug("*** Marking transaction for rollback");
-        status.setRollbackOnly();
+
+        if(status.isReadOnly()){
+            logger.debug("*** Marking transaction for rollback - will ignore commits and rollbacks");
+        } else {
+            logger.debug("*** Marking transaction for rollback");
+            status.setRollbackOnly();
+        }
     }
 
     @Override
     protected void doCleanupAfterCompletion(Object transaction) {
+        logger.debug("*** Doing cleanup after completion");
         OrientTransaction tx = (OrientTransaction) transaction;
         if (!tx.getDatabase().isClosed()) {
             tx.getDatabase().close();
         }
-        TransactionSynchronizationManager.unbindResource(dbf);
-        logger.debug("*** Doing cleanup after completion");
+
+        if(TransactionSynchronizationManager.hasResource(dbf)) {
+            TransactionSynchronizationManager.unbindResource(dbf);
+            logger.debug("*** Removed resources");
+        } else {
+            logger.debug("*** Did not remove resources");
+        }
+
     }
 
     @Override
@@ -178,4 +197,5 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
     public void setDatabaseManager(AbstractOrientDatabaseFactory databaseFactory) {
         this.dbf = databaseFactory;
     }
+
 }
