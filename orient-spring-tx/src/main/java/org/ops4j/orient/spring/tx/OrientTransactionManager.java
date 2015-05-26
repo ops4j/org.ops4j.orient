@@ -21,6 +21,8 @@ package org.ops4j.orient.spring.tx;
 import com.orientechnologies.orient.core.db.ODatabaseDocumentInternal;
 import com.orientechnologies.orient.core.db.ODatabaseInternal;
 import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
+import com.orientechnologies.orient.core.tx.OTransaction;
+import com.orientechnologies.orient.core.tx.OTransactionNoTx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.TransactionDefinition;
@@ -43,7 +45,7 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
 
     private static final long serialVersionUID = 1L;
 
-    private static Logger log = LoggerFactory.getLogger(OrientTransactionManager.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private AbstractOrientDatabaseFactory dbf;
 
@@ -51,19 +53,30 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
     protected Object doGetTransaction() throws TransactionException {
         OrientTransaction tx = new OrientTransaction();
 
-        ODatabaseInternal<?> db = (ODatabaseInternal<?>) TransactionSynchronizationManager.getResource(getResourceFactory());
+        ODatabaseInternal<?> db = (ODatabaseInternal<?>) TransactionSynchronizationManager.getResource(dbf);
         if (db != null) {
             tx.setDatabase(db);
             tx.setTx(db.getTransaction());
         }
-
         return tx;
     }
 
     @Override
     protected boolean isExistingTransaction(Object transaction) throws TransactionException {
         OrientTransaction tx = (OrientTransaction) transaction;
-        return tx.getTx() == null ? false : tx.getTx().isActive();
+        OTransaction tx1 = tx.getTx();
+        boolean condition = tx1 == null ? false : tx1.isActive();
+        if(tx1 instanceof OTransactionNoTx){
+            condition = true;
+        }
+        if(condition){
+            logger.debug("\t\\-- *** " +
+                    "Participating in running transaction: db.hashCode() = {}", tx.getDatabase().hashCode());
+        }else{
+            logger.debug("*** isExistingTransaction: No active transaction");
+        }
+
+        return condition;
     }
 
     @Override
@@ -76,50 +89,82 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
             tx.setDatabase(db);
             TransactionSynchronizationManager.bindResource(dbf, db);
         }
-        log.debug("beginning transaction, db.hashCode() = {}", db.hashCode());
-        db.begin();
+
+        if(definition.isReadOnly()) {
+            logger.debug("*** Setting transaction to READ-ONLY - will ignore commits and rollbacks, db.hashCode() = {}", db.hashCode());
+            db.begin(OTransaction.TXTYPE.NOTX);
+        }else {
+            logger.debug("*** Beginning transaction, db.hashCode() = {}", db.hashCode());
+            db.begin();
+        }
     }
 
     @Override
     protected void doCommit(DefaultTransactionStatus status) throws TransactionException {
+
         OrientTransaction tx = (OrientTransaction) status.getTransaction();
         ODatabaseInternal<?> db = tx.getDatabase();
-        log.debug("committing transaction, db.hashCode() = {}", db.hashCode());
-        db.commit();
+        if(status.isReadOnly()){
+            logger.debug("*** Committing READ-ONLY transaction - will ignore commits and rollbacks, db.hashCode() = {}", db.hashCode());
+        }else {
+            logger.debug("*** Committing transaction, db.hashCode() = {}", db.hashCode());
+            db.commit();
+        }
+
     }
 
     @Override
     protected void doRollback(DefaultTransactionStatus status) throws TransactionException {
         OrientTransaction tx = (OrientTransaction) status.getTransaction();
         ODatabaseInternal<?> db = tx.getDatabase();
-        log.debug("committing transaction, db.hashCode() = {}", db.hashCode());
+
+        if(status.isReadOnly()){
+            logger.debug("*** Rolling back READ-ONLY transaction - will ignore commits and rollbacks, db.hashCode() = {}", db.hashCode());
+        }else{
+            logger.debug("*** Rolling back transaction, db.hashCode() = {}", db.hashCode());
+        }
+
         db.rollback();
     }
-    
+
     @Override
     protected void doSetRollbackOnly(DefaultTransactionStatus status) throws TransactionException {
-        status.setRollbackOnly();
+
+        if(status.isReadOnly()){
+            logger.debug("*** Marking transaction for rollback - will ignore commits and rollbacks");
+        } else {
+            logger.debug("*** Marking transaction for rollback");
+            status.setRollbackOnly();
+        }
     }
 
     @Override
     protected void doCleanupAfterCompletion(Object transaction) {
+        logger.debug("*** Doing cleanup after completion");
         OrientTransaction tx = (OrientTransaction) transaction;
         if (!tx.getDatabase().isClosed()) {
             tx.getDatabase().close();
         }
-        TransactionSynchronizationManager.unbindResource(dbf);
+
+        if(TransactionSynchronizationManager.hasResource(dbf)) {
+            TransactionSynchronizationManager.unbindResource(dbf);
+            logger.debug("*** Removed resources");
+        } else {
+            logger.debug("*** Did not remove resources");
+        }
+
     }
-    
+
     @Override
     protected Object doSuspend(Object transaction) throws TransactionException {
         OrientTransaction tx = (OrientTransaction) transaction;
         ODatabaseInternal<?> db = tx.getDatabase();
         return db;
     }
-    
+
     @Override
     protected void doResume(Object transaction, Object suspendedResources)
-        throws TransactionException {
+            throws TransactionException {
         OrientTransaction tx = (OrientTransaction) transaction;
         ODatabaseInternal<?> db = tx.getDatabase();
         if (!db.isClosed()) {
@@ -137,7 +182,7 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
 
     /**
      * Gets the database factory for the database managed by this transaction manager.
-     * 
+     *
      * @return the database
      */
     public AbstractOrientDatabaseFactory getDatabaseFactory() {
@@ -146,10 +191,11 @@ public class OrientTransactionManager extends AbstractPlatformTransactionManager
 
     /**
      * Sets the database factory for the database managed by this transaction manager.
-     * 
+     *
      * @param databaseFactory the database to set
      */
     public void setDatabaseManager(AbstractOrientDatabaseFactory databaseFactory) {
         this.dbf = databaseFactory;
     }
+
 }
