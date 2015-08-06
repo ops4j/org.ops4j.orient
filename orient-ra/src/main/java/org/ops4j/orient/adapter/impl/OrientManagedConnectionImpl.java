@@ -66,23 +66,39 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
 
         @Override
         public void begin() throws ResourceException {
-            log.debug("begin()");
-            db.begin();
-            fireConnectionEvent(LOCAL_TRANSACTION_STARTED);
+            try {
+                log.debug("begin()");
+                if (db.isClosed()) {
+                    log.debug("db connection closed, reopening...");
+                    openDatabase();
+                }
+                db.begin();
+                fireConnectionEvent(LOCAL_TRANSACTION_STARTED);
+            } catch (RuntimeException e) {
+                throw new ResourceException(e);
+            }
         }
 
         @Override
         public void commit() throws ResourceException {
-            log.debug("commit()");
-            db.commit();
-            fireConnectionEvent(LOCAL_TRANSACTION_COMMITTED);
+            try {
+                log.debug("commit()");
+                db.commit();
+                fireConnectionEvent(LOCAL_TRANSACTION_COMMITTED);
+            } catch (RuntimeException e) {
+                throw new ResourceException(e);
+            }
         }
 
         @Override
         public void rollback() throws ResourceException {
-            log.debug("rollback()");
-            db.rollback();
-            fireConnectionEvent(LOCAL_TRANSACTION_ROLLEDBACK);
+            try {
+                log.debug("rollback()");
+                db.rollback();
+                fireConnectionEvent(LOCAL_TRANSACTION_ROLLEDBACK);
+            } catch (RuntimeException e) {
+                throw new ResourceException(e);
+            }
         }
     }
 
@@ -112,11 +128,11 @@ public class OrientManagedConnectionImpl implements ManagedConnection, Closeable
 
         log.debug("instantiating Orient Database of type [{}] with URL [{}]", type, url);
         if (type.equals("document")) {
-            this.db = new ODatabaseDocumentTx(url);
+            this.db = new ODatabaseDocumentTx(url, true);
         } else if (type.equals("object")) {
             this.db = new OObjectDatabaseTx(url);
         } else if (type.equals("graph")) {
-            this.db = new ODatabaseDocumentTx(url);
+            this.db = new ODatabaseDocumentTx(url, true);
         }
     }
 
